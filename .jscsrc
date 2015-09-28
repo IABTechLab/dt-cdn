@@ -1,0 +1,16 @@
+{
+    "preset": "yandex",
+    "excludeFiles": [
+        "node_modules/**",
+        "README.md",
+        "doc/**",
+        "src/partials/**",
+        "dist/**",
+        "coverage/**",
+        "karma.conf.js"
+    ],
+    "disallowEmptyBlocks": null,
+    "requireDotNotation": {
+        "allExcept": ["keywords"]
+    }
+}

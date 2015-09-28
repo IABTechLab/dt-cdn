@@ -1,0 +1,8 @@
+node_modules
+script
+doc/**
+src/partials/**
+dist/**
+doc/**
+coverage/**
+karma.conf.js
