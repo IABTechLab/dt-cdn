@@ -1,6 +1,6 @@
 'use strict';
 
-var window = require('global/window');
+// var window = require('global/window');
 
 var atomic = {};
 

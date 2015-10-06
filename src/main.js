@@ -1,4 +1,4 @@
-var window = require('global/window');
+// var window = require('global/window');
 
 var DigiTrust = require('./modules/DigiTrust');
 
