@@ -54,14 +54,6 @@ module.exports = function (grunt) {
                 singleRun: true,
                 browsers: ['PhantomJS']
             }
-        },
-        copy: {
-            files: {
-                cwd: 'path/to/files',  // set working folder / root to copy
-                src: '**/*',           // copy all files and subfolders
-                dest: 'dist/files',    // destination folder
-                expand: true           // required when using cwd
-            }
         }
     });
 
