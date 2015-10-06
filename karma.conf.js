@@ -14,7 +14,7 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             // This is the tests that will be loaded into the page
-            'dist/tests/digitrust-test.js',
+            'src/tests/digitrust-test.js',
             {
                 // This is to expose the actual dist files which will be sucked into each test
                 pattern: 'dist/*.js', watched: false, included: false, served: true

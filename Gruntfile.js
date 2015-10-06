@@ -54,15 +54,28 @@ module.exports = function (grunt) {
                 singleRun: true,
                 browsers: ['PhantomJS']
             }
+        },
+        copy: {
+          files: {
+            cwd: 'path/to/files',  // set working folder / root to copy
+            src: '**/*',           // copy all files and subfolders
+            dest: 'dist/files',    // destination folder
+            expand: true           // required when using cwd
+          }
         }
     });
 
     // Load plugins
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-strip-code');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
+
+    grunt.event.on('watch', function(action, filepath, target) {
+      grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+    });
 
     // Register tasks
     grunt.registerTask('default', ['browserify', 'strip_code', 'uglify', 'karma']);
