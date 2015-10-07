@@ -1,0 +1,5 @@
+{
+	"en": {
+		"memberId": "Missing member ID, add the member ID to the DigiTrust.initialize() call."
+	}
+}
