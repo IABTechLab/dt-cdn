@@ -23,7 +23,6 @@ var xhr = function (type, url, data, async) {
     };
     var XHR = window.XMLHttpRequest || ActiveXObject;
     var request = new XHR('MSXML2.XMLHTTP.3.0');
-    request.withCredentials = true;
     request.open(type, url, async);
     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     request.onreadystatechange = function () {

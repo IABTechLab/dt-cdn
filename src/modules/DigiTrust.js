@@ -3,6 +3,7 @@
 var xhr = require('./xhr');
 var helpers = require('./helpers');
 var errors = require('../config/errors.json');
+var popup = require('./DigiTrustPopup');
 
 /*
     An identity response object is
@@ -41,7 +42,10 @@ var errors = require('../config/errors.json');
 var defaultInitializeOptions = {
     member: '',
     adblocker: {
-        blockContent: false
+        blockContent: false,
+        userMessage: '',
+        popupFontColor: 'red',
+        popupBackgroundColor: 'blue'
     },
     consent: {
         requires: 'implicit'
@@ -72,8 +76,7 @@ function _cookieConsentCheck(options, cookieConsentCallback) {
 
 function _isAdblockEnabled(callback) {
 
-    var url = 'http://anvil.rubiconproject.com/a/api/market.js?' +
-        '&account_id=10438&site_id=22410&zone_id=97122&cb=oz_onValuationLoaded_97122_15&size_id=15';
+    var url = 'http://stats.aws.rubiconproject.com/';
     // var url = 'http://localhost:8000/fake-404-page';
     // var url = 'http://localhost:8000/cors.php';
 
@@ -102,6 +105,7 @@ function _main(options, mainCallback) {
         // Check AdBlock
         _isAdblockEnabled(function (adblockIsEnabled) {
             if (adblockIsEnabled) {
+                popup.createAdblockPopup(options);
                 identityResponseObject.success = false;
                 return mainCallback(identityResponseObject);
             } else {
