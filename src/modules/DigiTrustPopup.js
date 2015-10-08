@@ -1,8 +1,8 @@
 'use strict';
 
-var popup = {};
+var DigiTrustPopup = {};
 
-popup.createAdblockPopup = function (options) {
+DigiTrustPopup.createAdblockPopup = function (options) {
 
     var div = document.createElement('div');
     div.style.width = '100%';
@@ -17,4 +17,4 @@ popup.createAdblockPopup = function (options) {
     document.body.appendChild(div);
 };
 
-module.exports = popup;
+module.exports = DigiTrustPopup;

@@ -11,7 +11,7 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['src/**'],
-                tasks: ['browserify', 'uglify']
+                tasks: ['browserify', 'strip_code', 'uglify']
             }
         },
         uglify: {
@@ -72,4 +72,5 @@ module.exports = function (grunt) {
     // Register tasks
     grunt.registerTask('default', ['browserify', 'strip_code', 'uglify', 'karma']);
     grunt.registerTask('nokarma', ['browserify', 'strip_code', 'uglify']);
+    // Run "grunt watch" while developing for auto-building
 };

@@ -1,0 +1,12 @@
+{
+    "member": "",
+    "adblocker": {
+        "blockContent": false,
+        "userMessage": "An ad blocker has been detected. Advertising is what allows us to create this content. Please turn off the ad blocker and then click below to reload the page.",
+        "popupFontColor": "#ffffff",
+        "popupBackgroundColor": "#000000"
+    },
+    "consent": {
+        "requires": "implicit"
+    }
+}

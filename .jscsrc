@@ -3,8 +3,6 @@
     "excludeFiles": [
         "node_modules/**",
         "README.md",
-        "doc/**",
-        "src/partials/**",
         "dist/**",
         "coverage/**",
         "karma.conf.js"

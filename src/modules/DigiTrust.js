@@ -1,98 +1,11 @@
 'use strict';
 
-var xhr = require('./xhr');
+var configErrors = require('../config/errors.json');
+var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
-var errors = require('../config/errors.json');
-var popup = require('./DigiTrustPopup');
-
-/*
-    An identity response object is
-    provided in the initialize() callback.
-
-    var identityResponseObject = {
-        success: boolean,
-        identity: identityObject
-    };
-- -
-    An Identity object is the primary container for
-    attributes persisted within the browser.
-
-    var identityObject = {
-        id: boolean,
-        privacy: privacyObject
-    };
-- -
-    The Privacy object includes all privacy-related
-    settings attached to a given device.
-
-    var privacyObject = {
-        optouts: [],
-        consent: consentObject
-    };
-- -
-    The Consent object includes user's consent choice
-    and timestamp of action.
-
-    var consentObject = {
-        explicit: boolean,
-        time: long
-    };
-*/
-
-var defaultInitializeOptions = {
-    member: '',
-    adblocker: {
-        blockContent: false,
-        userMessage: '',
-        popupFontColor: 'red',
-        popupBackgroundColor: 'blue'
-    },
-    consent: {
-        requires: 'implicit'
-    }
-};
-
-function _cookieConsentCheck(options, cookieConsentCallback) {
-
-    var err = false;
-
-    var consentObject = {
-        explicit: null,
-        time: null
-    };
-
-    var privacyObject = {
-        optouts: [],
-        consent: consentObject
-    };
-
-    var identityObject = {
-        id: 12345,
-        privacy: privacyObject
-    };
-
-    return cookieConsentCallback(err, identityObject);
-}
-
-function _isAdblockEnabled(callback) {
-
-    var url = 'http://stats.aws.rubiconproject.com/';
-    // var url = 'http://localhost:8000/fake-404-page';
-    // var url = 'http://localhost:8000/cors.php';
-
-    xhr.get(url)
-    .success(function (data, xhr) {
-        return callback(false);
-    })
-    .error(function (data, xhr) {
-        // If no status, request was intercepted
-        if (!xhr.status) {
-            return callback(true);
-        } else {
-            return callback(false);
-        }
-    });
-}
+var DigiTrustPopup = require('./DigiTrustPopup');
+var DigiTrustCookie = require('./DigiTrustCookie');
+var DigiTrustAdblock = require('./DigiTrustAdblock');
 
 function _main(options, mainCallback) {
 
@@ -103,13 +16,13 @@ function _main(options, mainCallback) {
 
     if (options.adblocker.blockContent) {
         // Check AdBlock
-        _isAdblockEnabled(function (adblockIsEnabled) {
+        DigiTrustAdblock.isAdblockEnabled(function (adblockIsEnabled) {
             if (adblockIsEnabled) {
-                popup.createAdblockPopup(options);
+                DigiTrustPopup.createAdblockPopup(options);
                 identityResponseObject.success = false;
                 return mainCallback(identityResponseObject);
             } else {
-                _cookieConsentCheck(options, function (err, identityObject) {
+                DigiTrustCookie.getUserCookies(options, function (err, identityObject) {
                     if (err) {
                         identityResponseObject.success = false;
                         return mainCallback(identityResponseObject);
@@ -121,7 +34,7 @@ function _main(options, mainCallback) {
             }
         });
     } else {
-        _cookieConsentCheck(options, function (err, identityObject) {
+        DigiTrustCookie.getUserCookies(options, function (err, identityObject) {
             if (err) {
                 identityResponseObject.success = false;
                 return mainCallback(identityResponseObject);
@@ -135,11 +48,11 @@ function _main(options, mainCallback) {
 
 function initialize(options, initializeCallback) {
 
-    options = (!options) ? defaultInitializeOptions : helpers.extend(defaultInitializeOptions, options);
+    options = (!options) ? configInitializeOptions : helpers.extend(configInitializeOptions, options);
 
     // Verify Member ID
     if (!options.member || options.member.length === 0) {
-        throw new Error(errors.en.memberId);
+        throw new Error(configErrors.en.memberId);
     }
 
     _main(options, function (identityResponseObject) {
@@ -148,7 +61,16 @@ function initialize(options, initializeCallback) {
 }
 
 function getUser(options) {
-    return 12345;
+
+    /*DigiTrustCookie.getUserCookies(options, function (err, identityObject) {
+        if (err) {
+            identityResponseObject.success = false;
+            return mainCallback(identityResponseObject);
+        } else {
+            identityResponseObject.identity = identityObject;
+            return mainCallback(identityResponseObject);
+        }
+    });*/
 }
 
 module.exports = {
