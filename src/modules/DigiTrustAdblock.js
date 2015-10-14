@@ -9,16 +9,17 @@ DigiTrustAdblock.isAdblockEnabled = function (callback) {
 
     var url = configGeneral.urls.adblockCheck;
 
+    // Call rubicon endpoint, AdBlock should block this domain
     helpers.xhr.get(url)
     .success(function (data, xhrObj) {
-        return callback(false);
+        return callback(null, false);
     })
     .error(function (data, xhrObj) {
         // If no status, request was intercepted
         if (!xhrObj.status) {
-            return callback(true);
+            return callback(null, true);
         } else {
-            return callback(false);
+            return callback(null, false);
         }
     });
 };

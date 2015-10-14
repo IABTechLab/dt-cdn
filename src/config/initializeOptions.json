@@ -7,6 +7,9 @@
         "popupBackgroundColor": "#000000"
     },
     "consent": {
-        "requires": "implicit"
+        "requires": "implicit",
+        "userMessage": "Cookie consent information goes here, and it is very interesting.",
+        "popupFontColor": "#ffffff",
+        "popupBackgroundColor": "#000000"
     }
 }

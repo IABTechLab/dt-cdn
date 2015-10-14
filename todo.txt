@@ -1,3 +1,9 @@
+- getUser synchronous
+- race condition with iframe ready and requesting an identity
+- verify origin for postMessage
+- check api version
+- unit test coverage
+- browser compatibility tests
 - javascript error logger
 - detect country
 

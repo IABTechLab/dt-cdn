@@ -1,6 +1,4 @@
-<script src="../dist/digitrust.js"></script>
+<script src='../dist/digitrust.js'></script>
 <script>
-    cookie.setItem('3rdparty', 'is_set');
-    console.log('3rd party executed');
-    window.location = document.referrer;
+    DigiTrustCookie.createUserCookiesOnDigitrustDomain();
 </script>
