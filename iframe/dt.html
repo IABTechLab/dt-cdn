@@ -1,6 +1,5 @@
 <script src='../dist/digitrust.js'></script>
 <script>
-var logTag = 'DT.Server: ';
 function messageHandler(evt) {
     switch (evt.data.type) {
         case 'DigiTrust.identity.request':
@@ -24,7 +23,7 @@ if (window.addEventListener) {
     window.attachEvent('onmessage', messageHandler);
 }
 
-// On document ready, send message to parent
+// Iframe JavaScript is loaded, send READY message to parent
 var iframeReady = {
     version: 1,
     type: 'DigiTrust.iframe.ready',
