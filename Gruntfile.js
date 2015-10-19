@@ -17,7 +17,8 @@ module.exports = function (grunt) {
         uglify: {
             my_target: {
                 files: {
-                    'dist/digitrust.min.js': ['<%= browserify.production.dest %>']
+                    'dist/digitrust.min.js': ['<%= browserify.client.dest %>'],
+                    'dist/digitrust-server.min.js': ['<%= browserify.server.dest %>']
                 }
             }
         },
@@ -30,13 +31,21 @@ module.exports = function (grunt) {
             }
         },
         browserify: {
-            production: {
+            client: {
                 options: {
                     debug: false,
                     plugin: [collapse]
                 },
-                src: ['src/main.js'],
+                src: ['src/client.js'],
                 dest: 'dist/digitrust.js'
+            },
+            server: {
+                options: {
+                    debug: false,
+                    plugin: [collapse]
+                },
+                src: ['src/server.js'],
+                dest: 'dist/digitrust-server.js'
             },
         },
         strip_code: {

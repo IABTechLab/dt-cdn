@@ -1,7 +1,8 @@
 {
 	"urls": {
-		"digitrustRedirect": "http://digitru.st/redirect/redirect.html",
-		"digitrustIframe": "http://digitru.st/iframe/dt.html",
+		"digitrustRedirect": "http://digitru.st/pages/redirect.html",
+		"digitrustIframe": "http://digitru.st/pages/dt.html",
+		"optoutInfo": "http://digitru.st/pages/info.html",
 		"adblockCheck": "http://stats.aws.rubiconproject.com/"
 	},
 	"cookie": {
@@ -17,5 +18,12 @@
 			"maxAgeMiliseconds": 157680000000,
             "userObjectKey": "DigiTrust.v1.identity"
 		}
+	},
+	"iframe": {
+		"timeoutDuration": 10000,
+		"postMessageOrigin": "//digitru.st"
+	},
+	"consent": {
+		"consentLinkId": "digitrust-optout"
 	}
 }

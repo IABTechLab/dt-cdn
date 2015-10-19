@@ -1,5 +1,6 @@
 {
 	"en": {
-		"memberId": "Missing member ID, add the member ID to the DigiTrust.initialize() call."
+		"memberId": "[DigiTrust Client Error] Missing member ID, add the member ID to the function call options",
+        "postMessageOrigin": "[DigiTrust Client Error] Origin of postMessage call was not the official DigiTrust domain"
 	}
 }

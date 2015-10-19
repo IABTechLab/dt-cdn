@@ -8,7 +8,7 @@
     },
     "consent": {
         "requires": "implicit",
-        "userMessage": "Cookie consent information goes here, and it is very interesting.",
+        "userMessage": "Your browser blocks some 3rd party cookies by default. By clicking on this page you allow our partner DigiTrust to place its cookies and help us serve you personalized ads. <em>This notice only appears once.</em>",
         "popupFontColor": "#ffffff",
         "popupBackgroundColor": "#000000"
     }

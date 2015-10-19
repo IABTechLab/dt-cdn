@@ -1,0 +1,23 @@
+<script src='../dist/digitrust-server.js'></script>
+
+INFO PAGE
+
+<div>You are opted: <span id="optout-status"></span></div>
+<button onclick="DigiTrustCookie.setOptout(true);showOptoutStatus();">Opt me OUT</button>
+<button onclick="DigiTrustCookie.setOptout(false);showOptoutStatus();">Opt me IN</button>
+
+<script>
+    function showOptoutStatus() {
+        var userJSON = DigiTrustCookie.getIdentityCookieJSON();
+        console.log(userJSON);
+        if (helpers.isEmpty(userJSON)) {
+            DigiTrustCookie.setOptout(false);
+        }
+
+        var userJSON = DigiTrustCookie.getIdentityCookieJSON();
+        if (userJSON.hasOwnProperty('privacy')) {
+            document.getElementById('optout-status').innerHTML = userJSON.privacy.optout ? 'OUT' : 'IN';
+        }
+    }
+    showOptoutStatus();
+</script>

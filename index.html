@@ -7,17 +7,28 @@
             member: 'example_member_id',
             adblocker: {
                 blockContent: true,
-                userMessage: '*custom* AdBlock DETECTED! My custom message to the user.', // @todo add to GitHub spec
+                userMessage: '<h2>Oh noooo … You’re using an ad blocker!</h2>' +
+                    'Did you know advertising pays for this brilliant content? Please ' +
+                    'disable your ad blocker, then press the Reload button below … and ' +
+                    'thank you for your visit!', // @todo add to GitHub spec
                 popupFontColor: 'white', // @todo add to GitHub spec
                 popupBackgroundColor: 'orange' // @todo add to GitHub spec
             }
         },
         function (digiTrustResult) {
             console.log(digiTrustResult);
+        });/*
+        var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
+            console.log(digiTrustResult);
         });
+        console.log(json);*/
     </script>
 </head>
 <body>
+    <a href="foobar">Link Foobra</a><br/>
+    <a href="#">Link #</a><br/>
+    <a href="">Link Blank</a><br/>
+    <a>Link</a><br/>
     Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. 
     Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. 
     Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. Awesome content is here. 

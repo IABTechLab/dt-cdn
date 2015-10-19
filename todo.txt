@@ -1,12 +1,15 @@
-- getUser synchronous
-- race condition with iframe ready and requesting an identity
-- verify origin for postMessage
-- check api version
-- unit test coverage
-- browser compatibility tests
+- [DONE] ffx iframe
+- [DONE] ffx/safari adblock detector
+- [DONE] css design
+- [WIP] browser testing
+- unit tests
+- hosting
+- error catching (crypto, etc)
+
+- deploy script
+
 - javascript error logger
 - detect country
-
 <script type="text/javascript">
   var userLang = navigator.language || navigator.userLanguage; 
  alert ("The language is: " + userLang);

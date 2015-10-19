@@ -11,19 +11,18 @@ var _maxAgeToDate = function (milliseconds) {
     return date.toUTCString();
 };
 
-var _getCoookies = function () {
-    return document.cookie;
-};
-
 var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
     document.cookie = cookieKV + expiresKV + domainKV + pathKV;
 };
 
-var _setPublisherCookie = function (cookieV) {
-    var cookieKV = configGeneral.cookie.publisher.userObjectKey + '=' + cookieV + ';';
-    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.publisher.maxAgeMiliseconds) + ';';
-    var domainKV = configGeneral.cookie.publisher.domainKeyValue;
-    var pathKV = configGeneral.cookie.publisher.pathKeyValue;
+var _setIdentityCookie = function (cookieV) {
+
+    var cookieConfig = window.DigiTrust.isClient ? configGeneral.cookie.publisher : configGeneral.cookie.digitrust;
+
+    var cookieKV = cookieConfig.userObjectKey + '=' + cookieV + ';';
+    var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.maxAgeMiliseconds) + ';';
+    var domainKV = cookieConfig.domainKeyValue;
+    var pathKV = cookieConfig.pathKeyValue;
 
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
@@ -31,16 +30,16 @@ var _setPublisherCookie = function (cookieV) {
 var _verifyUserCookieStructure = function (userJSON) {
     if (!userJSON) { return false; }
 
-    var userId = userJSON.hasOwnProperty('id');
-    var privacy = userJSON.hasOwnProperty('privacy');
+    var hasUserId = userJSON.hasOwnProperty('id');
+    var hasPrivacy = userJSON.hasOwnProperty('privacy');
 
-    if (!userId) {
+    if (!hasUserId || userJSON.id.length < 1) {
         return false;
     }
 
-    if (privacy) {
-        var optouts = userJSON.privacy.hasOwnProperty('optouts');
-        if (!optouts) {
+    if (hasPrivacy) {
+        var hasOptout = userJSON.privacy.hasOwnProperty('optout');
+        if (!hasOptout) {
             return false;
         }
     } else {
@@ -51,61 +50,95 @@ var _verifyUserCookieStructure = function (userJSON) {
 };
 
 var DigiTrustCookie = {};
-
-DigiTrustCookie.getUser = function (initializeOptions) {
-
-    DigiTrustPopup.createConsentPopup(initializeOptions);
-
-    helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
-        if (_verifyUserCookieStructure(userJSON)) {
-            var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
-            _setPublisherCookie(cookieStringEncoded);
-            helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [userJSON]);
-        } else {
-            window.location = configGeneral.urls.digitrustRedirect;
-        }
-    });
-
-    var localUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
+DigiTrustCookie.showCookieConsentPopup = true;
+DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
+    var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
     if (localUserCookie) {
         var localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
         if (_verifyUserCookieStructure(localUserCookieJSON)) {
-            // OK
-            // OK, Proceed to show content
-            // OK
-            // Sync with DT domain
-            helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [localUserCookieJSON]);
+            return localUserCookieJSON;
         } else {
-            DigiTrustCommunication.getIdentity();
+            return {};
         }
+    } else {
+        return {};
+    }
+};
+
+DigiTrustCookie.setDigitrustCookie = function (cookieV) {
+    var cookieKV = configGeneral.cookie.digitrust.userObjectKey + '=' + cookieV + ';';
+    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
+    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+
+    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
+DigiTrustCookie.getUser = function (initializeOptions) {
+
+    helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
+        if (_verifyUserCookieStructure(userJSON)) {
+            var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
+            _setIdentityCookie(cookieStringEncoded);
+            helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [userJSON]);
+        } else {
+            /*
+                No DigiTrust cookie exists on digitru.st domain
+            */
+            if (DigiTrustCookie.showCookieConsentPopup) {
+                DigiTrustPopup.createConsentPopup(initializeOptions);
+                helpers.createClickListener();
+            } else {
+                helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [null]);
+            }
+        }
+    });
+
+    /*
+        Only update publisher cookie, do not return anywhere
+    */
+    helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
+        if (_verifyUserCookieStructure(userJSON)) {
+            var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
+            _setIdentityCookie(cookieStringEncoded);
+        }
+    });
+
+    var localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
+    if (!helpers.isEmpty(localUserCookieJSON)) {
+        // OK to proceed & show content
+        helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [localUserCookieJSON]);
+        // Grab remote cookie & update local
+        DigiTrustCommunication.getIdentity({syncOnly:true});
     } else {
         // Connect to iframe to check remote cookies
         DigiTrustCommunication.getIdentity();
     }
 };
 
-// Client (Publisher) should not use this method; only http://digitru.st
-DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
+DigiTrustCookie.setOptout = function (optoutValue) {
+    optoutValue = optoutValue ? true : false;
+    var cookieConfig = window.DigiTrust.isClient ? configGeneral.cookie.publisher : configGeneral.cookie.digitrust;
+    var identityCookieJSON = DigiTrustCookie.getIdentityCookieJSON(cookieConfig.userObjectKey);
 
-    var userId = 123456;
-    var userJSON = {
-        id: userId,
-        privacy: {
-            optouts: [],
-        }
+    if (helpers.isEmpty(identityCookieJSON)) {
+        identityCookieJSON.id = helpers.generateUserId();
+    }
+
+    identityCookieJSON.privacy = {
+        optout: optoutValue
     };
 
-    var cookieString = DigiTrustCookie.obfuscateCookieValue(userJSON);
-    var cookieKV = configGeneral.cookie.digitrust.userObjectKey + '=' + cookieString + ';';
-    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
-    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+    // If opting in, set consent time
+    if (optoutValue === false) {
+        identityCookieJSON.privacy.consent = {
+            time: new Date()
+        };
+    }
 
-    // Sets cookie on http://digitru.st domain
-    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
-
-    window.location = document.referrer;
+    var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(identityCookieJSON);
+    _setIdentityCookie(cookieStringEncoded);
 };
 
 DigiTrustCookie.obfuscateCookieValue = function (value) {

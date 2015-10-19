@@ -1,5 +1,7 @@
 'use strict';
 
+var configGeneral = require('../config/general.json');
+
 var helpers = {};
 
 helpers.extend = function (target, source) {
@@ -119,5 +121,62 @@ MinPubSub.unsubscribe = function (handle, callback) {
 };
 
 helpers.MinPubSub = MinPubSub;
+
+helpers.createClickListener = function () {
+    window.onclick = function (e) {
+        e = e || window.event;
+        var t = e.target || e.srcElement;
+        // Listen to all links except for the OPT OUT link
+        if (t.id === configGeneral.consent.consentLinkId) {
+            return true;
+        }
+        if (t.nodeName === 'A') {
+            window.location = configGeneral.urls.digitrustRedirect;
+            return false;
+        }
+    };
+};
+
+helpers.generateUserId = function () {
+    var id = '';
+    var buffer = new Uint32Array(2);
+
+    crypto.getRandomValues(buffer);
+    for (var i in buffer) {
+        if (buffer.hasOwnProperty(i)) {
+            id = id + buffer[i].toString(16);
+        }
+    }
+
+    return id;
+};
+
+helpers.isEmpty = function (obj) {
+
+    // null and undefined are "empty"
+    if (obj === null) {
+        return true;
+    }
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0) {
+        return false;
+    }
+    if (obj.length === 0) {
+        return true;
+    }
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) {
+            return false;
+        }
+    }
+
+    return true;
+};
 
 module.exports = helpers;

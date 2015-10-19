@@ -1,0 +1,36 @@
+<script src='../dist/digitrust-server.js'></script>
+<script>
+    function messageHandler(evt) {
+        switch (evt.data.type) {
+            case 'DigiTrust.identity.request':
+                var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
+                var digiTrustUserJSON = digiTrustUserCookie ?
+                    DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
+
+                var messageType = evt.data.syncOnly ?
+                    'DigiTrust.identity.response.syncOnly' :
+                    'DigiTrust.identity.response';
+                var identity = {
+                    version: 1,
+                    type: messageType,
+                    value: digiTrustUserJSON
+                };
+                window.parent.postMessage(identity, evt.origin);
+                break;
+        }
+    }
+
+    if (window.addEventListener) {
+        window.addEventListener('message', messageHandler, false);
+    } else {
+        window.attachEvent('onmessage', messageHandler);
+    }
+
+    // Iframe JavaScript is loaded, send READY message to parent
+    var iframeReady = {
+        version: 1,
+        type: 'DigiTrust.iframe.ready',
+        value: {}
+    };
+    window.parent.postMessage(iframeReady, document.referrer);
+</script>
