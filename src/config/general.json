@@ -1,29 +1,89 @@
 {
-	"urls": {
-		"digitrustRedirect": "http://digitru.st/pages/redirect.html",
-		"digitrustIframe": "http://digitru.st/pages/dt.html",
-		"optoutInfo": "http://digitru.st/pages/info.html",
-		"adblockCheck": "http://stats.aws.rubiconproject.com/"
-	},
-	"cookie": {
-		"publisher": {
-			"domainKeyValue": "domain: digitru.st;",
-			"pathKeyValue": "path=/;",
-			"maxAgeMiliseconds": 604800000,
-			"userObjectKey": "DigiTrust.v1.identity"
+	"prod": {
+		"urls": {
+			"digitrustRedirect": "//digitru.st/prod/v1/redirect.html",
+			"digitrustIframe": "//digitru.st/prod/v1/dt.html",
+			"optoutInfo": "//digitru.st/prod/v1/info.html",
+			"adblockCheck": "//stats.aws.rubiconproject.com/"
 		},
-		"digitrust": {
-			"domainKeyValue": "domain: digitru.st;",
-			"pathKeyValue": "path=/;",
-			"maxAgeMiliseconds": 157680000000,
-            "userObjectKey": "DigiTrust.v1.identity"
+		"cookie": {
+			"publisher": {
+				"domainKeyValue": "domain: digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrust.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain: digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+	            "userObjectKey": "DigiTrust.v1.identity"
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "//digitru.st"
+		},
+		"consent": {
+			"consentLinkId": "digitrust-optout"
 		}
 	},
-	"iframe": {
-		"timeoutDuration": 10000,
-		"postMessageOrigin": "//digitru.st"
+	"dev": {
+		"urls": {
+			"digitrustRedirect": "//digitru.st/dev/v1/redirect.html",
+			"digitrustIframe": "//digitru.st/dev/v1/dt.html",
+			"optoutInfo": "//digitru.st/dev/v1/info.html",
+			"adblockCheck": "//stats.aws.rubiconproject.com/"
+		},
+		"cookie": {
+			"publisher": {
+				"domainKeyValue": "domain: digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrust.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain: digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+	            "userObjectKey": "DigiTrust.v1.identity"
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "//digitru.st"
+		},
+		"consent": {
+			"consentLinkId": "digitrust-optout"
+		}
 	},
-	"consent": {
-		"consentLinkId": "digitrust-optout"
-	}
+	"local": {
+		"urls": {
+			"digitrustRedirect": "//local.digitru.st/dist/redirect.html",
+			"digitrustIframe": "//local.digitru.st/dist/dt.html",
+			"optoutInfo": "//local.digitru.st/dist/info.html",
+			"adblockCheck": "//stats.aws.rubiconproject.com/"
+		},
+		"cookie": {
+			"publisher": {
+				"domainKeyValue": "domain: digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrust.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain: digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+	            "userObjectKey": "DigiTrust.v1.identity"
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "//local.digitru.st"
+		},
+		"consent": {
+			"consentLinkId": "digitrust-optout"
+		}
+	},
 }

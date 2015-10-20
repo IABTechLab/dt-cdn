@@ -6,12 +6,33 @@ var collapse = require('bundle-collapser/plugin');
 module.exports = function (grunt) {
     // Project configuration
     'use strict';
+
+    // Get or Default environment
+    var argEnv = grunt.option('env');
+    if (argEnv === 'local') {
+        argEnv = 'local';
+    } else if (argEnv === 'dev') {
+        argEnv = 'dev';
+    } else {
+        argEnv = 'prod';
+    }
+
+    console.log('ENVIRONMENT: ', argEnv);
+
+    // Set environment in config file
+    grunt.file.write('src/config/env.json', '{"current":"' + argEnv + '"}');
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        deployment: grunt.file.readJSON('deployment-config.json'),
         watch: {
             js: {
                 files: ['src/**'],
                 tasks: ['browserify', 'strip_code', 'uglify']
+            },
+            html: {
+                files: ['pages/**'],
+                tasks: ['copy:main']
             }
         },
         uglify: {
@@ -63,23 +84,66 @@ module.exports = function (grunt) {
                 singleRun: true,
                 browsers: ['PhantomJS']
             }
+        },
+        aws_s3: {
+            options: {
+                accessKeyId: '<%= deployment.AWSAccessKeyId %>',
+                secretAccessKey: '<%= deployment.AWSSecretKey %>',
+                region: 'us-west-2'
+            },
+            deploy: {
+                options: {
+                    bucket: '<%= deployment.bucket %>',
+                    access: 'public-read',
+                    params: {
+                        CacheControl: 'max-age=86400, public'
+                    }
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'dist',
+                        src: ['digitrust.js', 'digitrust.min.js', 'digitrust-server.js', 'digitrust-server.min.js'],
+                        dest: argEnv + '/v1/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'pages',
+                        src: ['dt.html', 'info.html', 'redirect.html'],
+                        dest: argEnv + '/v1/'
+                    }
+                ]
+            }
+        },
+        copy: {
+            main: {
+                cwd: 'pages/',
+                src: '**',
+                expand: true,
+                dest: 'dist/'
+            }
         }
     });
 
     // Load plugins
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-strip-code');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-aws-s3');
 
     grunt.event.on('watch', function (action, filepath, target) {
         grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
     });
 
     // Register tasks
-    grunt.registerTask('default', ['browserify', 'strip_code', 'uglify', 'karma']);
-    grunt.registerTask('nokarma', ['browserify', 'strip_code', 'uglify']);
-    // Run "grunt watch" while developing for auto-building
+    grunt.registerTask('default', ['copy:main', 'browserify', 'strip_code', 'uglify', 'karma']);
+    grunt.registerTask('nokarma', ['copy:main', 'browserify', 'strip_code', 'uglify']);
+    // Deploy to prod: grunt deploy --env prod
+    // Deploy to dev: grunt deploy
+    grunt.registerTask('deploy', ['default', 'aws_s3']);
+    // NOTE: Run "grunt watch" while developing for auto-building
 };

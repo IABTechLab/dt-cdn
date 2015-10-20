@@ -1,6 +1,7 @@
 'use strict';
 
-var configGeneral = require('../config/general');
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general')[env];
 
 var fontFamily = 'Helvetica, Arial, Veranda, sans-serif';
 

@@ -1,6 +1,7 @@
 'use strict';
 
-var configGeneral = require('../config/general.json');
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general.json')[env];
 
 var helpers = {};
 
@@ -67,8 +68,8 @@ var xhrRequest = function (type, url, data, async) {
 
 var xhr = {};
 
-xhr.get = function (src, data, async) {
-    return xhrRequest('GET', src, data, async);
+xhr.get = function (url, data, async) {
+    return xhrRequest('GET', url, data, async);
 };
 
 xhr.put = function (url, data, async) {

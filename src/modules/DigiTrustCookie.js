@@ -1,9 +1,10 @@
 'use strict';
 
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general.json')[env];
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 var DigiTrustPopup = require('./DigiTrustPopup');
 var helpers = require('./helpers');
-var configGeneral = require('../config/general.json');
 
 var _maxAgeToDate = function (milliseconds) {
     var date = new Date();

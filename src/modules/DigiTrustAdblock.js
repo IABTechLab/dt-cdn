@@ -1,9 +1,13 @@
 'use strict';
 
-var configGeneral = require('../config/general.json');
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general.json')[env];
 var helpers = require('./helpers');
+var DigiTrustPopup = require('./DigiTrustPopup');
 
 var DigiTrustAdblock = {};
+DigiTrustAdblock.adblockDetected = false;
+DigiTrustAdblock.initializeOptions = {};
 
 DigiTrustAdblock.checkElements = function () {
     // Need to wait for <body> to load
@@ -41,7 +45,7 @@ DigiTrustAdblock.checkElements = function () {
         window.document.body.removeChild(baitInDom);
 
         if (detected) {
-            helpers.MinPubSub.publish('DigiTrust.pubsub.adblockDetected', [true]);
+            DigiTrustAdblock.performIfDetected();
         }
     };
 };
@@ -50,22 +54,39 @@ DigiTrustAdblock.checkEndpoint = function () {
 
     // Call rubicon endpoint, AdBlock may block this domain
     helpers.xhr.get(configGeneral.urls.adblockCheck)
-    .success(function (data, xhrObj) {
-        // do nothing
-    })
     .error(function (data, xhrObj) {
         // If no status, request was intercepted
         if (!xhrObj.status) {
-            helpers.MinPubSub.publish('DigiTrust.pubsub.adblockDetected', [true]);
+            DigiTrustAdblock.performIfDetected();
         } else {
             // do nothing
         }
     });
 };
 
-DigiTrustAdblock.checkAdblock = function () {
+DigiTrustAdblock.performIfDetected = function () {
+
+    if (DigiTrustAdblock.adblockDetected === false) {
+
+        DigiTrustAdblock.adblockDetected = true;
+        DigiTrustPopup.createAdblockPopup(DigiTrustAdblock.initializeOptions);
+
+        if (typeof DigiTrustAdblock.initializeOptions.adblocker.detectedCallback === 'function') {
+            try {
+                DigiTrustAdblock.initializeOptions.adblocker.detectedCallback();
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+};
+
+DigiTrustAdblock.checkAdblock = function (initializeOptions) {
+    DigiTrustAdblock.initializeOptions = initializeOptions;
     DigiTrustAdblock.checkElements();
     DigiTrustAdblock.checkEndpoint();
 };
 
-module.exports = DigiTrustAdblock;
+module.exports = {
+    checkAdblock: DigiTrustAdblock.checkAdblock
+};

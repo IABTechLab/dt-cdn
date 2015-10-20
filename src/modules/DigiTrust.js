@@ -1,7 +1,8 @@
 'use strict';
 
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
-var configGeneral = require('../config/general.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustPopup = require('./DigiTrustPopup');
@@ -12,7 +13,6 @@ var DigiTrustAdblock = require('./DigiTrustAdblock');
 var DigiTrust = {};
 DigiTrust.options = {};
 DigiTrust.isClient = false; // Is client or server?
-DigiTrust.adblockDetected = false;
 
 DigiTrust.initialize = function (initializeOptions, initializeCallback) {
 
@@ -39,14 +39,7 @@ DigiTrust.initialize = function (initializeOptions, initializeCallback) {
 
     // Does publisher want to check AdBlock
     if (DigiTrust.options.adblocker.blockContent) {
-
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.adblockDetected', function (boolean) {
-            if (boolean && DigiTrust.adblockDetected === false) {
-                DigiTrust.adblockDetected = true;
-                DigiTrustPopup.createAdblockPopup(DigiTrust.options);
-            }
-        });
-        DigiTrustAdblock.checkAdblock();
+        DigiTrustAdblock.checkAdblock(DigiTrust.options);
         DigiTrust._getIdentityObject(getIdentityObjectCallback);
 
     } else {

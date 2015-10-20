@@ -1,6 +1,7 @@
 'use strict';
 
-var configGeneral = require('../config/general.json');
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 var helpers = require('./helpers');
 
@@ -53,7 +54,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
 
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
-    DigiTrustCommunication.iframe.src = configGeneral.urls.digitrustIframe;
+    DigiTrustCommunication.iframe.src = location.protocol + configGeneral.urls.digitrustIframe;
     document.head.appendChild(DigiTrustCommunication.iframe);
 };
 
@@ -66,11 +67,10 @@ DigiTrustCommunication.getIdentity = function (options) {
         syncOnly: options.syncOnly ? options.syncOnly : false,
         value: {}
     };
-    DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, configGeneral.urls.digitrustIframe);
+    DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, DigiTrustCommunication.iframe.src);
 };
 
 module.exports = {
     getIdentity: DigiTrustCommunication.getIdentity,
-    startConnection: DigiTrustCommunication.startConnection,
-    setOptout: DigiTrustCommunication.setOptout
+    startConnection: DigiTrustCommunication.startConnection
 };
