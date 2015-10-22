@@ -123,16 +123,29 @@ MinPubSub.unsubscribe = function (handle, callback) {
 
 helpers.MinPubSub = MinPubSub;
 
+var _getHref = function (current) {
+    if (current.nodeName.toLowerCase() === 'a') {
+        return current.getAttribute('href');
+    } else if (current.nodeName.toLowerCase() === 'body') {
+        return false;
+    } else {
+        return _getHref(current.parentNode);
+    }
+};
+
 helpers.createClickListener = function () {
     window.onclick = function (e) {
         e = e || window.event;
         var t = e.target || e.srcElement;
-        // Listen to all links except for the OPT OUT link
+
+        // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
         if (t.id === configGeneral.consent.consentLinkId) {
             return true;
         }
-        if (t.nodeName === 'A') {
-            window.location = configGeneral.urls.digitrustRedirect;
+
+        var possibleHref = _getHref(t);
+        if (possibleHref) {
+            window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
         }
     };
@@ -189,6 +202,14 @@ helpers.isEmpty = function (obj) {
     }
 
     return true;
+};
+
+helpers.getUrlParameterByName = function (name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
 
 module.exports = helpers;

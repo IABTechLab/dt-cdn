@@ -1,44 +1,49 @@
-<script src='./digitrust-server.js'></script>
-<link rel="P3Pv1" href="http://digitrust.s3.amazonaws.com/dev/v1/p3p.xml">
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='./digitrust-server.js'></script>
+    <link rel="P3Pv1" href="http://digitrust.s3.amazonaws.com/dev/v1/p3p.xml">
+    <script>
 
-    var cookieKey = configGeneral.cookie.publisher.userObjectKey;
-    var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
-    console.log('USER JSON DT', userJSON);
-    function messageHandler(evt) {
-        console.log(evt.data.type);
-        switch (evt.data.type) {
-            case 'DigiTrust.identity.request':
-                var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
-                console.log(digiTrustUserCookie);
-                var digiTrustUserJSON = digiTrustUserCookie ?
-                    DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
+        var cookieKey = configGeneral.cookie.publisher.userObjectKey;
+        var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
+        console.log('USER JSON DT', userJSON);
+        function messageHandler(evt) {
+            console.log(evt.data.type);
+            switch (evt.data.type) {
+                case 'DigiTrust.identity.request':
+                    var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
+                    console.log(digiTrustUserCookie);
+                    var digiTrustUserJSON = digiTrustUserCookie ?
+                        DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
 
-                var messageType = evt.data.syncOnly ?
-                    'DigiTrust.identity.response.syncOnly' :
-                    'DigiTrust.identity.response';
-                var identity = {
-                    version: 1,
-                    type: messageType,
-                    value: digiTrustUserJSON
-                };
-                window.parent.postMessage(identity, evt.origin);
-                break;
+                    var messageType = evt.data.syncOnly ?
+                        'DigiTrust.identity.response.syncOnly' :
+                        'DigiTrust.identity.response';
+                    var identity = {
+                        version: 1,
+                        type: messageType,
+                        value: digiTrustUserJSON
+                    };
+                    window.parent.postMessage(identity, evt.origin);
+                    break;
+            }
         }
-    }
 
-    if (window.addEventListener) {
-        window.addEventListener('message', messageHandler, false);
-    } else {
-        window.attachEvent('onmessage', messageHandler);
-    }
+        if (window.addEventListener) {
+            window.addEventListener('message', messageHandler, false);
+        } else {
+            window.attachEvent('onmessage', messageHandler);
+        }
 
-    // Iframe JavaScript is loaded, send READY message to parent
-    var iframeReady = {
-        version: 1,
-        type: 'DigiTrust.iframe.ready',
-        value: {}
-    };
-    window.parent.postMessage(iframeReady, document.referrer);
+        // Iframe JavaScript is loaded, send READY message to parent
+        var iframeReady = {
+            version: 1,
+            type: 'DigiTrust.iframe.ready',
+            value: {}
+        };
+        window.parent.postMessage(iframeReady, document.referrer);
 
-</script>
+    </script>
+</head>
+</html>

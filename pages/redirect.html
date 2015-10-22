@@ -13,7 +13,11 @@ function createUserCookiesOnDigitrustDomain() {
 
     DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
 
-    window.location = document.referrer;
+    var redirect = helpers.getUrlParameterByName('redirect');
+    if (!redirect) {
+        redirect = document.referrer;
+    }
+    window.location = redirect;
 };
 
 createUserCookiesOnDigitrustDomain();
