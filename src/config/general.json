@@ -30,20 +30,20 @@
 	},
 	"dev": {
 		"urls": {
-			"digitrustRedirect": "//digitru.st/dev/v1/redirect.html",
-			"digitrustIframe": "//digitru.st/dev/v1/dt.html",
-			"optoutInfo": "//digitru.st/dev/v1/info.html",
+			"digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
+			"digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
+			"optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
 			"adblockCheck": "//stats.aws.rubiconproject.com/"
 		},
 		"cookie": {
 			"publisher": {
-				"domainKeyValue": "domain: digitru.st;",
+				"domainKeyValue": "domain: digitrust.s3.amazonaws.com;",
 				"pathKeyValue": "path=/;",
 				"maxAgeMiliseconds": 604800000,
 				"userObjectKey": "DigiTrust.v1.identity"
 			},
 			"digitrust": {
-				"domainKeyValue": "domain: digitru.st;",
+				"domainKeyValue": "domain: digitrust.s3.amazonaws.com;",
 				"pathKeyValue": "path=/;",
 				"maxAgeMiliseconds": 157680000000,
 	            "userObjectKey": "DigiTrust.v1.identity"
@@ -51,7 +51,7 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "//digitru.st"
+			"postMessageOrigin": "//digitrust.s3.amazonaws.com"
 		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"

@@ -28,11 +28,17 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: ['src/**'],
-                tasks: ['browserify', 'strip_code', 'uglify']
+                tasks: ['browserify', 'strip_code', 'uglify'],
+                options: {
+                    atBegin: true
+                }
             },
             html: {
                 files: ['pages/**'],
-                tasks: ['copy:main']
+                tasks: ['copy:main'],
+                options: {
+                    atBegin: true
+                }
             }
         },
         uglify: {
@@ -109,7 +115,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: 'pages',
-                        src: ['dt.html', 'info.html', 'redirect.html'],
+                        src: ['dt.html', 'info.html', 'redirect.html', 'p3p.xml', 'p3p_full.xml'],
                         dest: argEnv + '/v1/'
                     }
                 ]

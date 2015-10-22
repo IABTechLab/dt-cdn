@@ -15,6 +15,6 @@
     "sub": true,
     "browserify": true,
     "browser": true,
-    "predef": ["ActiveXObject", "crypto", "console"]
+    "predef": ["ActiveXObject", "crypto", "msCrypto", "console"]
 
 }

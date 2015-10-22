@@ -16,34 +16,39 @@ DigiTrust.isClient = false; // Is client or server?
 
 DigiTrust.initialize = function (initializeOptions, initializeCallback) {
 
-    var identityResponseObject = {success: false};
-    var getIdentityObjectCallback = function (err, identityObject) {
-        if (err || helpers.isEmpty(identityObject)) {
-            return initializeCallback(identityResponseObject);
-        } else {
-            identityResponseObject.success = true;
-            identityResponseObject.identity = identityObject;
-            return initializeCallback(identityResponseObject);
+    try {
+        var identityResponseObject = {success: false};
+        var getIdentityObjectCallback = function (err, identityObject) {
+            if (err || helpers.isEmpty(identityObject)) {
+                return initializeCallback(identityResponseObject);
+            } else {
+                identityResponseObject.success = true;
+                identityResponseObject.identity = identityObject;
+                return initializeCallback(identityResponseObject);
+            }
+        };
+
+        // Merge custom client options with default options
+        DigiTrust.options = (!initializeOptions) ?
+            configInitializeOptions :
+            helpers.extend(configInitializeOptions, initializeOptions);
+
+        // Verify Publisher's Member ID
+        if (!DigiTrust.options.member || DigiTrust.options.member.length === 0) {
+            throw new Error(configErrors.en.memberId);
         }
-    };
 
-    // Merge custom client options with default options
-    DigiTrust.options = (!initializeOptions) ?
-        configInitializeOptions :
-        helpers.extend(configInitializeOptions, initializeOptions);
+        // Does publisher want to check AdBlock
+        if (DigiTrust.options.adblocker.blockContent) {
+            DigiTrustAdblock.checkAdblock(DigiTrust.options);
+            DigiTrust._getIdentityObject(getIdentityObjectCallback);
 
-    // Verify Publisher's Member ID
-    if (!DigiTrust.options.member || DigiTrust.options.member.length === 0) {
-        throw new Error(configErrors.en.memberId);
-    }
-
-    // Does publisher want to check AdBlock
-    if (DigiTrust.options.adblocker.blockContent) {
-        DigiTrustAdblock.checkAdblock(DigiTrust.options);
-        DigiTrust._getIdentityObject(getIdentityObjectCallback);
-
-    } else {
-        DigiTrust._getIdentityObject(getIdentityObjectCallback);
+        } else {
+            DigiTrust._getIdentityObject(getIdentityObjectCallback);
+        }
+    } catch (e) {
+        console.log(e);
+        return initializeCallback({success: false});
     }
 };
 

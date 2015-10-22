@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="dist/digitrust.js"></script>
+    <script src="dist/digitrust.min.js"></script>
+    <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <script>
         DigiTrust.initialize({
             member: 'example_member_id',
             adblocker: {
                 blockContent: true,
-                detectedCallback: function () { alert('pub did smth'); },
-                userMessage: '<h2>Oh noooo … You’re using an ad blocker!</h2>' +
-                    'Did you know advertising pays for this brilliant content? Please ' +
-                    'disable your ad blocker, then press the Reload button below … and ' +
-                    'thank you for your visit!', // @todo add to GitHub spec
-                popupFontColor: 'white', // @todo add to GitHub spec
-                popupBackgroundColor: 'orange' // @todo add to GitHub spec
+                detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
+                // popupFontColor: 'white', // @todo add to GitHub spec
+                // popupBackgroundColor: 'orange' // @todo add to GitHub spec
             }
         },
         function (digiTrustResult) {

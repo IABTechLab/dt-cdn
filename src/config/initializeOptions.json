@@ -2,9 +2,9 @@
     "member": "",
     "adblocker": {
         "blockContent": false,
-        "userMessage": "An ad blocker has been detected. Advertising is what allows us to create this content. Please turn off the ad blocker and then click below to reload the page.",
+        "userMessage": "<h2>Oh noooo ... You're using an ad blocker!</h2> Did you know advertising pays for this brilliant content? Please disable your ad blocker, then press the Reload button below ... and thank you for your visit!",
         "popupFontColor": "#ffffff",
-        "popupBackgroundColor": "#000000",
+        "popupBackgroundColor": "orange",
         "ping": {
             "url": null,
             "method": "GET"

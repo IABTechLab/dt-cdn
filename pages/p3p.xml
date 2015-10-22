@@ -1,0 +1,8 @@
+<META xmlns="http://www.w3.org/2002/01/P3Pv1">
+   <POLICY-REFERENCES>
+      <POLICY-REF about="http://digitrust.s3.amazonaws.com/dev/v1/p3p_full.xml">
+         <INCLUDE>\*</INCLUDE>
+         <COOKIE-INCLUDE name="*" value="*" domain="*" path="*"/>
+      </POLICY-REF>
+   </POLICY-REFERENCES>
+</META>

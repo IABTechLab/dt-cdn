@@ -141,8 +141,19 @@ helpers.createClickListener = function () {
 helpers.generateUserId = function () {
     var id = '';
     var buffer = new Uint32Array(2);
+    var _getCryptoLib = function () {
+        var cryptoLib;
+        if (typeof crypto !== 'undefined') {
+            cryptoLib = crypto;
+        } else if (typeof msCrypto !== 'undefined') {
+            cryptoLib = msCrypto;
+        } else {
+            throw new Error('[DigiTrust] Browser missing Web Cryptography library');
+        }
+        return cryptoLib;
+    };
 
-    crypto.getRandomValues(buffer);
+    _getCryptoLib().getRandomValues(buffer);
     for (var i in buffer) {
         if (buffer.hasOwnProperty(i)) {
             id = id + buffer[i].toString(16);

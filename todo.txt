@@ -1,13 +1,16 @@
 - [DONE] ffx iframe
 - [DONE] ffx/safari adblock detector
 - [DONE] css design
-- [WIP] browser testing
+- [DONE] callback if adblocker detected
+- [DONE] deploy script
+- [DONE] error catching (crypto, etc)
+- [DONE] hosting
+
+- [WIP] browser testing (cryptooo)
+
 - unit tests
-- hosting
-- error catching (crypto, etc)
 
-- deploy script
-
+- test https
 - javascript error logger
 - detect country
 <script type="text/javascript">

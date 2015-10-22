@@ -134,7 +134,7 @@ DigiTrustCookie.setOptout = function (optoutValue) {
     // If opting in, set consent time
     if (optoutValue === false) {
         identityCookieJSON.privacy.consent = {
-            time: new Date()
+            time: (new Date()).getTime()
         };
     }
 

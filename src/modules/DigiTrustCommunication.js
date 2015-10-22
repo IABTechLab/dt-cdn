@@ -13,6 +13,8 @@ DigiTrustCommunication._messageHandler = function (evt) {
     if (evt.origin !== location.protocol + configGeneral.iframe.postMessageOrigin) {
         throw new Error(configErrors.en.postMessageOrigin);
     } else {
+        console.log(evt.data.type);
+        console.log(evt.data.value);
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.ready', [true]);
