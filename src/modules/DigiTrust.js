@@ -14,6 +14,10 @@ var DigiTrust = {};
 DigiTrust.options = {};
 DigiTrust.isClient = false; // Is client or server?
 
+DigiTrust._isMemberIdValid = function (memberId) {
+    return memberId && memberId.length > 0;
+};
+
 DigiTrust.initialize = function (initializeOptions, initializeCallback) {
 
     try {
@@ -34,8 +38,9 @@ DigiTrust.initialize = function (initializeOptions, initializeCallback) {
             helpers.extend(configInitializeOptions, initializeOptions);
 
         // Verify Publisher's Member ID
-        if (!DigiTrust.options.member || DigiTrust.options.member.length === 0) {
-            throw new Error(configErrors.en.memberId);
+        if (!DigiTrust._isMemberIdValid(DigiTrust.options.member)) {
+            console.log(configErrors.en.memberId);
+            return initializeCallback(identityResponseObject);
         }
 
         // Does publisher want to check AdBlock
@@ -59,12 +64,12 @@ DigiTrust.getUser = function (getUserOptions, callback) {
         success: false
     };
 
-    // Verify Publisher's Member ID
-    if (!getUserOptions.member || getUserOptions.member.length === 0) {
-        throw new Error(configErrors.en.memberId);
-    }
-
     if (getUserOptions.synchronous === true) {
+        // Verify Publisher's Member ID
+        if (!DigiTrust._isMemberIdValid(getUserOptions.member)) {
+            console.log(configErrors.en.memberId);
+            return identityResponseObject;
+        }
         // Get publisher cookie
         var identityJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
         if (!helpers.isEmpty(identityJSON)) {
@@ -73,6 +78,11 @@ DigiTrust.getUser = function (getUserOptions, callback) {
         }
         return identityResponseObject;
     } else {
+        // Verify Publisher's Member ID
+        if (!DigiTrust._isMemberIdValid(getUserOptions.member)) {
+            console.log(configErrors.en.memberId);
+            return callback(identityResponseObject);
+        }
         DigiTrustCookie.showCookieConsentPopup = false;
         DigiTrust._getIdentityObject(function (err, identityObject) {
             if (err) {

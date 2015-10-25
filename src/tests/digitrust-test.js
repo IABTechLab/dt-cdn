@@ -1,11 +1,26 @@
-describe('JavaScript addition operator', function () {
-    it('adds two numbers together', function () {
-        expect(1 + 2).toEqual(3);
-    });
-});
+describe('DT Client', function () {    
+    //initialize: DigiTrust.initialize,
+    //getUser: DigiTrust.getUser,
+    //setOptout: DigiTrust.setOptout
 
-describe('JavaScript addition operator 2', function () {
-    it('adds two numbers together', function () {
-        expect(1 + 3).toEqual(4);
+    it('getUser without memebr id', function (done) {
+        var initializeResult;
+        DigiTrust.initialize({
+            member: null
+        },
+        function (identityResponse) {
+            var initializeResult = identityResponse;
+            expect(initializeResult.success).toBe(false);
+            console.log(initializeResult);
+            done();
+        });
+        
+    });
+
+    it('getUser without memebr id', function () {
+        var getUserResult = DigiTrust.getUser({
+            synchronous: true
+        });
+        expect(getUserResult.success).toBe(false);
     });
 });
