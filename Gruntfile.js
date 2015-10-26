@@ -13,6 +13,8 @@ module.exports = function (grunt) {
         argEnv = 'local';
     } else if (argEnv === 'dev') {
         argEnv = 'dev';
+    } else if (argEnv === 'funky') {
+        argEnv = 'funky';
     } else {
         argEnv = 'prod';
     }

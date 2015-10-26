@@ -8,13 +8,12 @@ var helpers = require('./helpers');
 var DigiTrustCommunication = {};
 
 DigiTrustCommunication.iframe = null;
+DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
 
 DigiTrustCommunication._messageHandler = function (evt) {
     if (evt.origin !== location.protocol + configGeneral.iframe.postMessageOrigin) {
         throw new Error(configErrors.en.postMessageOrigin);
     } else {
-        console.log(evt.data.type);
-        console.log(evt.data.value);
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.ready', [true]);
@@ -40,10 +39,12 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     */
     var iframeLoadErrorTimeout = setTimeout(function () {
         loadSuccess(false);
+        DigiTrustCommunication.iframeStatus = 0;
     }, configGeneral.iframe.timeoutDuration);
 
     helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
         clearTimeout(iframeLoadErrorTimeout);
+        DigiTrustCommunication.iframeStatus = 2;
         loadSuccess(true);
     });
 
@@ -57,19 +58,39 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
     DigiTrustCommunication.iframe.src = location.protocol + configGeneral.urls.digitrustIframe;
+    DigiTrustCommunication.iframeStatus = 1;
     document.head.appendChild(DigiTrustCommunication.iframe);
 };
 
 DigiTrustCommunication.getIdentity = function (options) {
     options = options ? options : {};
-
-    var identityRequest = {
-        version: 1,
-        type: 'DigiTrust.identity.request',
-        syncOnly: options.syncOnly ? options.syncOnly : false,
-        value: {}
+    var _sendIdentityRequest = function (options) {
+        var identityRequest = {
+            version: 1,
+            type: 'DigiTrust.identity.request',
+            syncOnly: options.syncOnly ? options.syncOnly : false,
+            value: {}
+        };
+        DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, DigiTrustCommunication.iframe.src);
     };
-    DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, DigiTrustCommunication.iframe.src);
+
+    if (DigiTrustCommunication.iframeStatus === 2) {
+        _sendIdentityRequest(options);
+    } else if (DigiTrustCommunication.iframeStatus === 1) {
+        // This mimics a "delay", until the iframe is ready
+        helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+            _sendIdentityRequest(options);
+        });
+    } else if (DigiTrustCommunication.iframeStatus === 0) {
+        // Create communication gateway with digitru.st iframe
+        DigiTrustCommunication.startConnection(function (loadSuccess) {
+            if (loadSuccess) {
+                _sendIdentityRequest(options);
+            } else {
+                throw new Error(configErrors.en.iframeError);
+            }
+        });
+    }
 };
 
 module.exports = {

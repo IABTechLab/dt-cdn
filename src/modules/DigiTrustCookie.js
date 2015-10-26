@@ -76,45 +76,67 @@ DigiTrustCookie.setDigitrustCookie = function (cookieV) {
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
-DigiTrustCookie.getUser = function (initializeOptions) {
+DigiTrustCookie.getUser = function (options, callback) {
 
-    helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
-        if (_verifyUserCookieStructure(userJSON)) {
-            var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
-            _setIdentityCookie(cookieStringEncoded);
-            helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [userJSON]);
-        } else {
-            /*
-                No DigiTrust cookie exists on digitru.st domain
-            */
-            if (DigiTrustCookie.showCookieConsentPopup) {
-                DigiTrustPopup.createConsentPopup(initializeOptions);
-                helpers.createClickListener();
+    options = options || {};
+    var useCallback = (typeof callback === 'function') ? true : false;
+    var localUserCookieJSON = {};
+    var _createSyncOnlySubscription = function () {
+        // LISTENER: Only update publisher cookie, do not return anywhere
+        helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
+            if (_verifyUserCookieStructure(userJSON)) {
+                var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
+                _setIdentityCookie(cookieStringEncoded);
+            }
+        });
+    };
+
+    if (useCallback === false) {
+        localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
+        // Do a sync with digitrust official domain
+        _createSyncOnlySubscription();
+        DigiTrustCommunication.getIdentity({syncOnly:true});
+        return (!helpers.isEmpty(localUserCookieJSON)) ? localUserCookieJSON : {};
+    } else {
+        /*
+            postMessage doesn't have a callback, so we listen for an event emitted by the
+            DigiTrustCommunication module telling us that a message arrived from http://digitru.st
+            and now we can complete the callback
+
+            LISTENER: listen for message from digitrust iframe
+        */
+        helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
+            if (_verifyUserCookieStructure(userJSON)) {
+                var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
+                _setIdentityCookie(cookieStringEncoded);
+                return callback(false, userJSON);
             } else {
-                helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [null]);
+                // No DigiTrust cookie exists on digitru.st domain
+                if (DigiTrustCookie.showCookieConsentPopup) {
+                    DigiTrustPopup.createConsentPopup(options);
+                    helpers.createClickListener();
+                }
+                return callback(true);
+            }
+        });
+
+        if (options.ignoreLocalCookies === true) {
+            DigiTrustCommunication.getIdentity();
+        } else {
+            localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(
+                configGeneral.cookie.publisher.userObjectKey
+            );
+            if (!helpers.isEmpty(localUserCookieJSON)) {
+                // OK to proceed & show content
+                // Grab remote cookie & update local
+                _createSyncOnlySubscription();
+                DigiTrustCommunication.getIdentity({syncOnly:true});
+                return callback(false, localUserCookieJSON);
+            } else {
+                // Connect to iframe to check remote cookies
+                DigiTrustCommunication.getIdentity();
             }
         }
-    });
-
-    /*
-        Only update publisher cookie, do not return anywhere
-    */
-    helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
-        if (_verifyUserCookieStructure(userJSON)) {
-            var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
-            _setIdentityCookie(cookieStringEncoded);
-        }
-    });
-
-    var localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
-    if (!helpers.isEmpty(localUserCookieJSON)) {
-        // OK to proceed & show content
-        helpers.MinPubSub.publish('DigiTrust.pubsub.identity.final', [localUserCookieJSON]);
-        // Grab remote cookie & update local
-        DigiTrustCommunication.getIdentity({syncOnly:true});
-    } else {
-        // Connect to iframe to check remote cookies
-        DigiTrustCommunication.getIdentity();
     }
 };
 

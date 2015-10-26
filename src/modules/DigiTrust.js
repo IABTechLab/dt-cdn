@@ -5,24 +5,42 @@ var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
-var DigiTrustPopup = require('./DigiTrustPopup');
 var DigiTrustCookie = require('./DigiTrustCookie');
-var DigiTrustCommunication = require('./DigiTrustCommunication');
 var DigiTrustAdblock = require('./DigiTrustAdblock');
 
 var DigiTrust = {};
-DigiTrust.options = {};
 DigiTrust.isClient = false; // Is client or server?
 
 DigiTrust._isMemberIdValid = function (memberId) {
-    return memberId && memberId.length > 0;
+    if (memberId && memberId.length > 0) {
+        return true;
+    } else {
+        console.log(configErrors.en.memberId);
+        return false;
+    }
 };
 
 DigiTrust.initialize = function (initializeOptions, initializeCallback) {
 
     try {
         var identityResponseObject = {success: false};
-        var getIdentityObjectCallback = function (err, identityObject) {
+
+        // Merge custom client options with default options
+        var options = (!initializeOptions) ?
+            configInitializeOptions :
+            helpers.extend(configInitializeOptions, initializeOptions);
+
+        // Verify Publisher's Member ID
+        if (!DigiTrust._isMemberIdValid(options.member)) {
+            return initializeCallback(identityResponseObject);
+        }
+
+        // Does publisher want to check AdBlock (async)
+        if (options.adblocker.blockContent) {
+            DigiTrustAdblock.checkAdblock(options);
+        }
+
+        DigiTrustCookie.getUser(options, function (err, identityObject) {
             if (err || helpers.isEmpty(identityObject)) {
                 return initializeCallback(identityResponseObject);
             } else {
@@ -30,63 +48,39 @@ DigiTrust.initialize = function (initializeOptions, initializeCallback) {
                 identityResponseObject.identity = identityObject;
                 return initializeCallback(identityResponseObject);
             }
-        };
-
-        // Merge custom client options with default options
-        DigiTrust.options = (!initializeOptions) ?
-            configInitializeOptions :
-            helpers.extend(configInitializeOptions, initializeOptions);
-
-        // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(DigiTrust.options.member)) {
-            console.log(configErrors.en.memberId);
-            return initializeCallback(identityResponseObject);
-        }
-
-        // Does publisher want to check AdBlock
-        if (DigiTrust.options.adblocker.blockContent) {
-            DigiTrustAdblock.checkAdblock(DigiTrust.options);
-            DigiTrust._getIdentityObject(getIdentityObjectCallback);
-
-        } else {
-            DigiTrust._getIdentityObject(getIdentityObjectCallback);
-        }
+        });
     } catch (e) {
         console.log(e);
         return initializeCallback({success: false});
     }
 };
 
-DigiTrust.getUser = function (getUserOptions, callback) {
+DigiTrust.getUser = function (options, callback) {
 
-    getUserOptions = getUserOptions || {};
+    options = options || {};
+    var async = (typeof callback === 'function') ? true : false;
     var identityResponseObject = {
         success: false
     };
 
-    if (getUserOptions.synchronous === true) {
-        // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(getUserOptions.member)) {
-            console.log(configErrors.en.memberId);
-            return identityResponseObject;
-        }
+    // Verify Publisher's Member ID
+    if (!DigiTrust._isMemberIdValid(options.member)) {
+        return (async === false) ? identityResponseObject : callback(identityResponseObject);
+    }
+
+    if (async === false) {
         // Get publisher cookie
-        var identityJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
+        var identityJSON = DigiTrustCookie.getUser();
         if (!helpers.isEmpty(identityJSON)) {
             identityResponseObject.success = true;
             identityResponseObject.identity = identityJSON;
         }
         return identityResponseObject;
     } else {
-        // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(getUserOptions.member)) {
-            console.log(configErrors.en.memberId);
-            return callback(identityResponseObject);
-        }
         DigiTrustCookie.showCookieConsentPopup = false;
-        DigiTrust._getIdentityObject(function (err, identityObject) {
+        options.ignoreLocalCookies = true;
+        DigiTrustCookie.getUser(options, function (err, identityObject) {
             if (err) {
-                identityResponseObject.success = false;
                 return callback(identityResponseObject);
             } else {
                 identityResponseObject.success = true;
@@ -96,26 +90,6 @@ DigiTrust.getUser = function (getUserOptions, callback) {
             }
         });
     }
-};
-
-DigiTrust._getIdentityObject = function (callback) {
-    /*  postMessage doesn't have a callback, so we listen for an event emitted by the
-        DigiTrustCommunication module telling us that a message arrived from http://digitru.st
-        and now we can complete the callback
-    */
-    helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.final', function (userJSON) {
-        var error = (!userJSON || userJSON === {}) ? true : false;
-        return callback(error, userJSON);
-    });
-
-    // Create communication gateway with digitru.st iframe
-    DigiTrustCommunication.startConnection(function (loadSuccess) {
-        if (loadSuccess) {
-            DigiTrustCookie.getUser(DigiTrust.options);
-        } else {
-            return callback(true);
-        }
-    });
 };
 
 module.exports = {

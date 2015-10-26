@@ -1,15 +1,17 @@
+'use strict';
+
 var connect = require('connect');
 var serveStatic = require('serve-static');
 
 function setHeaders(res, path) {
-  res.setHeader('P3P', 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"')
+    res.setHeader('P3P', 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
 }
 
 connect().use(
     serveStatic(
-        __dirname,
+        './',
         {
-            'setHeaders': setHeaders
+            setHeaders: setHeaders
         }
     )
-).listen(8080);
+).listen(80, '127.0.0.1');

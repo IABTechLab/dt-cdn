@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="dist/digitrust.min.js"></script>
+    <script src="dist/digitrust.js"></script>
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <script>
         DigiTrust.initialize({
@@ -15,11 +15,11 @@
         },
         function (digiTrustResult) {
             console.log(digiTrustResult);
-        });/*
-        var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
-            console.log(digiTrustResult);
         });
-        console.log(json);*/
+        /*var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
+            console.log(digiTrustResult);
+        });*/
+        // console.log(json);
     </script>
 </head>
 <body>

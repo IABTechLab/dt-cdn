@@ -7,13 +7,11 @@
 
         var cookieKey = configGeneral.cookie.publisher.userObjectKey;
         var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
-        console.log('USER JSON DT', userJSON);
+
         function messageHandler(evt) {
-            console.log(evt.data.type);
             switch (evt.data.type) {
                 case 'DigiTrust.identity.request':
                     var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
-                    console.log(digiTrustUserCookie);
                     var digiTrustUserJSON = digiTrustUserCookie ?
                         DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
 

@@ -1,7 +1,7 @@
-describe('DT Client', function () {    
-    //initialize: DigiTrust.initialize,
-    //getUser: DigiTrust.getUser,
-    //setOptout: DigiTrust.setOptout
+describe('DT Client', function () {
+    // initialize: DigiTrust.initialize,
+    // getUser: DigiTrust.getUser,
+    // setOptout: DigiTrust.setOptout
 
     it('getUser without memebr id', function (done) {
         var initializeResult;
@@ -11,10 +11,8 @@ describe('DT Client', function () {
         function (identityResponse) {
             var initializeResult = identityResponse;
             expect(initializeResult.success).toBe(false);
-            console.log(initializeResult);
             done();
         });
-        
     });
 
     it('getUser without memebr id', function () {
