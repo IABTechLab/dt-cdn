@@ -1,9 +1,9 @@
 {
 	"prod": {
 		"urls": {
-			"digitrustRedirect": "//digitru.st/prod/v1/redirect.html",
-			"digitrustIframe": "//digitru.st/prod/v1/dt.html",
-			"optoutInfo": "//digitru.st/prod/v1/info.html",
+			"digitrustRedirect": "//cdn.digitru.st/prod/v1/redirect.html",
+			"digitrustIframe": "//cdn.digitru.st/prod/v1/dt.html",
+			"optoutInfo": "//cdn.digitru.st/prod/v1/info.html",
 			"adblockCheck": "//stats.aws.rubiconproject.com/"
 		},
 		"cookie": {
