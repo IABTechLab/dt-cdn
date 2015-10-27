@@ -9,24 +9,22 @@ module.exports = function (grunt) {
 
     // Get or Default environment
     var argEnv = grunt.option('env');
-    if (argEnv === 'local') {
-        argEnv = 'local';
+    if (argEnv === 'prod') {
+        argEnv = 'prod';
     } else if (argEnv === 'dev') {
         argEnv = 'dev';
-    } else if (argEnv === 'funky') {
-        argEnv = 'funky';
     } else {
-        argEnv = 'prod';
+        argEnv = 'local';
     }
-
     console.log('ENVIRONMENT: ', argEnv);
 
     // Set environment in config file
     grunt.file.write('src/config/env.json', '{"current":"' + argEnv + '"}');
 
+    var deployment = grunt.file.readJSON('deployment.json');
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        deployment: grunt.file.readJSON('deployment-config.json'),
         watch: {
             js: {
                 files: ['src/**'],
@@ -93,36 +91,6 @@ module.exports = function (grunt) {
                 browsers: ['PhantomJS']
             }
         },
-        aws_s3: {
-            options: {
-                accessKeyId: '<%= deployment.AWSAccessKeyId %>',
-                secretAccessKey: '<%= deployment.AWSSecretKey %>',
-                region: 'us-west-2'
-            },
-            deploy: {
-                options: {
-                    bucket: '<%= deployment.bucket %>',
-                    access: 'public-read',
-                    params: {
-                        CacheControl: 'max-age=86400, public'
-                    }
-                },
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'dist',
-                        src: ['digitrust.js', 'digitrust.min.js', 'digitrust-server.js', 'digitrust-server.min.js'],
-                        dest: argEnv + '/v1/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'pages',
-                        src: ['dt.html', 'info.html', 'redirect.html', 'p3p.xml', 'p3p_full.xml'],
-                        dest: argEnv + '/v1/'
-                    }
-                ]
-            }
-        },
         copy: {
             main: {
                 cwd: 'pages/',
@@ -130,7 +98,42 @@ module.exports = function (grunt) {
                 expand: true,
                 dest: 'dist/'
             }
+        },
+        environments: {
+            options: {
+                local_path: 'dist',
+                username: deployment.ec2.username,
+                privateKey: require('fs').readFileSync(deployment.ec2.privateKeyPath),
+                releases_to_keep: '3',
+                current_symlink: 'v1',
+                debug: true
+            },
+            dev1: {
+                options: {
+                    host: deployment.ec2.host1,
+                    deploy_path: '/var/www/cdn.digitru.st/dev/'
+                }
+            },
+            dev2: {
+                options: {
+                    host: deployment.ec2.host2,
+                    deploy_path: '/var/www/cdn.digitru.st/dev'
+                }
+            },
+            prod1: {
+                options: {
+                    host: deployment.ec2.host1,
+                    deploy_path: '/var/www/cdn.digitru.st/prod'
+                }
+            },
+            prod2: {
+                options: {
+                    host: deployment.ec2.host2,
+                    deploy_path: '/var/www/cdn.digitru.st/prod'
+                }
+            },
         }
+
     });
 
     // Load plugins
@@ -141,7 +144,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-strip-code');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
-    grunt.loadNpmTasks('grunt-aws-s3');
+    grunt.loadNpmTasks('grunt-ssh-deploy');
 
     grunt.event.on('watch', function (action, filepath, target) {
         grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
@@ -150,8 +153,31 @@ module.exports = function (grunt) {
     // Register tasks
     grunt.registerTask('default', ['copy:main', 'browserify', 'strip_code', 'uglify', 'karma']);
     grunt.registerTask('nokarma', ['copy:main', 'browserify', 'strip_code', 'uglify']);
-    // Deploy to prod: grunt deploy --env prod
-    // Deploy to dev: grunt deploy
-    grunt.registerTask('deploy', ['default', 'aws_s3']);
-    // NOTE: Run "grunt watch" while developing for auto-building
+
+    // Deployment tasks
+    if (argEnv === 'prod') {
+        grunt.registerTask('deploy-node1', ['default', 'ssh_deploy:prod1']);
+        grunt.registerTask('deploy-node2', ['default', 'ssh_deploy:prod2']);
+    } else if (argEnv === 'dev') {
+        grunt.registerTask('deploy-node1', ['default', 'ssh_deploy:dev1']);
+        grunt.registerTask('deploy-node2', ['default', 'ssh_deploy:dev2']);
+    } else {
+        var deployMissingEnv = function () {
+            grunt.log.error('***************************************************');
+            grunt.log.error('**');
+            grunt.log.error('** Error: This task is missing --env');
+            grunt.log.error('** Fix: Only able to deploy --env prod or --env dev');
+            grunt.log.error('** See the deployment tasks in Gruntfile.js');
+            grunt.log.error('**');
+            grunt.log.error('** DID NOT DEPLOY');
+            grunt.log.error('**');
+            grunt.log.error('***************************************************');
+        };
+        grunt.registerTask('deploy-node1', deployMissingEnv);
+        grunt.registerTask('deploy-node2', deployMissingEnv);
+    }
+
+    /*
+        NOTE: Run "grunt watch --env local" while developing for auto-building with local env setting
+    */
 };

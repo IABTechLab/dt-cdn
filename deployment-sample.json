@@ -1,0 +1,8 @@
+{
+    "ec2": {
+        "host1": "",
+        "host2": "",
+        "username": "",
+        "privateKeyPath": "/path-to-private-key"
+    }
+}

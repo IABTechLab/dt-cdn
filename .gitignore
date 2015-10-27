@@ -4,3 +4,4 @@ dist/*.js
 coverage
 npm-debug.log
 doc
+deployment.json

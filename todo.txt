@@ -4,9 +4,9 @@
 - [DONE] callback if adblocker detected
 - [DONE] deploy script
 - [DONE] error catching (crypto, etc)
-- [DONE] hosting
-
-- [WIP] browser testing (cryptooo)
+- [DONE] hosting hookup to S3
+- [DONE] browser testing (cryptooo)
+- clear cloudfront cache
 
 - unit tests
 
