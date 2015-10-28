@@ -22,7 +22,7 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "//digitru.st"
+			"postMessageOrigin": "//cdn.digitru.st"
 		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"
