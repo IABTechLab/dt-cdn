@@ -1,24 +1,26 @@
-describe('DT Client', function () {
+describe('DigiTrust.initialize', function () {
     // initialize: DigiTrust.initialize,
     // getUser: DigiTrust.getUser,
     // setOptout: DigiTrust.setOptout
 
     it('getUser without memebr id', function (done) {
-        var initializeResult;
         DigiTrust.initialize({
             member: null
         },
         function (identityResponse) {
-            var initializeResult = identityResponse;
-            expect(initializeResult.success).toBe(false);
+            expect(identityResponse.success).toBe(false);
             done();
         });
     });
+});
 
+describe('DigiTrust.getUser', function () {
+    
     it('getUser without memebr id', function () {
         var getUserResult = DigiTrust.getUser({
             synchronous: true
         });
         expect(getUserResult.success).toBe(false);
     });
+
 });

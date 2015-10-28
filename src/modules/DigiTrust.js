@@ -1,7 +1,5 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
@@ -94,6 +92,5 @@ DigiTrust.getUser = function (options, callback) {
 
 module.exports = {
     initialize: DigiTrust.initialize,
-    getUser: DigiTrust.getUser,
-    setOptout: DigiTrust.setOptout
+    getUser: DigiTrust.getUser
 };
