@@ -15,7 +15,7 @@ describe('DigiTrust.initialize', function () {
 });
 
 describe('DigiTrust.getUser', function () {
-    
+
     it('getUser without memebr id', function () {
         var getUserResult = DigiTrust.getUser({
             synchronous: true
