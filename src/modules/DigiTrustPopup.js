@@ -10,6 +10,7 @@ var DigiTrustPopup = {};
 DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
 
     var reloadDiv = document.createElement('div');
+    reloadDiv.id = 'digitrust-adb-reload';
     reloadDiv.style.padding = '10px 20px';
     reloadDiv.style.margin = '20px 0 0 0';
     reloadDiv.style.textAlign = 'center';
@@ -26,6 +27,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     };
 
     var messageDiv = document.createElement('div');
+    messageDiv.id = 'digitrust-adb-message';
     messageDiv.style.width = '50%';
     messageDiv.style.position = 'absolute';
     messageDiv.style.borderRadius = '20px';
@@ -42,12 +44,14 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     messageDiv.appendChild(reloadDiv);
 
     var blurDiv = document.createElement('div');
+    blurDiv.id = 'digitrust-adb-blur';
     blurDiv.style.width = '100%';
     blurDiv.style.height = '100%';
     blurDiv.style.opacity = 0.98;
     blurDiv.style.background = '#ffffff';
 
     var bgDiv = document.createElement('div');
+    bgDiv.id = 'digitrust-adb-bg';
     bgDiv.style.width = '100%';
     bgDiv.style.height = '100%';
     bgDiv.style.top = '0';
@@ -63,17 +67,19 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
 DigiTrustPopup.createConsentPopup = function (initializeOptions) {
 
     var optOut = document.createElement('a');
-    optOut.id = 'digitrust-optout';
+    optOut.id = configGeneral.consent.consentLinkId;
     optOut.innerHTML = 'You can read more or opt out of DigiTrust here.';
     optOut.style.padding = '0 0 0 10px';
     optOut.href = configGeneral.urls.optoutInfo;
 
     var textDiv = document.createElement('div');
+    textDiv.id = 'digitrust-c-text';
     textDiv.style.padding = '5px 50px';
     textDiv.innerHTML = initializeOptions.consent.userMessage;
     textDiv.appendChild(optOut);
 
     var iDiv = document.createElement('div');
+    iDiv.id = 'digitrust-c-info';
     iDiv.style.padding = '5px 15px';
     iDiv.style.float = 'left';
     iDiv.style.background = '#999999';
@@ -87,22 +93,23 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     iDiv.style.borderBottomRightRadius = '5px';
     iDiv.innerHTML = 'i';
 
-    var consentDiv = document.createElement('div');
-    consentDiv.style.width = '100%';
-    consentDiv.style.bottom = '0';
-    consentDiv.style.left = '0';
-    consentDiv.style.zIndex = 999998;
-    consentDiv.style.position = 'fixed';
-    consentDiv.style.fontFamily = fontFamily;
-    consentDiv.style.fontSize = '12px';
-    consentDiv.style.lineHeight = '18px';
-    consentDiv.style.background = initializeOptions.consent.popupBackgroundColor;
-    consentDiv.style.color = initializeOptions.consent.popupFontColor;
+    var bgDiv = document.createElement('div');
+    bgDiv.id = 'digitrust-c-bg';
+    bgDiv.style.width = '100%';
+    bgDiv.style.bottom = '0';
+    bgDiv.style.left = '0';
+    bgDiv.style.zIndex = 999998;
+    bgDiv.style.position = 'fixed';
+    bgDiv.style.fontFamily = fontFamily;
+    bgDiv.style.fontSize = '12px';
+    bgDiv.style.lineHeight = '18px';
+    bgDiv.style.background = initializeOptions.consent.popupBackgroundColor;
+    bgDiv.style.color = initializeOptions.consent.popupFontColor;
 
-    consentDiv.appendChild(iDiv);
-    consentDiv.appendChild(textDiv);
+    bgDiv.appendChild(iDiv);
+    bgDiv.appendChild(textDiv);
 
-    document.body.appendChild(consentDiv);
+    document.body.appendChild(bgDiv);
 };
 
 module.exports = DigiTrustPopup;
