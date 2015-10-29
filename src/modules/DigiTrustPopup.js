@@ -65,6 +65,20 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     document.body.style.color = 'transparent';
     document.body.style.textShadow = '0 0 7px #000000';
 
+    // Blur individual elements
+    var allTags = document.body.getElementsByTagName('*');
+    var totalTags = allTags.length;
+    for (var i = 0; i < totalTags; i++) {
+        allTags[i].style.color = 'transparent';
+        allTags[i].style.textShadow = '0 0 7px #000000';
+        allTags[i].style.filter = 'blur(1px)';
+        allTags[i].style.webkitFilter = 'blur(1px)';
+        allTags[i].style.mozFilter = 'blur(1px)';
+        allTags[i].style.msFilter = 'blur(1px)';
+        allTags[i].style.oFilter = 'blur(1px)';
+        // filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='5'); // IE lte 9
+    }
+
     bgDiv.appendChild(blurDiv);
     bgDiv.appendChild(messageDiv);
     document.body.appendChild(bgDiv);
