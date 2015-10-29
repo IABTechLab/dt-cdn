@@ -18,6 +18,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     reloadDiv.style.borderRadius = '10px';
     reloadDiv.style.background = '#999999';
     reloadDiv.style.color = '#ffffff';
+    reloadDiv.style.textShadow = 'none';
     reloadDiv.style.opacity = 1;
     reloadDiv.innerHTML = 'Reload Page';
     reloadDiv.style.cursor = 'pointer';
@@ -40,6 +41,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     messageDiv.style.opacity = 1;
     messageDiv.style.fontSize = '14px';
     messageDiv.style.fontFamily = fontFamily;
+    messageDiv.style.textShadow = 'none';
     messageDiv.innerHTML = '<div>' + initializeOptions.adblocker.userMessage + '</div>';
     messageDiv.appendChild(reloadDiv);
 
@@ -47,7 +49,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     blurDiv.id = 'digitrust-adb-blur';
     blurDiv.style.width = '100%';
     blurDiv.style.height = '100%';
-    blurDiv.style.opacity = 0.98;
+    blurDiv.style.opacity = 0.8;
     blurDiv.style.background = '#ffffff';
 
     var bgDiv = document.createElement('div');
@@ -58,6 +60,10 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     bgDiv.style.left = '0';
     bgDiv.style.zIndex = 999999;
     bgDiv.style.position = 'fixed';
+
+    // Blur document text
+    document.body.style.color = 'transparent';
+    document.body.style.textShadow = '0 0 7px #000000';
 
     bgDiv.appendChild(blurDiv);
     bgDiv.appendChild(messageDiv);

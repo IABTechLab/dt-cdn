@@ -28,35 +28,6 @@
 			"consentLinkId": "digitrust-optout"
 		}
 	},
-	"funky": {
-		"urls": {
-			"digitrustRedirect": "//psitsmike.com:8081/dist/redirect.html",
-			"digitrustIframe": "//psitsmike.com:8081/dist/dt.html",
-			"optoutInfo": "//psitsmike.com:8081/dist/info.html",
-			"adblockCheck": "//stats.aws.rubiconproject.com/"
-		},
-		"cookie": {
-			"publisher": {
-				"domainKeyValue": "domain: psitsmike.com;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrust.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain: psitsmike.com;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-	            "userObjectKey": "DigiTrust.v1.identity"
-			}
-		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "//psitsmike.com:8081"
-		},
-		"consent": {
-			"consentLinkId": "digitrust-optout"
-		}
-	},
 	"dev": {
 		"urls": {
 			"digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
