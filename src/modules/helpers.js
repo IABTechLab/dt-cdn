@@ -212,4 +212,9 @@ helpers.getUrlParameterByName = function (name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
 
+helpers.isIE = function  () {
+    var myNav = navigator.userAgent.toLowerCase();
+    return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
+};
+
 module.exports = helpers;
