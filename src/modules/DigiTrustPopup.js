@@ -63,24 +63,33 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     bgDiv.style.position = 'fixed';
 
     // Blur document text
+    var fontColorBody = document.body.style.color;
+    fontColorBody = fontColorBody || '#000000';
     document.body.style.color = 'transparent';
-    document.body.style.textShadow = '0 0 7px #000000';
+    document.body.style.textShadow = '0 0 7px ' + fontColorBody;
 
     // Blur individual elements
+    var fontColor = fontColorBody;
     var allTags = document.body.getElementsByTagName('*');
     var totalTags = allTags.length;
     for (var i = 0; i < totalTags; i++) {
+        if (allTags[i].style.color) {
+            fontColor = allTags[i].style.color;
+        } else {
+            fontColor = fontColorBody;
+        }
         allTags[i].style.color = 'transparent';
-        allTags[i].style.textShadow = '0 0 7px #000000';
+        allTags[i].style.textShadow = '0 0 7px ' + fontColor;
 
         if (helpers.isIE()) {
+            console.log('ie');
             allTags[i].style.filter = 'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5");';
         } else {
             allTags[i].style.filter = 'blur(1px)';
         }
         allTags[i].style.webkitFilter = 'blur(1px)';
         allTags[i].style.mozFilter = 'blur(1px)';
-        allTags[i].style.msFilter = 'blur(1px)';
+        allTags[i].style.msFilter = 'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5");';
         allTags[i].style.oFilter = 'blur(1px)';
     }
 
