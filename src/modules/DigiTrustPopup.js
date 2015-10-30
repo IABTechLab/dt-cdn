@@ -73,20 +73,16 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     var allTags = document.body.getElementsByTagName('*');
     var totalTags = allTags.length;
     for (var i = 0; i < totalTags; i++) {
-        if (allTags[i].style.color) {
-            fontColor = allTags[i].style.color;
-        } else {
+        // Blur text
+        fontColor = document.defaultView.getComputedStyle(allTags[i], null).color;
+        if (fontColor === 'rgba(0, 0, 0, 0)') {
             fontColor = fontColorBody;
         }
+
         allTags[i].style.color = 'transparent';
         allTags[i].style.textShadow = '0 0 7px ' + fontColor;
-
-        if (helpers.isIE()) {
-            console.log('ie');
-            allTags[i].style.filter = 'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5");';
-        } else {
-            allTags[i].style.filter = 'blur(1px)';
-        }
+        // Blur images
+        allTags[i].style.filter = 'blur(1px)';
         allTags[i].style.webkitFilter = 'blur(1px)';
         allTags[i].style.mozFilter = 'blur(1px)';
         allTags[i].style.msFilter = 'progid:DXImageTransform.Microsoft.Blur(PixelRadius="5");';
