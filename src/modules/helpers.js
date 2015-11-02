@@ -217,4 +217,17 @@ helpers.isIE = function  () {
     return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
 };
 
+helpers.getRollbar = function (callback) {
+    var rollbarConfig = {
+        accessToken: 'c8b18213935a43c59f7b18dca677fd65',
+        captureUncaught: true,
+        payload: {
+            environment: env,
+        }
+    };
+
+    var Rollbar = require('rollbar-browser').init(rollbarConfig);
+    return callback(Rollbar);
+};
+
 module.exports = helpers;
