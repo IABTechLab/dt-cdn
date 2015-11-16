@@ -7,10 +7,9 @@ To initialize your local repository for development, clone this repository and r
     npm install
     grunt --env local (build script)
     grunt watch --env local (build & watch script)
-    grunt deploy-node1 --env dev (builds & deploys your LOCAL ./dist to node1)
-    grunt deploy-node2 --env dev (builds & deploys your LOCAL ./dist to node2)
-    grunt deploy-node1 --env prod
-    grunt deploy-node2 --env prod
+    grunt deploy --env dev (builds & deploys your LOCAL ./dist)
+    grunt deploy --env prod
+    node node-server.js (to run fileserving with CORS *; may need to sudo)
 
 Available environments: local, dev, prod
 
