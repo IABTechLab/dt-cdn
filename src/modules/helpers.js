@@ -22,12 +22,12 @@ helpers.extend = function (target, source) {
 *   MIT
 */
 var parseXHR = function (req) {
-    var result;
-    try {
+    var result = req.responseText;
+    /*try {
         result = JSON.parse(req.responseText);
     } catch (e) {
         result = req.responseText;
-    }
+    }*/
     return [result, req];
 };
 
@@ -262,6 +262,15 @@ helpers.getRollbar = function (callback) {
 
     var Rollbar = require('rollbar-browser').init(rollbarConfig);
     return callback(Rollbar);
+};
+
+helpers.isValidJSON = function (str) {
+    try {
+        console.log(JSON.parse(str));
+    } catch (e) {
+        return false;
+    }
+    return true;
 };
 
 module.exports = helpers;

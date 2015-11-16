@@ -15,56 +15,66 @@ DigiTrustAppContainer.launch = function (options) {
     helpers.xhr.get(options.apps.manifest)
     .success(function (data, xhrObj) {
 
-        // If there are apps available
-        if (!helpers.isEmpty(data.apps)) {
-            for (var i = 0; i < data.apps.length; i++) {
-                window.DigiTrust.apps['app' + i] = data.apps[i];
-            }
+        if (!helpers.isValidJSON(data)) {
+            throw new Error(configErrors.en.appManifestInvalid);
+        } else {
+            data = JSON.parse(data);
+            // If there are apps available
+            if (!helpers.isEmpty(data.apps)) {
+                for (var i = 0; i < data.apps.length; i++) {
+                    window.DigiTrust.apps['app' + i] = data.apps[i];
+                }
 
-            // Listen for User input
-            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.selected.reload', function (app) {
-                DigiTrustAppContainer.userAppSelected(app, true);
-            });
-            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.selected.noreload', function (app) {
-                DigiTrustAppContainer.userAppSelected(app, false);
-            });
+                // Listen for User input
+                helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.selected.reload', function (app) {
+                    DigiTrustAppContainer.userAppSelected(app, true);
+                });
+                helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.selected.noreload', function (app) {
+                    DigiTrustAppContainer.userAppSelected(app, false);
+                });
 
-            // Listen to iFrame response
-            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.getAppsPreferences.response', function (appFromLS) {
-                var _launchAdblockPopup = function () {
-                    DigiTrustPopup.createAdblockPopup(options);
-                    var appsHTML = DigiTrustPopup.getAppsSelectHtml(window.DigiTrust.apps, null, true);
-                    document.getElementById('digitrust-adb-apps').appendChild(appsHTML);
-                };
+                // Listen to iFrame response
+                helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.getAppsPreferences.response', function (appFromLS) {
+                    var _launchAdblockPopup = function () {
+                        DigiTrustPopup.createAdblockPopup(options);
+                        var appsHTML = DigiTrustPopup.getAppsSelectHtml(window.DigiTrust.apps, null, true);
+                        document.getElementById('digitrust-adb-apps').appendChild(appsHTML);
+                    };
 
-                var _launchReminderPopup = function () {
-                    var appsHTML = DigiTrustPopup.getAppsSelectHtml(window.DigiTrust.apps, selectedApp, false);
-                    DigiTrustPopup.createAppOptionsPopup(options);
-                    document.getElementById('digitrust-apps-options').appendChild(appsHTML);
-                };
+                    var _launchReminderPopup = function () {
+                        var appsHTML = DigiTrustPopup.getAppsSelectHtml(window.DigiTrust.apps, selectedApp, false);
+                        DigiTrustPopup.createAppOptionsPopup(options);
+                        document.getElementById('digitrust-apps-options').appendChild(appsHTML);
+                    };
 
-                if (!helpers.isEmpty(appFromLS)) {
-                    // Is user selected app still made available by Publisher??
-                    var selectedApp = helpers.getObjectByKeyFromObject(window.DigiTrust.apps, 'name', appFromLS.name);
-                    if (selectedApp) {
-                        _launchReminderPopup(options);
-                        DigiTrustAppContainer.insertAppScript(selectedApp);
+                    if (!helpers.isEmpty(appFromLS)) {
+                        // Is user selected app still made available by Publisher??
+                        var selectedApp = helpers.getObjectByKeyFromObject(
+                            window.DigiTrust.apps,
+                            'name',
+                            appFromLS.name
+                        );
+
+                        if (selectedApp) {
+                            _launchReminderPopup(options);
+                            DigiTrustAppContainer.insertAppScript(selectedApp);
+                        } else {
+                            _launchAdblockPopup(options);
+                        }
                     } else {
                         _launchAdblockPopup(options);
                     }
-                } else {
-                    _launchAdblockPopup(options);
-                }
-            });
+                });
 
-            // Get apps preferences from DT domain
-            DigiTrustCommunication.getAppsPreferences({
-                member: window.DigiTrust.initializeOptions.member
-            });
+                // Get apps preferences from DT domain
+                DigiTrustCommunication.getAppsPreferences({
+                    member: window.DigiTrust.initializeOptions.member
+                });
+            }
         }
     })
     .error(function (data, xhrObj) {
-        console.log(configErrors.appManifestXHR);
+        throw new Error(configErrors.en.appManifestXHR);
     });
 };
 

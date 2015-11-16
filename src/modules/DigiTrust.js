@@ -19,8 +19,7 @@ DigiTrust._isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
         return true;
     } else {
-        console.log(configErrors.en.memberId);
-        return false;
+        throw new Error(configErrors.en.memberId);
     }
 };
 
