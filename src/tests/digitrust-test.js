@@ -1,4 +1,5 @@
 var DigiTrust = require('../modules/DigiTrust');
+window.DigiTrust = DigiTrust;
 var DigiTrustAdblock = require('../modules/DigiTrustAdblock');
 var DigiTrustCommunication = require('../modules/DigiTrustCommunication');
 var DigiTrustPopup = require('../modules/DigiTrustPopup');
@@ -21,7 +22,7 @@ describe('DigiTrust', function () {
 
     it('DigiTrust.getUser without memebr id', function () {
         var getUserResult = DigiTrust.getUser({
-            synchronous: true
+            member: null
         });
         expect(getUserResult.success).toBe(false);
     });

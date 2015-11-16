@@ -4,7 +4,7 @@
     <script src="dist/digitrust.js"></script>
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <script>
-        DigiTrust.initialize({
+        /*DigiTrust.initialize({
             member: 'example_member_id',
             site: 'example_site_id',
             adblocker: {
@@ -19,7 +19,8 @@
         },
         function (digiTrustResult) {
             console.log(digiTrustResult);
-        });
+        });*/
+        var json = DigiTrust.getUser({member: ''});
         /*var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
             console.log(digiTrustResult);
         });*/
