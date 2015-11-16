@@ -24,6 +24,9 @@
 			"timeoutDuration": 10000,
 			"postMessageOrigin": "//cdn.digitru.st"
 		},
+		"app": {
+			"reminderDuration": 3000
+		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"
 		}
@@ -53,6 +56,9 @@
 			"timeoutDuration": 10000,
 			"postMessageOrigin": "//digitrust.s3.amazonaws.com"
 		},
+		"app": {
+			"reminderDuration": 3000
+		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"
 		}
@@ -81,6 +87,9 @@
 		"iframe": {
 			"timeoutDuration": 10000,
 			"postMessageOrigin": "//local.digitru.st"
+		},
+		"app": {
+			"reminderDuration": 3000
 		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"

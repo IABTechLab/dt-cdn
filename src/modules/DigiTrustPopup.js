@@ -10,6 +10,9 @@ var DigiTrustPopup = {};
 
 DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
 
+    var appsDiv = document.createElement('div');
+    appsDiv.id = 'digitrust-adb-apps';
+
     var reloadDiv = document.createElement('div');
     reloadDiv.id = 'digitrust-adb-reload';
     reloadDiv.style.padding = '10px 20px';
@@ -44,7 +47,9 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     messageDiv.style.fontFamily = fontFamily;
     messageDiv.style.textShadow = 'none';
     messageDiv.innerHTML = '<div>' + initializeOptions.adblocker.userMessage + '</div>';
+    
     messageDiv.appendChild(reloadDiv);
+    messageDiv.appendChild(appsDiv);
 
     var blurDiv = document.createElement('div');
     blurDiv.id = 'digitrust-adb-blur';
@@ -140,6 +145,81 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     bgDiv.appendChild(textDiv);
 
     document.body.appendChild(bgDiv);
+};
+
+DigiTrustPopup.createAppOptionsPopup = function (initializeOptions) {
+
+    var bgDiv = document.createElement('div');
+    bgDiv.id = 'digitrust-apps-options';
+    bgDiv.style.bottom = '0';
+    bgDiv.style.left = '0';
+    bgDiv.style.right= '0';
+    bgDiv.style.padding = '5px';
+    bgDiv.style.zIndex = 999998;
+    bgDiv.style.position = 'fixed';
+    bgDiv.style.fontFamily = fontFamily;
+    bgDiv.style.fontSize = '12px';
+    bgDiv.style.lineHeight = '18px';
+    bgDiv.style.background = initializeOptions.consent.popupBackgroundColor;
+    bgDiv.style.color = initializeOptions.consent.popupFontColor;
+
+    var closeDiv = document.createElement('div');
+    closeDiv.id = 'digitrust-apps-options-close';
+    closeDiv.innerHTML = 'x';
+    closeDiv.style.cursor = 'pointer';
+    closeDiv.style.position = 'absolute';
+    closeDiv.style.right = '7px';
+    closeDiv.style.top = '5px';
+    closeDiv.style.fontWeight = 'bold';
+    closeDiv.onclick = function () {
+        document.getElementById('digitrust-apps-options').remove();
+    };
+    bgDiv.appendChild(closeDiv);
+
+    document.body.appendChild(bgDiv);
+};
+
+DigiTrustPopup.getAppsSelectHtml = function (appsObject, defaultApp, reload) {
+    var appsHTML = document.createElement('div');
+    appsHTML.id = 'digitrust-apps-select-container';
+    // appsHTML.style.margin = '20px 0 0 0';
+    appsHTML.innerHTML = '<b>Apps available:</b><br/>';
+
+    var appsSelectList = document.createElement("select");
+    appsSelectList.id = "digitrust-apps-select";
+    for (var appId in appsObject) {
+        var option = document.createElement("option");
+        option.value = appId;
+        option.text = appsObject[appId].name;
+
+        if (defaultApp && appsObject[appId].name === defaultApp.name) {
+            option.selected = true;
+        }
+
+        appsSelectList.appendChild(option);
+    }
+    appsHTML.appendChild(appsSelectList);
+
+    var setAppButton = document.createElement('button');
+    setAppButton.id = 'digitrust-apps-set-app';
+    setAppButton.innerHTML = 'Select';
+    setAppButton.onclick = function () {
+        var element = document.getElementById('digitrust-apps-select');
+        var appId = element.options[element.selectedIndex].value;
+        var app = window.DigiTrust.apps[appId];
+        if (reload === true) {
+            helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.reload', [app]);
+        } else {
+            helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.noreload', [app]);
+        }
+    };
+    appsHTML.appendChild(setAppButton);
+
+    var statusText = document.createElement("span");
+    statusText.id = "digitrust-apps-select-status";
+    appsHTML.appendChild(statusText);
+
+    return appsHTML;
 };
 
 module.exports = DigiTrustPopup;

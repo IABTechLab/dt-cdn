@@ -123,17 +123,21 @@ MinPubSub.unsubscribe = function (handle, callback) {
 
 helpers.MinPubSub = MinPubSub;
 
-var _getHref = function (current) {
-    if (current.nodeName.toLowerCase() === 'a') {
-        return current.getAttribute('href');
-    } else if (current.nodeName.toLowerCase() === 'body') {
-        return false;
+var _getElementHref = function (current) {
+    if (current) {
+        if (current.nodeName.toLowerCase() === 'a') {
+            return current.getAttribute('href');
+        } else if (current.nodeName.toLowerCase() === 'body') {
+            return false;
+        } else {
+            return _getElementHref(current.parentNode);
+        }
     } else {
-        return _getHref(current.parentNode);
+        return false;
     }
 };
 
-helpers.createClickListener = function () {
+helpers.createConsentClickListener = function () {
     window.onclick = function (e) {
         e = e || window.event;
         var t = e.target || e.srcElement;
@@ -143,10 +147,22 @@ helpers.createClickListener = function () {
             return true;
         }
 
-        var possibleHref = _getHref(t);
+        var possibleHref = _getElementHref(t);
         if (possibleHref) {
             window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
+        }
+    };
+};
+
+helpers.createPageViewClickListener = function () {
+    window.onclick = function (e) {
+        e = e || window.event;
+        var t = e.target || e.srcElement;
+
+        var possibleHref = _getElementHref(t);
+        if (possibleHref) {
+            helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.pageView', []);
         }
     };
 };
@@ -202,6 +218,24 @@ helpers.isEmpty = function (obj) {
     }
 
     return true;
+};
+
+helpers.getObjectByKeyFromArray = function (items, key, value) {
+    for (var i = 0; i < items.length; i++) {
+        if (items[i][key] === value) {
+            return items[i];
+        }
+    }
+    return null;
+};
+
+helpers.getObjectByKeyFromObject = function (items, key, value) {
+    for (var itemKey in items) {
+        if (items[itemKey][key] === value) {
+            return items[itemKey];
+        }
+    }
+    return null;
 };
 
 helpers.getUrlParameterByName = function (name) {

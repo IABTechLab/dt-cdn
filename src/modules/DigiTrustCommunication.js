@@ -24,6 +24,12 @@ DigiTrustCommunication._messageHandler = function (evt) {
             case 'DigiTrust.identity.response.syncOnly':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
                 break;
+            case 'DigiTrust.getAppsPreferences.response':
+                helpers.MinPubSub.publish('DigiTrust.pubsub.app.getAppsPreferences.response', [evt.data.value]);
+                break;
+            case 'DigiTrust.setAppsPreferences.response':
+                helpers.MinPubSub.publish('DigiTrust.pubsub.app.setAppsPreferences.response', [evt.data.value]);
+                break;
         }
     }
 };
@@ -62,6 +68,27 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     document.head.appendChild(DigiTrustCommunication.iframe);
 };
 
+DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {
+
+    if (DigiTrustCommunication.iframeStatus === 2) {
+        sendRequestFunction(options);
+    } else if (DigiTrustCommunication.iframeStatus === 1) {
+        // This mimics a "delay", until the iframe is ready
+        helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+            sendRequestFunction(options);
+        });
+    } else if (DigiTrustCommunication.iframeStatus === 0) {
+        // Create communication gateway with digitru.st iframe
+        DigiTrustCommunication.startConnection(function (loadSuccess) {
+            if (loadSuccess) {
+                sendRequestFunction(options);
+            } else {
+                throw new Error(configErrors.en.iframeError);
+            }
+        });
+    }
+};
+
 DigiTrustCommunication.getIdentity = function (options) {
     options = options ? options : {};
     var _sendIdentityRequest = function (options) {
@@ -74,26 +101,50 @@ DigiTrustCommunication.getIdentity = function (options) {
         DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, DigiTrustCommunication.iframe.src);
     };
 
-    if (DigiTrustCommunication.iframeStatus === 2) {
-        _sendIdentityRequest(options);
-    } else if (DigiTrustCommunication.iframeStatus === 1) {
-        // This mimics a "delay", until the iframe is ready
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
-            _sendIdentityRequest(options);
-        });
-    } else if (DigiTrustCommunication.iframeStatus === 0) {
-        // Create communication gateway with digitru.st iframe
-        DigiTrustCommunication.startConnection(function (loadSuccess) {
-            if (loadSuccess) {
-                _sendIdentityRequest(options);
-            } else {
-                throw new Error(configErrors.en.iframeError);
+    DigiTrustCommunication.sendRequest(_sendIdentityRequest, options);
+};
+
+DigiTrustCommunication.getAppsPreferences = function (options) {
+    if (!options.member) { throw new Error(configErrors.en.iframeMissingMember); }
+
+    var _request = function (options) {
+        var requestPayload = {
+            version: 1,
+            type: 'DigiTrust.getAppsPreferences.request',
+            value: {
+                member: options.member
             }
-        });
-    }
+        };
+        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
+    };
+
+    DigiTrustCommunication.sendRequest(_request, options);
+};
+
+DigiTrustCommunication.setAppsPreferences = function (options) {
+    
+    if (!options.member) { throw new Error(configErrors.en.iframeMissingMember); }
+    if (!options.app || !options.app.name) { throw new Error(configErrors.en.iframeMissingAppName); }
+
+    var _request = function (options) {
+        var requestPayload = {
+            version: 1,
+            type: 'DigiTrust.setAppsPreferences.request',
+            value: {
+                member: options.member,
+                app: options.app
+            }
+        };
+        console.log(requestPayload);
+        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
+    };
+
+    DigiTrustCommunication.sendRequest(_request, options);
 };
 
 module.exports = {
     getIdentity: DigiTrustCommunication.getIdentity,
-    startConnection: DigiTrustCommunication.startConnection
+    startConnection: DigiTrustCommunication.startConnection,
+    getAppsPreferences: DigiTrustCommunication.getAppsPreferences,
+    setAppsPreferences: DigiTrustCommunication.setAppsPreferences
 };

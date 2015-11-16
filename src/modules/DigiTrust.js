@@ -9,7 +9,11 @@ var rollbar = require('rollbar-browser');
 
 var DigiTrust = {};
 DigiTrust.isClient = false; // Is client or server?
+DigiTrust.initializeOptions = {};
 DigiTrust.Rollbar = false;
+DigiTrust.apps = {};
+DigiTrust.currentApp = {};
+DigiTrust.loadedApps = [];
 
 DigiTrust._isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
@@ -20,15 +24,20 @@ DigiTrust._isMemberIdValid = function (memberId) {
     }
 };
 
-DigiTrust.initialize = function (initializeOptions, initializeCallback) {
+DigiTrust._setDigiTrustOptions = function (options) {
+    var options = (!options) ?
+            configInitializeOptions :
+            helpers.extend(configInitializeOptions, options);
+    // Set DigiTrust options on global object
+    window.DigiTrust.initializeOptions = options;
+    return options;
+};
 
+DigiTrust.initialize = function (options, initializeCallback) {
     try {
         var identityResponseObject = {success: false};
 
-        // Merge custom client options with default options
-        var options = (!initializeOptions) ?
-            configInitializeOptions :
-            helpers.extend(configInitializeOptions, initializeOptions);
+        var options = DigiTrust._setDigiTrustOptions(options);
 
         // Verify Publisher's Member ID
         if (!DigiTrust._isMemberIdValid(options.member)) {
@@ -66,7 +75,7 @@ DigiTrust.initialize = function (initializeOptions, initializeCallback) {
 
 DigiTrust.getUser = function (options, callback) {
 
-    options = options || {};
+    options = DigiTrust._setDigiTrustOptions(options);
     var async = (typeof callback === 'function') ? true : false;
     var identityResponseObject = {
         success: false
@@ -115,7 +124,51 @@ DigiTrust.getUser = function (options, callback) {
     }
 };
 
+DigiTrust.addListener = function (appName, eventName, callback) {
+    var _callbackArgs = function () {
+        return {
+            identity: DigiTrustCookie.getUser(),
+            preferences: {},
+            context: {
+                publisher: window.DigiTrust.initializeOptions.member,
+                site: window.DigiTrust.initializeOptions.site,
+                url: location.href
+            }
+        };
+    };
+
+    switch (eventName) {
+        case 'enable':
+            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.enable', function (pubsubAppName) {
+                if (appName === pubsubAppName) {
+                    callback(_callbackArgs());
+                }
+            });
+            break;
+        case 'disable':
+            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.disable', function (pubsubAppName) {
+                if (appName === pubsubAppName) {
+                    callback(_callbackArgs());
+                }
+            });
+            break;
+        case 'page-view':
+            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.pageView', function () {
+                if (appName === window.DigiTrust.currentApp.name) {
+                    callback(_callbackArgs());
+                }
+            });
+            break;
+    }
+};
+
 module.exports = {
     initialize: DigiTrust.initialize,
-    getUser: DigiTrust.getUser
+    initializeOptions: DigiTrust.initializeOptions,
+    getUser: DigiTrust.getUser,
+    isClient: DigiTrust.isClient,
+    apps: DigiTrust.apps,
+    loadedApps: DigiTrust.loadedApps,
+    currentApp: DigiTrust.currentApp,
+    addListener: DigiTrust.addListener
 };

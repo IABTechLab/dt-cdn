@@ -6,18 +6,16 @@
 - [DONE] error catching (crypto, etc)
 - [DONE] hosting hookup to S3
 - [DONE] browser testing (cryptooo)
+- [DONE] Can you also reconcile the github wiki docs with implemented behavior, and tell me about inconsistencies?
+- [DONE] javascript error logger
 
 - unit tests
-- javascript error logger
 - test https
-- Can you also reconcile the github wiki docs with implemented behavior, and tell me about inconsistencies?
-
 
 - detect country
 <script type="text/javascript">
   var userLang = navigator.language || navigator.userLanguage; 
  alert ("The language is: " + userLang);
  </script>
- 
 
 - [later] clear cloudfront cache

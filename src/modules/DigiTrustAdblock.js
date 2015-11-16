@@ -4,10 +4,10 @@ var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var helpers = require('./helpers');
 var DigiTrustPopup = require('./DigiTrustPopup');
+var DigiTrustAppContainer = require('./DigiTrustAppContainer');
 
 var DigiTrustAdblock = {};
 DigiTrustAdblock.adblockDetected = false;
-DigiTrustAdblock.initializeOptions = {};
 
 DigiTrustAdblock.checkElements = function () {
     // Need to wait for <body> to load
@@ -70,11 +70,16 @@ DigiTrustAdblock.performIfDetected = function () {
     if (DigiTrustAdblock.adblockDetected === false) {
 
         DigiTrustAdblock.adblockDetected = true;
-        DigiTrustPopup.createAdblockPopup(DigiTrustAdblock.initializeOptions);
+        // If publisher has apps enabled
+        if (!helpers.isEmpty(window.DigiTrust.initializeOptions.apps.manifest)) {
+            DigiTrustAppContainer.launch(window.DigiTrust.initializeOptions);
+        } else {
+            DigiTrustPopup.createAdblockPopup(window.DigiTrust.initializeOptions);
+        }
 
-        if (typeof DigiTrustAdblock.initializeOptions.adblocker.detectedCallback === 'function') {
+        if (typeof window.DigiTrust.initializeOptions.adblocker.detectedCallback === 'function') {
             try {
-                DigiTrustAdblock.initializeOptions.adblocker.detectedCallback();
+                window.DigiTrust.initializeOptions.adblocker.detectedCallback();
             } catch (e) {
                 console.log(e);
             }
@@ -83,7 +88,6 @@ DigiTrustAdblock.performIfDetected = function () {
 };
 
 DigiTrustAdblock.checkAdblock = function (initializeOptions) {
-    DigiTrustAdblock.initializeOptions = initializeOptions;
     DigiTrustAdblock.checkElements();
     DigiTrustAdblock.checkEndpoint();
 };

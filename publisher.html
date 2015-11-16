@@ -5,12 +5,16 @@
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <script>
         DigiTrust.initialize({
-            member: 'example_id',
+            member: 'example_member_id',
+            site: 'example_site_id',
             adblocker: {
                 blockContent: true,
                 detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
                 // popupFontColor: 'white', // @todo add to GitHub spec
                 // popupBackgroundColor: 'orange' // @todo add to GitHub spec
+            },
+            apps: {
+                manifest: 'http://local.digitru.st/misc/manifest.json'
             }
         },
         function (digiTrustResult) {
