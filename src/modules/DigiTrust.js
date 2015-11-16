@@ -25,7 +25,7 @@ DigiTrust._isMemberIdValid = function (memberId) {
 };
 
 DigiTrust._setDigiTrustOptions = function (options) {
-    var options = (!options) ?
+    options = (!options) ?
             configInitializeOptions :
             helpers.extend(configInitializeOptions, options);
     // Set DigiTrust options on global object
@@ -37,7 +37,7 @@ DigiTrust.initialize = function (options, initializeCallback) {
     try {
         var identityResponseObject = {success: false};
 
-        var options = DigiTrust._setDigiTrustOptions(options);
+        options = DigiTrust._setDigiTrustOptions(options);
 
         // Verify Publisher's Member ID
         if (!DigiTrust._isMemberIdValid(options.member)) {

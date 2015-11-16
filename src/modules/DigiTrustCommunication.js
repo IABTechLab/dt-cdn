@@ -122,7 +122,7 @@ DigiTrustCommunication.getAppsPreferences = function (options) {
 };
 
 DigiTrustCommunication.setAppsPreferences = function (options) {
-    
+
     if (!options.member) { throw new Error(configErrors.en.iframeMissingMember); }
     if (!options.app || !options.app.name) { throw new Error(configErrors.en.iframeMissingAppName); }
 

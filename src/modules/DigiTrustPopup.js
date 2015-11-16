@@ -47,7 +47,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     messageDiv.style.fontFamily = fontFamily;
     messageDiv.style.textShadow = 'none';
     messageDiv.innerHTML = '<div>' + initializeOptions.adblocker.userMessage + '</div>';
-    
+
     messageDiv.appendChild(reloadDiv);
     messageDiv.appendChild(appsDiv);
 
@@ -153,7 +153,7 @@ DigiTrustPopup.createAppOptionsPopup = function (initializeOptions) {
     bgDiv.id = 'digitrust-apps-options';
     bgDiv.style.bottom = '0';
     bgDiv.style.left = '0';
-    bgDiv.style.right= '0';
+    bgDiv.style.right = '0';
     bgDiv.style.padding = '5px';
     bgDiv.style.zIndex = 999998;
     bgDiv.style.position = 'fixed';
@@ -185,18 +185,20 @@ DigiTrustPopup.getAppsSelectHtml = function (appsObject, defaultApp, reload) {
     // appsHTML.style.margin = '20px 0 0 0';
     appsHTML.innerHTML = '<b>Apps available:</b><br/>';
 
-    var appsSelectList = document.createElement("select");
-    appsSelectList.id = "digitrust-apps-select";
+    var appsSelectList = document.createElement('select');
+    appsSelectList.id = 'digitrust-apps-select';
     for (var appId in appsObject) {
-        var option = document.createElement("option");
-        option.value = appId;
-        option.text = appsObject[appId].name;
+        if (appsObject.hasOwnProperty(appId)) {
+            var option = document.createElement('option');
+            option.value = appId;
+            option.text = appsObject[appId].name;
 
-        if (defaultApp && appsObject[appId].name === defaultApp.name) {
-            option.selected = true;
+            if (defaultApp && appsObject[appId].name === defaultApp.name) {
+                option.selected = true;
+            }
+
+            appsSelectList.appendChild(option);
         }
-
-        appsSelectList.appendChild(option);
     }
     appsHTML.appendChild(appsSelectList);
 
@@ -215,8 +217,8 @@ DigiTrustPopup.getAppsSelectHtml = function (appsObject, defaultApp, reload) {
     };
     appsHTML.appendChild(setAppButton);
 
-    var statusText = document.createElement("span");
-    statusText.id = "digitrust-apps-select-status";
+    var statusText = document.createElement('span');
+    statusText.id = 'digitrust-apps-select-status';
     appsHTML.appendChild(statusText);
 
     return appsHTML;

@@ -71,7 +71,7 @@ DigiTrustAppContainer.launch = function (options) {
 var _appOnLoad = function (app) {
     // If this is the first app being loaded
     if (helpers.isEmpty(window.DigiTrust.currentApp)) {
-        helpers.createPageViewClickListener();    
+        helpers.createPageViewClickListener();
     } else {
         // Disable previous app
         helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.disable', [window.DigiTrust.currentApp.name]);
@@ -82,19 +82,18 @@ var _appOnLoad = function (app) {
 };
 
 DigiTrustAppContainer.insertAppScript = function (app) {
-    var s, r, t;
-    r = false;
-    s = document.createElement('script');
+    var r = false;
+    var s = document.createElement('script');
     s.type = 'text/javascript';
     s.src = app.behavior;
-    s.onload = s.onreadystatechange = function() {
-        if ( !r && (!this.readyState || this.readyState == 'complete') ) {
+    s.onload = s.onreadystatechange = function () {
+        if (!r && (!this.readyState || this.readyState === 'complete')) {
             r = true;
             _appOnLoad(app);
             console.log(app.name, 'done loading script');
         }
     };
-    t = document.getElementsByTagName('script')[0];
+    var t = document.getElementsByTagName('script')[0];
     t.parentNode.insertBefore(s, t);
 };
 
@@ -118,7 +117,7 @@ DigiTrustAppContainer.userAppSelected = function (app, reload) {
             }
         });
 
-        if (window.DigiTrust.loadedApps.indexOf(app.name) == -1) {
+        if (window.DigiTrust.loadedApps.indexOf(app.name) === -1) {
             // Load App script
             DigiTrustAppContainer.insertAppScript(app);
         } else {
