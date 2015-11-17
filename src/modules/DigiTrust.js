@@ -136,6 +136,11 @@ DigiTrust.addListener = function (appName, eventName, callback) {
         };
     };
 
+    var app = helpers.getObjectByKeyFromObject(window.DigiTrust.apps, 'name', appName);
+    if (helpers.isEmpty(app)) {
+        throw new Error(configErrors.en.appNameInvalid);
+    }
+
     switch (eventName) {
         case 'enable':
             helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.enable', function (pubsubAppName) {

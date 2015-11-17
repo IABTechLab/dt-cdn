@@ -8,15 +8,13 @@
 - [DONE] browser testing (cryptooo)
 - [DONE] Can you also reconcile the github wiki docs with implemented behavior, and tell me about inconsistencies?
 - [DONE] javascript error logger
+- [DONE] verify appName for addListener
+- [DONE] hide selection of apps for 48 hrs
 
 - cross-browser APPS
+- pageview count
+
 
 - unit tests
 - test https
-- detect country
-<script type="text/javascript">
-  var userLang = navigator.language || navigator.userLanguage; 
- alert ("The language is: " + userLang);
- </script>
-
-- [later] clear cloudfront cache
+- detect country<script type="text/javascript">var userLang = navigator.language || navigator.userLanguage; alert ("The language is:" + userLang);</script>

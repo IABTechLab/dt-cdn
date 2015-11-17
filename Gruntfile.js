@@ -156,9 +156,11 @@ module.exports = function (grunt) {
 
     // Deployment tasks
     if (argEnv === 'prod') {
-        grunt.registerTask('deploy', ['default', 'ssh_deploy:prod1', 'ssh_deploy:prod2']);
+        grunt.registerTask('deploy1', ['default', 'ssh_deploy:prod1']);
+        grunt.registerTask('deploy2', ['default', 'ssh_deploy:prod2']);
     } else if (argEnv === 'dev') {
-        grunt.registerTask('deploy', ['default', 'ssh_deploy:dev1', 'ssh_deploy:dev2']);
+        grunt.registerTask('deploy1', ['default', 'ssh_deploy:dev1']);
+        grunt.registerTask('deploy2', ['default', 'ssh_deploy:dev2']);
     } else {
         var deployMissingEnv = function () {
             grunt.log.error('***************************************************');
@@ -171,7 +173,8 @@ module.exports = function (grunt) {
             grunt.log.error('**');
             grunt.log.error('***************************************************');
         };
-        grunt.registerTask('deploy', deployMissingEnv);
+        grunt.registerTask('deploy1', deployMissingEnv);
+        grunt.registerTask('deploy2', deployMissingEnv);
     }
 
     /*

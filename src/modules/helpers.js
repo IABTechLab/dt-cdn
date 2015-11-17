@@ -266,7 +266,7 @@ helpers.getRollbar = function (callback) {
 
 helpers.isValidJSON = function (str) {
     try {
-        console.log(JSON.parse(str));
+        JSON.parse(str);
     } catch (e) {
         return false;
     }

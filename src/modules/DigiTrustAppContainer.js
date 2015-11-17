@@ -6,6 +6,7 @@ var configErrors = require('../config/errors.json');
 var helpers = require('./helpers');
 var DigiTrustPopup = require('./DigiTrustPopup');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
+var DigiTrustCookie = require('./DigiTrustCookie');
 
 var DigiTrustAppContainer = {};
 
@@ -56,7 +57,20 @@ DigiTrustAppContainer.launch = function (options) {
                         );
 
                         if (selectedApp) {
-                            _launchReminderPopup(options);
+                            // How frequently do we show the reminder?
+                            var _ifShowReminder = function () {
+                                // If reminder cookie has not expired yet, do not show
+                                if (DigiTrustCookie.getCookieByName(configGeneral.app.cookie.reminderObjectKey)) {
+                                    return false;
+                                } else {
+                                    // If reminder cookie expired, set new cookie and show reminder
+                                    DigiTrustCookie.setAppReminderCookie();
+                                    return true;
+                                }
+                            };
+                            if (_ifShowReminder()) {
+                                _launchReminderPopup(options);
+                            }
                             DigiTrustAppContainer.insertAppScript(selectedApp);
                         } else {
                             _launchAdblockPopup(options);
@@ -81,7 +95,8 @@ DigiTrustAppContainer.launch = function (options) {
 var _appOnLoad = function (app) {
     // If this is the first app being loaded
     if (helpers.isEmpty(window.DigiTrust.currentApp)) {
-        helpers.createPageViewClickListener();
+        // Might be useful for pushState page-view tracking
+        // helpers.createPageViewClickListener();
     } else {
         // Disable previous app
         helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.disable', [window.DigiTrust.currentApp.name]);
@@ -89,6 +104,7 @@ var _appOnLoad = function (app) {
     window.DigiTrust.currentApp = app;
     window.DigiTrust.loadedApps.push(app.name);
     helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.enable', [app.name]);
+    helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.pageView', [app.name]);
 };
 
 DigiTrustAppContainer.insertAppScript = function (app) {

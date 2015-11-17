@@ -67,6 +67,15 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     }
 };
 
+DigiTrustCookie.setAppReminderCookie = function () {
+    var cookieKV = configGeneral.app.cookie.reminderObjectKey + '=1;';
+    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.app.cookie.reminderMaxAgeMiliseconds) + ';';
+    var domainKV = configGeneral.cookie.publisher.domainKeyValue;
+    var pathKV = configGeneral.cookie.publisher.pathKeyValue;
+
+    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
 DigiTrustCookie.setDigitrustCookie = function (cookieV) {
     var cookieKV = configGeneral.cookie.digitrust.userObjectKey + '=' + cookieV + ';';
     var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';

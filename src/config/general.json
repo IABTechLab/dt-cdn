@@ -25,7 +25,10 @@
 			"postMessageOrigin": "//cdn.digitru.st"
 		},
 		"app": {
-			"reminderDuration": 3000
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrust.v1.ar"
+			}
 		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"
@@ -57,7 +60,10 @@
 			"postMessageOrigin": "//digitrust.s3.amazonaws.com"
 		},
 		"app": {
-			"reminderDuration": 3000
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrust.v1.ar"
+			}
 		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"
@@ -72,13 +78,13 @@
 		},
 		"cookie": {
 			"publisher": {
-				"domainKeyValue": "domain: digitru.st;",
+				"domainKeyValue": "domain: local.digitru.st;",
 				"pathKeyValue": "path=/;",
 				"maxAgeMiliseconds": 604800000,
 				"userObjectKey": "DigiTrust.v1.identity"
 			},
 			"digitrust": {
-				"domainKeyValue": "domain: digitru.st;",
+				"domainKeyValue": "domain: local.digitru.st;",
 				"pathKeyValue": "path=/;",
 				"maxAgeMiliseconds": 157680000000,
 	            "userObjectKey": "DigiTrust.v1.identity"
@@ -89,7 +95,10 @@
 			"postMessageOrigin": "//local.digitru.st"
 		},
 		"app": {
-			"reminderDuration": 3000
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrust.v1.ar"
+			}
 		},
 		"consent": {
 			"consentLinkId": "digitrust-optout"
