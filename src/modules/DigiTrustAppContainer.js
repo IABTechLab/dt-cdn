@@ -71,7 +71,7 @@ DigiTrustAppContainer.launch = function (options) {
                             if (_ifShowReminder()) {
                                 _launchReminderPopup(options);
                             }
-                            DigiTrustAppContainer.insertAppScript(selectedApp);
+                            DigiTrustAppContainer.insertAppScript(selectedApp, false);
                         } else {
                             _launchAdblockPopup(options);
                         }
@@ -92,7 +92,19 @@ DigiTrustAppContainer.launch = function (options) {
     });
 };
 
-var _appOnLoad = function (app) {
+var _appOnLoad = function (app, publishEnable) {
+    console.log(app.name, 'done loading APP JavaScript');
+
+    if (publishEnable === true) {
+        helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.enable', [app.name]);
+    } else {
+        var publishAfterReload = localStorage.getItem('a:' + app.name + ':publishEnable');
+        if (publishAfterReload === 'true') {
+            helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.enable', [app.name]);
+            localStorage.removeItem('a:' + app.name + ':publishEnable');
+        }
+    }
+
     // If this is the first app being loaded
     if (helpers.isEmpty(window.DigiTrust.currentApp)) {
         // Might be useful for pushState page-view tracking
@@ -103,11 +115,11 @@ var _appOnLoad = function (app) {
     }
     window.DigiTrust.currentApp = app;
     window.DigiTrust.loadedApps.push(app.name);
-    helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.enable', [app.name]);
     helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.pageView', [app.name]);
 };
 
-DigiTrustAppContainer.insertAppScript = function (app) {
+DigiTrustAppContainer.insertAppScript = function (app, publishEnable) {
+    publishEnable = publishEnable || false;
     var r = false;
     var s = document.createElement('script');
     s.type = 'text/javascript';
@@ -115,8 +127,7 @@ DigiTrustAppContainer.insertAppScript = function (app) {
     s.onload = s.onreadystatechange = function () {
         if (!r && (!this.readyState || this.readyState === 'complete')) {
             r = true;
-            _appOnLoad(app);
-            console.log(app.name, 'done loading script');
+            _appOnLoad(app, publishEnable);
         }
     };
     var t = document.getElementsByTagName('script')[0];
@@ -124,6 +135,8 @@ DigiTrustAppContainer.insertAppScript = function (app) {
 };
 
 DigiTrustAppContainer.userAppSelected = function (app, reload) {
+    reload = reload || false;
+    // If user selects already-loaded app, do not do anything
     if (window.DigiTrust.currentApp.name === app.name) {
         document.getElementById('digitrust-apps-options-close').click();
     } else {
@@ -143,11 +156,14 @@ DigiTrustAppContainer.userAppSelected = function (app, reload) {
             }
         });
 
-        if (window.DigiTrust.loadedApps.indexOf(app.name) === -1) {
+        // If we do not want to reload the page, and the app has not been loaded yet
+        if (reload === false && window.DigiTrust.loadedApps.indexOf(app.name) === -1) {
             // Load App script
-            DigiTrustAppContainer.insertAppScript(app);
+            DigiTrustAppContainer.insertAppScript(app, true);
         } else {
-            _appOnLoad(app);
+            // Launch "enable" event upon reload
+            // (we reload since the AdBlocker detector popup uglifies the page's whole CSS)
+            localStorage.setItem('a:' + app.name + ':publishEnable', 'true');
         }
 
         // Update UI
