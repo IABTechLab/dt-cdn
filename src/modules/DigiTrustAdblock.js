@@ -52,17 +52,21 @@ DigiTrustAdblock.checkElements = function () {
 };
 
 DigiTrustAdblock.checkEndpoint = function () {
-
-    // Call rubicon endpoint, AdBlock may block this domain
-    helpers.xhr.get(configGeneral.urls.adblockCheck)
-    .error(function (data, xhrObj) {
-        // If no status, request was intercepted
-        if (!xhrObj.status) {
-            DigiTrustAdblock.performIfDetected();
-        } else {
-            // do nothing
-        }
-    });
+    // Firefox adblocker throws an exception here; we do not want to abort the script (DigiTrust try/catch "returns")
+    try {
+        // Call rubicon endpoint, AdBlock may block this domain
+        helpers.xhr.get(configGeneral.urls.adblockCheck)
+        .error(function (data, xhrObj) {
+            // If no status, request was intercepted
+            if (!xhrObj.status) {
+                DigiTrustAdblock.performIfDetected();
+            } else {
+                // do nothing
+            }
+        });
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 DigiTrustAdblock.performIfDetected = function () {
