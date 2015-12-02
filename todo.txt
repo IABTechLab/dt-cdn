@@ -12,8 +12,6 @@
 - [DONE] hide selection of apps for 48 hrs
 
 - cross-browser APPS
-- pageview count
-
 
 - unit tests
 - test https

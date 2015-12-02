@@ -137,6 +137,12 @@ var _getElementHref = function (current) {
     }
 };
 
+helpers.getAbsolutePath = function (href) {
+    var link = document.createElement('a');
+    link.href = href;
+    return (link.protocol + '//' + link.host + link.pathname + link.search + link.hash);
+};
+
 helpers.createConsentClickListener = function () {
     window.onclick = function (e) {
         e = e || window.event;
@@ -149,6 +155,7 @@ helpers.createConsentClickListener = function () {
 
         var possibleHref = _getElementHref(t);
         if (possibleHref) {
+            possibleHref = helpers.getAbsolutePath(possibleHref);
             window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
         }

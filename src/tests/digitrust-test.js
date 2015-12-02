@@ -104,3 +104,22 @@ describe('DigiTrustPopup', function () {
             .toEqual(configInitializeOptions.consent.popupFontColor);
     });
 });
+
+describe('helpers', function () {
+
+    it('getAbsolutePath', function () {
+
+        /*
+            Since this runs in phantom, the base url should be: http://localhost:9876/
+            The index page is: http://localhost:9876/context.html
+        */
+
+        expect(helpers.getAbsolutePath('http://example.com')).toBe('http://example.com/');
+        expect(helpers.getAbsolutePath('https://www.exmaple.com')).toBe('https://www.exmaple.com/');
+        expect(helpers.getAbsolutePath('//cdn.example.com/lib.js')).toBe('http://cdn.example.com/lib.js');
+        expect(helpers.getAbsolutePath('/test')).toBe('http://localhost:9876/test');
+        expect(helpers.getAbsolutePath('test')).toBe('http://localhost:9876/test');
+        expect(helpers.getAbsolutePath('#test')).toBe('http://localhost:9876/context.html#test');
+        expect(helpers.getAbsolutePath('../test')).toBe('http://localhost:9876/test');
+    });
+});
