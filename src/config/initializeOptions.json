@@ -3,9 +3,9 @@
     "site": "",
     "adblocker": {
         "blockContent": false,
-        "userMessage": "<h2>Oh noooo ... You're using an ad blocker!</h2> Did you know advertising pays for this brilliant content? Please disable your ad blocker, then press the Reload button below ... and thank you for your visit!",
-        "popupFontColor": "#ffffff",
-        "popupBackgroundColor": "orange"
+        "userMessage": "Did you know advertising pays for this brilliant content? Please disable your ad blocker, then press the Reload button below ... and thank you for your visit!",
+        "popupFontColor": "#5F615D",
+        "popupBackgroundColor": "#FFFFFF"
     },
     "consent": {
         "requires": "implicit",

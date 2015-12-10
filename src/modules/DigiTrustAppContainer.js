@@ -38,8 +38,8 @@ DigiTrustAppContainer.launch = function (options) {
                 helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.getAppsPreferences.response', function (appFromLS) {
                     var _launchAdblockPopup = function () {
                         DigiTrustPopup.createAdblockPopup(options);
-                        var appsHTML = DigiTrustPopup.getAppsSelectHtml(window.DigiTrust.apps, null, true);
-                        document.getElementById('digitrust-adb-apps').appendChild(appsHTML);
+                        var appsHTML = DigiTrustPopup.getAppsDivsHtml(window.DigiTrust.apps, null, true);
+                        document.getElementById(configGeneral.htmlIDs.dtAdbApps).appendChild(appsHTML);
                     };
 
                     var _launchReminderPopup = function () {

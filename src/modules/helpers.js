@@ -149,7 +149,7 @@ helpers.createConsentClickListener = function () {
         var t = e.target || e.srcElement;
 
         // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
-        if (t.id === configGeneral.consent.consentLinkId) {
+        if (t.id === configGeneral.htmlIDs.consentLinkId) {
             return true;
         }
 

@@ -30,8 +30,12 @@
 				"reminderObjectKey": "DigiTrust.v1.ar"
 			}
 		},
-		"consent": {
-			"consentLinkId": "digitrust-optout"
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
 		}
 	},
 	"dev": {
@@ -65,8 +69,12 @@
 				"reminderObjectKey": "DigiTrust.v1.ar"
 			}
 		},
-		"consent": {
-			"consentLinkId": "digitrust-optout"
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
 		}
 	},
 	"local": {
@@ -100,8 +108,12 @@
 				"reminderObjectKey": "DigiTrustLOCAL.v1.ar"
 			}
 		},
-		"consent": {
-			"consentLinkId": "digitrust-optout"
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
 		}
-	},
+	}
 }

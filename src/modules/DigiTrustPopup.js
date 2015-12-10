@@ -4,76 +4,36 @@ var env = require('../config/env.json').current;
 var configGeneral = require('../config/general')[env];
 var helpers = require('./helpers');
 
-var fontFamily = 'Helvetica, Arial, Veranda, sans-serif';
+var fontFamily = 'Helvetica, Arial, Verdana, sans-serif';
+var mq = {
+    phoneString: '(min-width : 320px) and (max-width : 768px)',
+    tabletString: '(min-width : 768px) and (max-width : 1024px)',
+    desktopString: '(min-width : 1024px)',
+};
 
 var DigiTrustPopup = {};
 
+var _mqPhone = function () {
+    return window.matchMedia(mq.phoneString);
+};
+
+var _mqTablet = function () {
+    return window.matchMedia(mq.tabletString);
+};
+
 DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
 
-    var appsDiv = document.createElement('div');
-    appsDiv.id = 'digitrust-adb-apps';
+    /* Blur document text
+    */
 
-    var reloadDiv = document.createElement('div');
-    reloadDiv.id = 'digitrust-adb-reload';
-    reloadDiv.style.padding = '10px 20px';
-    reloadDiv.style.margin = '20px 0 0 0';
-    reloadDiv.style.textAlign = 'center';
-    reloadDiv.style.display = 'inline-block';
-    reloadDiv.style.borderRadius = '10px';
-    reloadDiv.style.background = '#999999';
-    reloadDiv.style.color = '#ffffff';
-    reloadDiv.style.textShadow = 'none';
-    reloadDiv.style.opacity = 1;
-    reloadDiv.innerHTML = 'Reload Page';
-    reloadDiv.style.cursor = 'pointer';
-    reloadDiv.style.fontWeight = 'bold';
-    reloadDiv.onclick = function () {
-        location.reload();
-    };
-
-    var messageDiv = document.createElement('div');
-    messageDiv.id = 'digitrust-adb-message';
-    messageDiv.style.width = '50%';
-    messageDiv.style.position = 'absolute';
-    messageDiv.style.borderRadius = '20px';
-    messageDiv.style.padding = '30px';
-    messageDiv.style.top = '50%';
-    messageDiv.style.left = '50%';
-    messageDiv.style.transform = 'translate(-50%, -50%)';
-    messageDiv.style.background = initializeOptions.adblocker.popupBackgroundColor;
-    messageDiv.style.color = initializeOptions.adblocker.popupFontColor;
-    messageDiv.style.opacity = 1;
-    messageDiv.style.fontSize = '14px';
-    messageDiv.style.fontFamily = fontFamily;
-    messageDiv.style.textShadow = 'none';
-    messageDiv.innerHTML = '<div>' + initializeOptions.adblocker.userMessage + '</div>';
-
-    messageDiv.appendChild(reloadDiv);
-    messageDiv.appendChild(appsDiv);
-
-    var blurDiv = document.createElement('div');
-    blurDiv.id = 'digitrust-adb-blur';
-    blurDiv.style.width = '100%';
-    blurDiv.style.height = '100%';
-    blurDiv.style.opacity = 0.8;
-    blurDiv.style.background = '#ffffff';
-
-    var bgDiv = document.createElement('div');
-    bgDiv.id = 'digitrust-adb-bg';
-    bgDiv.style.width = '100%';
-    bgDiv.style.height = '100%';
-    bgDiv.style.top = '0';
-    bgDiv.style.left = '0';
-    bgDiv.style.zIndex = 999999;
-    bgDiv.style.position = 'fixed';
-
-    // Blur document text
     var fontColorBody = document.body.style.color;
     fontColorBody = fontColorBody || '#000000';
     document.body.style.color = 'transparent';
     document.body.style.textShadow = '0 0 7px ' + fontColorBody;
 
-    // Blur individual elements
+    /* Blur individual elements
+    */
+
     var fontColor = fontColorBody;
     var allTags = document.body.getElementsByTagName('*');
     var totalTags = allTags.length;
@@ -94,15 +54,196 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
         allTags[i].style.oFilter = 'blur(1px)';
     }
 
+    /* DIVs
+    */
+
+    var appsDiv = document.createElement('div');
+    appsDiv.id = configGeneral.htmlIDs.dtAdbApps;
+
+    var reloadDiv = document.createElement('div');
+    reloadDiv.id = 'digitrust-adb-reload';
+    reloadDiv.innerHTML = 'RELOAD THE PAGE';
+    reloadDiv.style.cursor = 'pointer';
+    reloadDiv.style.background = '#006080';
+    reloadDiv.style.color = '#FFF';
+    reloadDiv.style.fontSize = '15px';
+    reloadDiv.style.fontWeight = '600';
+    reloadDiv.style.letterSpacing = '.05em';
+    reloadDiv.style.position = 'absolute';
+    reloadDiv.style.textAlign = 'center';
+    reloadDiv.style.borderBottom = '10px solid #279CBF';
+    reloadDiv.style.padding = '30px 50px 20px';
+    reloadDiv.style.bottom = '-45px';
+    reloadDiv.style.right = '30px';
+    reloadDiv.style.textTransform = 'uppercase';
+    reloadDiv.style.width = '365px';
+    if (_mqTablet().matches) {
+        reloadDiv.style.width = '355px';
+        reloadDiv.style.padding = '25px 0 25px';
+        reloadDiv.style.bottom = '-38px';
+        reloadDiv.style.right = '30px';
+    } else if (_mqPhone().matches) {
+        reloadDiv.style.width = '180px';
+        reloadDiv.style.padding = '25px 5px 25px';
+        reloadDiv.style.bottom = '-25px';
+        reloadDiv.style.right = '20px';
+    }
+
+    reloadDiv.onclick = function () {
+        location.reload();
+    };
+
+    var publisherLogo;
+    if (1) {
+        publisherLogo = document.createElement('img');
+        publisherLogo.src = '/misc/logo.png';
+        publisherLogo.style.display = 'block';
+        publisherLogo.style.maxWidth = '90%';
+    } else {
+        publisherLogo = document.createElement('div');
+        publisherLogo.innerHTML = 'The Jupiter Chronicle';
+    }
+
+    var clearBothDiv = document.createElement('div');
+    clearBothDiv.style.clear = 'both';
+
+    var poweredByImg = document.createElement('img');
+    poweredByImg.src = '/misc/powered_by.jpg';
+
+    var poweredByDiv = document.createElement('div');
+    poweredByDiv.innerHTML = 'Powered By<br/>';
+    poweredByDiv.style.fontSize = '.8em';
+    poweredByDiv.style.color = '#9B9B99';
+    poweredByDiv.style.position = 'absolute';
+    poweredByDiv.style.bottom = '20px';
+    poweredByDiv.style.left = '30px';
+    if (_mqTablet().matches) {
+        poweredByDiv.style.position = 'static';
+        poweredByDiv.style.padding = '0 0 10px';
+
+        // Image style
+        poweredByImg.style.width = '80px';
+    } else if (_mqPhone().matches) {
+        poweredByDiv.style.position = 'static';
+        poweredByDiv.style.padding = '10px 0 10px';
+
+        // Image style
+        poweredByImg.style.width = '80px';
+    }
+    poweredByDiv.appendChild(poweredByImg);
+
+    var messageDiv = document.createElement('div');
+    messageDiv.style.float = 'left';
+    messageDiv.style.width = '250px';
+    messageDiv.style.margin = '15px 0 85px';
+    messageDiv.innerHTML = initializeOptions.adblocker.userMessage;
+    if (_mqTablet().matches) {
+        messageDiv.style.width = '150px';
+        messageDiv.style.marginBottom = '15px';
+    } else if (_mqPhone().matches) {
+        messageDiv.style.width = '90%';
+        messageDiv.style.float = 'none';
+        messageDiv.style.marginBottom = '15px';
+    }
+
+    var pictureDiv = document.createElement('img');
+    pictureDiv.id = configGeneral.htmlIDs.publisherPicture;
+    pictureDiv.style.margin = '15px 0 20px 0';
+    pictureDiv.style.float = 'right';
+    pictureDiv.style.width = '465px';
+    // pictureDiv.src = '/misc/picture.jpg';
+    pictureDiv.src = 'http://cdn4.wpbeginner.com/wp-content/uploads/2012/07/detectingadblockusers.png';
+    if (_mqTablet().matches) {
+        pictureDiv.style.margin = '15px 0 0 0';
+        pictureDiv.style.width = '420px';
+        pictureDiv.style.float = 'right';
+    } else if (_mqPhone().matches) {
+        pictureDiv.style.margin = '0 0 0 0';
+        pictureDiv.style.width = '100%';
+        pictureDiv.style.float = 'none';
+    }
+
+    var contentDiv = document.createElement('div');
+    // Not needed yet: contentDiv.id = 'digitrust-adb-message';
+    contentDiv.style.width = '740px';
+    // contentDiv.style.height = '500px';
+    contentDiv.style.fontWeight = '300';
+    contentDiv.style.position = 'absolute';
+    contentDiv.style.padding = '50px 30px 30px 30px';
+    contentDiv.style.margin = '80px 0 70px';
+    contentDiv.style.left = '50%';
+    contentDiv.style.transform = 'translate(-50%, 0)';
+    contentDiv.style.background = initializeOptions.adblocker.popupBackgroundColor;
+    contentDiv.style.color = initializeOptions.adblocker.popupFontColor;
+    contentDiv.style.opacity = 1;
+    contentDiv.style.fontSize = '15px';
+    contentDiv.style.fontFamily = fontFamily;
+    contentDiv.style.textShadow = 'none';
+    contentDiv.style.border = '1px solid #D8D8D8';
+    contentDiv.style.borderTopWidth = '30px';
+    contentDiv.style.borderTopLeftRadius = '7px';
+    contentDiv.style.borderTopRightRadius = '7px';
+    contentDiv.style.borderBottomWidth = '10px';
+    contentDiv.style.borderBottomLeftRadius = '7px';
+    contentDiv.style.borderBottomRightRadius = '7px';
+    contentDiv.style.borderBottomColor = '#2E7C97';
+    contentDiv.style.boxShadow = '0px 0px 15px 5px rgba(0,0,0,0.15)';
+    // Media queries
+    if (_mqTablet().matches) {
+        contentDiv.style.width = '570px';
+        contentDiv.style.padding = '50px 30px 0 30px';
+    } else if (_mqPhone().matches) {
+        contentDiv.style.width = '324px';
+        contentDiv.style.padding = '30px 20px 0 20px';
+        contentDiv.style.fontSize = '12px';
+        contentDiv.style.lineHeight = '16px';
+    }
+
+    contentDiv.appendChild(publisherLogo);
+    contentDiv.appendChild(messageDiv);
+    contentDiv.appendChild(appsDiv);
+    contentDiv.appendChild(pictureDiv);
+    contentDiv.appendChild(clearBothDiv);
+    contentDiv.appendChild(poweredByDiv);
+    contentDiv.appendChild(reloadDiv);
+
+    var scrollContainer = document.createElement('div');
+    scrollContainer.style.overflowY = 'scroll';
+    scrollContainer.style.width = '100%';
+    scrollContainer.style.height = '100%';
+    scrollContainer.style.position = 'absolute';
+    scrollContainer.appendChild(contentDiv);
+
+    var blurDiv = document.createElement('div');
+    blurDiv.id = 'digitrust-adb-blur';
+    blurDiv.style.width = '100%';
+    blurDiv.style.height = '100%';
+    blurDiv.style.opacity = 0.8;
+    blurDiv.style.background = '#ffffff';
+    blurDiv.style.position = 'fixed';
+
+    var bgDiv = document.createElement('div');
+    bgDiv.id = 'digitrust-adb-bg';
+    bgDiv.style.width = '100%';
+    bgDiv.style.height = '100%';
+    bgDiv.style.top = '0';
+    bgDiv.style.left = '0';
+    bgDiv.style.zIndex = 999999;
+    bgDiv.style.position = 'fixed';
+    bgDiv.style.overflowY = 'scroll';
+
     bgDiv.appendChild(blurDiv);
-    bgDiv.appendChild(messageDiv);
+    bgDiv.appendChild(scrollContainer);
     document.body.appendChild(bgDiv);
+
+    // Block scroll on body
+    document.body.style.overflowY = 'hidden';
 };
 
 DigiTrustPopup.createConsentPopup = function (initializeOptions) {
 
     var optOut = document.createElement('a');
-    optOut.id = configGeneral.consent.consentLinkId;
+    optOut.id = configGeneral.htmlIDs.consentLinkId;
     optOut.innerHTML = 'You can read more or opt out of DigiTrust here.';
     optOut.style.padding = '0 0 0 10px';
     optOut.href = configGeneral.urls.optoutInfo;
@@ -179,11 +320,110 @@ DigiTrustPopup.createAppOptionsPopup = function (initializeOptions) {
     document.body.appendChild(bgDiv);
 };
 
+DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
+
+    document.getElementById(configGeneral.htmlIDs.publisherPicture).remove();
+
+    var appsHTML = document.createElement('div');
+    appsHTML.id = 'digitrust-apps-select-container';
+    appsHTML.style.height = '370px';
+    appsHTML.style.width = '485px';
+    appsHTML.style.float = 'right';
+    appsHTML.style.margin = '10px -10px 10px 0';
+    // appsHTML.style.position = 'relative';
+    appsHTML.style.overflowY = 'scroll';
+    if (_mqTablet().matches) {
+        appsHTML.style.height = '340px';
+        appsHTML.style.width = '373px';
+        appsHTML.style.margin = '10px -10px 0 0';
+    } else if (_mqPhone().matches) {
+        appsHTML.style.height = '280px';
+        appsHTML.style.width = '324px';
+        appsHTML.style.float = 'none';
+        appsHTML.style.margin = '0 0 0 5px';
+    }
+
+    var _optionOnclick = function (option) {
+        return function () {
+            var allApps = document.getElementsByClassName('dt-app');
+            for (var i = 0; i < allApps.length; i++) {
+                allApps[i].style.background = '#ffffff';
+                allApps[i].className = configGeneral.htmlIDs.dtAdbAppClass;
+            }
+
+            option.className += ' ' + configGeneral.htmlIDs.dtAdbAppSelected + ' '; // keep spaces
+            option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 170px 0';
+            if (_mqTablet().matches) {
+                option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 120px 0';
+            } else if (_mqPhone().matches) {
+                option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 90px 0';
+            }
+
+            /*var app = window.DigiTrust.apps[appId];
+            if (reload === true) {
+                helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.reload', [app]);
+            } else {
+                helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.noreload', [app]);
+            }*/
+        };
+    };
+
+    for (var appId in appsObject) {
+        if (appsObject.hasOwnProperty(appId)) {
+            var icon = document.createElement('img');
+            icon.src = '/misc/icon1.png';
+            icon.style.display = 'block';
+            icon.style.margin = 'auto';
+            icon.style.maxWidth = '40%';
+
+            var appLabel = document.createElement('div');
+            appLabel.innerHTML = appsObject[appId].name;
+            appLabel.style.margin = '20px 0 0 0';
+
+            var option = document.createElement('div');
+            option.id = 'dt-app-id-' + appId;
+            option.className = configGeneral.htmlIDs.dtAdbAppClass;
+            option.setAttribute('data-appId', appId);
+            option.style.fontSize = '10px';
+            option.style.width = '200px';
+            option.style.float = 'left';
+            option.style.textAlign = 'left';
+            option.style.border = '1px solid #EEE';
+            option.style.margin = '10px';
+            option.style.padding = '30px 10px 10px 10px';
+            option.style.boxShadow = '0px 0px 5px 5px rgba(0,0,0,0.10)';
+            option.style.background = '#ffffff';
+            if (_mqTablet().matches) {
+                option.style.width = '150px';
+                option.style.padding = '15px 7px 7px 7px';
+            } else if (_mqPhone().matches) {
+                option.style.width = '120px';
+                option.style.padding = '10px 7px 7px 7px';
+                option.style.boxShadow = '0px 0px 5px 2px rgba(0,0,0,0.10)';
+            }
+            option.appendChild(icon);
+            option.appendChild(appLabel);
+
+            option.onclick = _optionOnclick(option);
+
+            /*if (defaultApp && appsObject[appId].name === defaultApp.name) {
+                option.setAttribute('data-selected', 'true');
+            }*/
+
+            appsHTML.appendChild(option);
+        }
+    }
+
+    var statusText = document.createElement('span');
+    statusText.id = 'digitrust-apps-select-status';
+    appsHTML.appendChild(statusText);
+
+    return appsHTML;
+};
+
 DigiTrustPopup.getAppsSelectHtml = function (appsObject, defaultApp, reload) {
     var appsHTML = document.createElement('div');
     appsHTML.id = 'digitrust-apps-select-container';
-    // appsHTML.style.margin = '20px 0 0 0';
-    appsHTML.innerHTML = '<b>Apps available:</b><br/>';
 
     var appsSelectList = document.createElement('select');
     appsSelectList.id = 'digitrust-apps-select';
