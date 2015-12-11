@@ -382,7 +382,9 @@ DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
     for (var appId in appsObject) {
         if (appsObject.hasOwnProperty(appId)) {
             var icon = document.createElement('img');
-            icon.src = '/misc/icon1.png';
+            if (appsObject[appId].icon && appsObject[appId].icon.url) {
+                icon.src = appsObject[appId].icon.url;
+            }
             icon.style.display = 'block';
             icon.style.margin = 'auto';
             icon.style.maxWidth = '40%';
