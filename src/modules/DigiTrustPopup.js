@@ -168,9 +168,6 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
         }
     } else {
         pictureDiv = document.createElement('span');
-
-        // Update message div to be full width!
-        messageDiv.style.width = '100%';
     }
 
     var contentDiv = document.createElement('div');
