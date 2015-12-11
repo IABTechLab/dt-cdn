@@ -109,7 +109,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     clearBothDiv.style.clear = 'both';
 
     var poweredByImg = document.createElement('img');
-    poweredByImg.src = './powered_by.png';
+    poweredByImg.src = '://cdn.digitru.st/prod/v1/powered_by.png';
     poweredByImg.style.width = '150px';
 
     var poweredByDiv = document.createElement('div');
