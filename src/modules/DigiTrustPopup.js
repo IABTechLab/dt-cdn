@@ -331,7 +331,10 @@ DigiTrustPopup.createAppOptionsPopup = function (initializeOptions) {
 
 DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
 
-    document.getElementById(configGeneral.htmlIDs.publisherPicture).remove();
+    var picture = document.getElementById(configGeneral.htmlIDs.publisherPicture);
+    if (picture) {
+        picture.remove();
+    }
 
     var appsHTML = document.createElement('div');
     appsHTML.id = 'digitrust-apps-select-container';
