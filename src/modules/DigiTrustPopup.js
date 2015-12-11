@@ -94,21 +94,23 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     };
 
     var publisherLogo;
-    if (1) {
+    if (initializeOptions.adblocker.logoSrc) {
         publisherLogo = document.createElement('img');
-        publisherLogo.src = '/misc/logo.png';
+        publisherLogo.src = initializeOptions.adblocker.logoSrc;
         publisherLogo.style.display = 'block';
         publisherLogo.style.maxWidth = '90%';
     } else {
-        publisherLogo = document.createElement('div');
-        publisherLogo.innerHTML = 'The Jupiter Chronicle';
+        publisherLogo = document.createElement('h1');
+        publisherLogo.innerHTML = initializeOptions.adblocker.logoText;
+        publisherLogo.style.margin = '0';
     }
 
     var clearBothDiv = document.createElement('div');
     clearBothDiv.style.clear = 'both';
 
     var poweredByImg = document.createElement('img');
-    poweredByImg.src = '/misc/powered_by.jpg';
+    poweredByImg.src = './powered_by.png';
+    poweredByImg.style.width = '150px';
 
     var poweredByDiv = document.createElement('div');
     poweredByDiv.innerHTML = 'Powered By<br/>';
@@ -133,6 +135,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     poweredByDiv.appendChild(poweredByImg);
 
     var messageDiv = document.createElement('div');
+    messageDiv.id = configGeneral.htmlIDs.dtAdbMessage;
     messageDiv.style.float = 'left';
     messageDiv.style.width = '250px';
     messageDiv.style.margin = '15px 0 85px';
@@ -141,32 +144,38 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
         messageDiv.style.width = '150px';
         messageDiv.style.marginBottom = '15px';
     } else if (_mqPhone().matches) {
-        messageDiv.style.width = '90%';
+        messageDiv.style.width = '100%';
         messageDiv.style.float = 'none';
         messageDiv.style.marginBottom = '15px';
     }
 
-    var pictureDiv = document.createElement('img');
-    pictureDiv.id = configGeneral.htmlIDs.publisherPicture;
-    pictureDiv.style.margin = '15px 0 20px 0';
-    pictureDiv.style.float = 'right';
-    pictureDiv.style.width = '465px';
-    // pictureDiv.src = '/misc/picture.jpg';
-    pictureDiv.src = 'http://cdn4.wpbeginner.com/wp-content/uploads/2012/07/detectingadblockusers.png';
-    if (_mqTablet().matches) {
-        pictureDiv.style.margin = '15px 0 0 0';
-        pictureDiv.style.width = '420px';
+    var pictureDiv;
+    if (initializeOptions.adblocker.pictureSrc) {
+        pictureDiv = document.createElement('img');
+        pictureDiv.id = configGeneral.htmlIDs.publisherPicture;
+        pictureDiv.style.margin = '15px 0 20px 0';
         pictureDiv.style.float = 'right';
-    } else if (_mqPhone().matches) {
-        pictureDiv.style.margin = '0 0 0 0';
-        pictureDiv.style.width = '100%';
-        pictureDiv.style.float = 'none';
+        pictureDiv.style.width = '465px';
+        pictureDiv.src = initializeOptions.adblocker.pictureSrc;
+        if (_mqTablet().matches) {
+            pictureDiv.style.margin = '15px 0 0 0';
+            pictureDiv.style.width = '420px';
+            pictureDiv.style.float = 'right';
+        } else if (_mqPhone().matches) {
+            pictureDiv.style.margin = '0 0 0 0';
+            pictureDiv.style.width = '100%';
+            pictureDiv.style.float = 'none';
+        }
+    } else {
+        pictureDiv = document.createElement('span');
+
+        // Update message div to be full width!
+        messageDiv.style.width = '100%';
     }
 
     var contentDiv = document.createElement('div');
-    // Not needed yet: contentDiv.id = 'digitrust-adb-message';
+    contentDiv.id = configGeneral.htmlIDs.dtAdbContainer;
     contentDiv.style.width = '740px';
-    // contentDiv.style.height = '500px';
     contentDiv.style.fontWeight = '300';
     contentDiv.style.position = 'absolute';
     contentDiv.style.padding = '50px 30px 30px 30px';
@@ -350,6 +359,8 @@ DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
                 allApps[i].style.background = '#ffffff';
                 allApps[i].className = configGeneral.htmlIDs.dtAdbAppClass;
             }
+
+            // http://i.imgur.com/84BZNtv.png
 
             option.className += ' ' + configGeneral.htmlIDs.dtAdbAppSelected + ' '; // keep spaces
             option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 170px 0';

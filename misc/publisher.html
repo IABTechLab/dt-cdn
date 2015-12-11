@@ -9,13 +9,16 @@
             member: 'example_member_id',
             site: 'example_site_id',
             adblocker: {
+                logoSrc: 'http://i.imgur.com/xfgM1wq.png',
+                logoText: 'The Seattle Times',
+                pictureSrc: 'http://i.imgur.com/IP5RRah.png',
                 blockContent: true,
                 detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
                 // popupFontColor: 'white', // @todo add to GitHub spec
                 // popupBackgroundColor: 'orange' // @todo add to GitHub spec
             },
             apps: {
-                manifest: 'http://local.digitru.st/misc/manifest.json'
+                //manifest: 'http://local.digitru.st/misc/manifest.json'
             }
         },
         function (digiTrustResult) {

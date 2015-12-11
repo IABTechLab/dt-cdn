@@ -35,7 +35,7 @@ module.exports = function (grunt) {
             },
             html: {
                 files: ['pages/**'],
-                tasks: ['copy:main'],
+                tasks: ['copy'],
                 options: {
                     atBegin: true
                 }
@@ -97,6 +97,10 @@ module.exports = function (grunt) {
                 src: '**',
                 expand: true,
                 dest: 'dist/'
+            },
+            images: {
+                src: 'misc/powered_by.png',
+                dest: 'dist/powered_by.png'
             }
         },
         environments: {
@@ -151,8 +155,8 @@ module.exports = function (grunt) {
     });
 
     // Register tasks
-    grunt.registerTask('default', ['copy:main', 'browserify', 'strip_code', 'uglify', 'karma']);
-    grunt.registerTask('nokarma', ['copy:main', 'browserify', 'strip_code', 'uglify']);
+    grunt.registerTask('default', ['copy', 'browserify', 'strip_code', 'uglify', 'karma']);
+    grunt.registerTask('nokarma', ['copy', 'browserify', 'strip_code', 'uglify']);
 
     // Deployment tasks
     if (argEnv === 'prod') {

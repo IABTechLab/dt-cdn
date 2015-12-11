@@ -78,12 +78,12 @@ describe('DigiTrustPopup', function () {
         expect(document.getElementById('digitrust-adb-bg').id)
             .toEqual('digitrust-adb-bg');
         expect(document.getElementById('digitrust-adb-reload').innerHTML)
-            .toContain('Reload Page');
-        expect(document.getElementById('digitrust-adb-message').innerHTML)
+            .toContain('RELOAD THE PAGE');
+        expect(document.getElementById(configGeneral.htmlIDs.dtAdbMessage).innerHTML)
             .toContain(configInitializeOptions.adblocker.userMessage);
-        expect(document.getElementById('digitrust-adb-message').style.background)
+        expect(document.getElementById(configGeneral.htmlIDs.dtAdbContainer).style.background)
             .toEqual(configInitializeOptions.adblocker.popupBackgroundColor);
-        expect(document.getElementById('digitrust-adb-message').style.color)
+        expect(document.getElementById(configGeneral.htmlIDs.dtAdbContainer).style.color)
             .toEqual(configInitializeOptions.adblocker.popupFontColor);
         expect(document.getElementById('digitrust-adb-blur').id)
             .toBeTruthy();
@@ -92,7 +92,7 @@ describe('DigiTrustPopup', function () {
     it('DigiTrustPopup.createConsentPopup', function () {
         DigiTrustPopup.createConsentPopup(configInitializeOptions);
 
-        expect(document.getElementById(configGeneral.consent.consentLinkId).innerHTML)
+        expect(document.getElementById(configGeneral.htmlIDs.consentLinkId).innerHTML)
             .toContain('You can read more or opt out of DigiTrust here.');
         expect(document.getElementById('digitrust-c-text').id)
             .toBeTruthy();

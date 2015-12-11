@@ -32,6 +32,8 @@
 		},
 		"htmlIDs": {
 			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
 			"dtAdbApps": "digitrust-adb-apps",
 			"dtAdbAppClass": "dt-app",
 			"dtAdbAppSelected": "dt-app-selected",
@@ -71,6 +73,8 @@
 		},
 		"htmlIDs": {
 			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
 			"dtAdbApps": "digitrust-adb-apps",
 			"dtAdbAppClass": "dt-app",
 			"dtAdbAppSelected": "dt-app-selected",
@@ -110,6 +114,8 @@
 		},
 		"htmlIDs": {
 			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
 			"dtAdbApps": "digitrust-adb-apps",
 			"dtAdbAppClass": "dt-app",
 			"dtAdbAppSelected": "dt-app-selected",

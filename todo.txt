@@ -11,6 +11,7 @@
 - [DONE] verify appName for addListener
 - [DONE] hide selection of apps for 48 hrs
 
+- add tests for custom logo & image & picture
 - cross-browser APPS
 
 - unit tests
