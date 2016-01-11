@@ -11,7 +11,7 @@ DigiTrustCommunication.iframe = null;
 DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
 
 DigiTrustCommunication._messageHandler = function (evt) {
-    if (evt.origin !== location.protocol + configGeneral.iframe.postMessageOrigin) {
+    if (evt.origin !== configGeneral.iframe.postMessageOrigin) {
         throw new Error(configErrors.en.postMessageOrigin);
     } else {
         switch (evt.data.type) {
@@ -63,7 +63,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
 
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
-    DigiTrustCommunication.iframe.src = location.protocol + configGeneral.urls.digitrustIframe;
+    DigiTrustCommunication.iframe.src = configGeneral.urls.digitrustIframe;
     DigiTrustCommunication.iframeStatus = 1;
     document.head.appendChild(DigiTrustCommunication.iframe);
 };
