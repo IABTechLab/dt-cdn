@@ -13,7 +13,17 @@
 
 - add tests for custom logo & image & picture
 - cross-browser APPS
+- https redirect
+- documentation for decrypting
+
+
+
+
+
+
+
+
+
 
 - unit tests
-- test https
 - detect country<script type="text/javascript">var userLang = navigator.language || navigator.userLanguage; alert ("The language is:" + userLang);</script>

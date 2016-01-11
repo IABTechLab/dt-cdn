@@ -62,7 +62,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
 
     var reloadDiv = document.createElement('div');
     reloadDiv.id = 'digitrust-adb-reload';
-    reloadDiv.innerHTML = 'RELOAD THE PAGE';
+    reloadDiv.innerHTML = 'SELECT APP & RELOAD THE PAGE';
     reloadDiv.style.cursor = 'pointer';
     reloadDiv.style.background = '#006080';
     reloadDiv.style.color = '#FFF';
@@ -90,7 +90,22 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
     }
 
     reloadDiv.onclick = function () {
-        location.reload();
+        var selectedAppList = document.getElementsByClassName(configGeneral.htmlIDs.dtAdbAppSelected);
+        var selectedApp = selectedAppList[0];
+        var appId = selectedApp.getAttribute('data-appId');
+        console.log(appId);
+        if (appId.length > 0) {
+            var app = window.DigiTrust.apps[appId];
+            console.log(app);
+            if (app) {
+                helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.reload', [app]);
+            } else {
+                throw new Error('App Object with this ID does not exist');
+            }
+        } else {
+            throw new Error('App ID string missing');
+        }
+        //location.reload();
     };
 
     var publisherLogo;
@@ -359,8 +374,6 @@ DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
                 allApps[i].style.background = '#ffffff';
                 allApps[i].className = configGeneral.htmlIDs.dtAdbAppClass;
             }
-
-            // http://i.imgur.com/84BZNtv.png
 
             option.className += ' ' + configGeneral.htmlIDs.dtAdbAppSelected + ' '; // keep spaces
             option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 170px 0';

@@ -1,0 +1,77 @@
+<script>
+
+helpers.ab2str = function (buf) {
+    return String.fromCharCode.apply(null, new Uint16Array(buf));
+};
+
+helpers.str2ab = function (str) {
+    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var bufView = new Uint16Array(buf);
+    for (var i=0, strLen=str.length; i<strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+};
+
+helpers.arrayBufferToBase64String = function (arrayBuffer) {
+    var byteArray = new Uint8Array(arrayBuffer)
+    var byteString = '';
+    for (var i=0; i<byteArray.byteLength; i++) {
+        byteString += String.fromCharCode(byteArray[i]);
+    }
+    return btoa(byteString);
+};
+
+helpers.base64StringToArrayBuffer = function (base64) {
+    var binary_string =  atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++)        {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+};
+var DTPublicKeyObject = {
+version: 1,
+type: "RSA-OAEP",
+hash: {
+name: "SHA-1"
+},
+key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA43IaroF13wUTJbGaqbwnotyH/815rWJwxZYPDefkwBWetC4p/Tght7Qb8hSg2eFJoW9kcUokpsqlur0PXo8hM2VU+2WNJrertotsW4e67oaw+/M9Eoy9X2FWQSc+LsfD53tnONQ8WG968bOLbPC6OEZ8Vj8FLpGHLBrSYPkPmZM5Alvjc7ux6YwlQ7QtCuUqbbFnAhg4CRFjZo8gyxj/0dkyBlSdBNE+QGruPeOif7hOT53NCtpWJHUhsXFcs8emuAzOnE5eCXySAsGFgytvt3rvY1BdhR6d7z0CBLdXost5p8EcR5LrLERCCsdWIwI6VvaqO3hMUiB78HBgXdlPwQIDAQAB"
+}
+
+console.log('ok1');
+    console.log(DTPublicKeyObject.key)
+    window.crypto.subtle.importKey(
+        'spki',
+        helpers.base64StringToArrayBuffer(DTPublicKeyObject.key),
+        {
+            name: DTPublicKeyObject.type,
+            hash: {
+                name: DTPublicKeyObject.hash.name
+            }
+        },
+        false,
+        ["encrypt"]
+    )
+    .then( function(cryptokey) {
+        console.log('ok2');
+        window.crypto.subtle.encrypt(
+            {
+                name: DTPublicKeyObject.type
+            },
+            cryptokey,
+            // string to array buffer
+            helpers.str2ab(valueToEncrypt)
+        )
+        .then( function(encryptedValue){
+
+            //returns an ArrayBuffer containing the encrypted data
+            var encryptedValueEncodedB64 = helpers.arrayBufferToBase64String(encryptedValue);
+            console.log(encryptedValueEncodedB64);
+
+            return callback(encryptedValueEncodedB64);
+        });
+    });
+
+</script>

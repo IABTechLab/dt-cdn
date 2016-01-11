@@ -1,7 +1,7 @@
 {
     "apps":[
         {
-            "name": "BitFoo1",
+            "name": "BitFoo",
             "description": "BitFoo allows for bitcoin-based microtransactions to access our content.",
             "behavior": "http://local.digitru.st/misc/BitFoo.js",
             "icon": {
@@ -12,7 +12,7 @@
             "options": { }
         },
         {
-            "name": "FivePlay2",
+            "name": "FivePlay",
             "description": "FivePlay plays a video every few page views.",
             "behavior": "http://local.digitru.st/misc/FivePlay.js",
             "icon": {
@@ -25,53 +25,13 @@
             }
         },
         {
-            "name": "FunkyApp3",
+            "name": "FunkyApp",
             "description": "FunkyApp is funky.",
             "behavior": "http://local.digitru.st/misc/FunkyApp.js",
             "icon": {
                 "w": 16,
                 "h": 16,
                 "url": ""
-            }
-        },
-        {
-            "name": "FunkyApp4",
-            "description": "FunkyApp is funky.",
-            "behavior": "http://local.digitru.st/misc/FunkyApp.js",
-            "icon": {
-                "w": 16,
-                "h": 16,
-                "url": "http://local.digitru.st/misc/FunkyApp.png"
-            }
-        },
-        {
-            "name": "FunkyApp5",
-            "description": "FunkyApp is funky.",
-            "behavior": "http://local.digitru.st/misc/FunkyApp.js",
-            "icon": {
-                "w": 16,
-                "h": 16,
-                "url": "http://local.digitru.st/misc/FunkyApp.png"
-            }
-        },
-        {
-            "name": "FunkyApp6",
-            "description": "FunkyApp is funky.",
-            "behavior": "http://local.digitru.st/misc/FunkyApp.js",
-            "icon": {
-                "w": 16,
-                "h": 16,
-                "url": "http://local.digitru.st/misc/FunkyApp.png"
-            }
-        },
-        {
-            "name": "FunkyApp7",
-            "description": "FunkyApp is funky.",
-            "behavior": "http://local.digitru.st/misc/FunkyApp.js",
-            "icon": {
-                "w": 16,
-                "h": 16,
-                "url": "http://local.digitru.st/misc/FunkyApp.png"
             }
         }
     ]

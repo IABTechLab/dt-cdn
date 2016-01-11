@@ -3,6 +3,7 @@
 
 var collapse = require('bundle-collapser/plugin');
 
+
 module.exports = function (grunt) {
     // Project configuration
     'use strict';
@@ -13,6 +14,8 @@ module.exports = function (grunt) {
         argEnv = 'prod';
     } else if (argEnv === 'dev') {
         argEnv = 'dev';
+    } else if (argEnv === 'local-chrome') {
+        argEnv = 'local-chrome';
     } else {
         argEnv = 'local';
     }
@@ -157,6 +160,131 @@ module.exports = function (grunt) {
     // Register tasks
     grunt.registerTask('default', ['copy', 'browserify', 'strip_code', 'uglify', 'karma']);
     grunt.registerTask('nokarma', ['copy', 'browserify', 'strip_code', 'uglify']);
+    grunt.registerTask('generateKey', function () {
+        var subtle = require('subtle');
+        var jose = require('node-jose');
+        var done = this.async();
+        var keyPair,
+            spki_pem,
+            pkcs8_pem,
+            KEY_JSON = {
+                type: "RSA-OAEP",
+                hash: {
+                    name: "SHA-1"
+                }
+            };
+
+        var argKeyVersion = grunt.option('keyversion');
+        if (argKeyVersion === undefined || argKeyVersion < 1) {
+            var er = 'ERROR: DO NOT FORGET the Key Version: grunt generateKey --keyversion 123';
+            console.log(er);
+            console.log(er);
+            console.log(er);
+            console.log(er);
+            console.log(er);
+            throw new Error();
+        }
+        KEY_JSON.version = parseInt(argKeyVersion);
+
+        function arrayBufferToBase64String(arrayBuffer) {
+            return arrayBuffer.toString('base64');
+        }
+
+        function convertBinaryToPem(binaryData, label) {
+            var base64Cert = arrayBufferToBase64String(binaryData);
+            var pemCert = "-----BEGIN " + label + "-----\n";
+
+            var nextIndex = 0;
+            var lineLength;
+            while (nextIndex < base64Cert.length) {
+                if (nextIndex + 64 <= base64Cert.length) {
+                    pemCert += base64Cert.substr(nextIndex, 64) + "\n";
+                } else {
+                    pemCert += base64Cert.substr(nextIndex) + "\n";
+                }
+                nextIndex += 64;
+            }
+
+            pemCert += "-----END " + label + "-----\n";
+            return pemCert;
+        };
+
+        subtle.generateKey({
+            name: KEY_JSON.type,
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([1, 0, 1]),  // 24 bit representation of 65537
+            hash: KEY_JSON.hash
+        }, true, ["encrypt", "decrypt"])
+        .then(function(newKeyPair) {
+            keyPair = newKeyPair;
+            return keyPair;
+        })
+        .then(function() {
+            return subtle.exportKey('spki', keyPair.publicKey)
+            .then(function(spki) {
+                KEY_JSON.spki = arrayBufferToBase64String(spki);
+                spki_pem = convertBinaryToPem(spki, "PUBLIC KEY");
+                
+                console.log('----------------------------');
+                console.log('spki (Public Key PEM)');
+                console.log('----------------------------');
+                console.log(spki_pem);
+            })
+        })
+        .then(function() {
+            return subtle.exportKey('pkcs8', keyPair.privateKey)
+            .then(function(pkcs8) {
+                pkcs8_pem = convertBinaryToPem(pkcs8, "PRIVATE KEY");
+                
+                console.log('----------------------------');
+                console.log('pkcs8 (Private Key PEM)');
+                console.log('----------------------------');
+                console.log(pkcs8_pem);
+            });
+        })
+        .then(function() {
+            return jose.JWK.asKey(pkcs8_pem, 'pem')
+                .then( function(result) {
+                    var jwkPublic = result.toJSON();
+                    jwkPublic.alg = KEY_JSON.type;
+                    jwkPublic.ext = true;
+                    jwkPublic.key_ops = ["encrypt"];
+                    KEY_JSON.jwk = jwkPublic;
+                    console.log('----------------------------');
+                    console.log('jwk Public');
+                    console.log('----------------------------');
+                    console.log(jwkPublic);
+
+                    var jwkPrivate = result.toJSON(true);
+                    jwkPrivate.alg = KEY_JSON.type;
+                    jwkPrivate.ext = true;
+                    jwkPrivate.key_ops = ["decrypt"];
+                    console.log('----------------------------');
+                    console.log('jwk Private');
+                    console.log('----------------------------');
+                    console.log(jwkPrivate);
+                });
+        })
+        .then( function() {
+            console.log('----------------------------');
+            console.log('Public Keys in JSON format');
+            console.log('----------------------------');
+            console.log(JSON.stringify(KEY_JSON, null, 4));
+
+
+            console.log('----------------------------');
+            console.log('----------------------------');
+            console.log('Remember to save JSON to /pages/key.json and /src/config/key.json');
+            console.log('----------------------------');
+            console.log('----------------------------');
+
+            done();
+        })
+        .catch(function(err){
+            console.log(err.stack)
+        });
+    });
+
 
     // Deployment tasks
     if (argEnv === 'prod') {

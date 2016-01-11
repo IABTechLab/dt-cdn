@@ -2,7 +2,7 @@
 <html>
 <head>
     <script src='./digitrust-server.js'></script>
-    <link rel="P3Pv1" href="http://digitrust.s3.amazonaws.com/dev/v1/p3p.xml">
+    <!--<link rel="P3Pv1" href="http://digitrust.s3.amazonaws.com/dev/v1/p3p.xml">-->
     <script>
 
         var cookieKey = configGeneral.cookie.publisher.userObjectKey;
@@ -14,16 +14,27 @@
                     var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
                     var digiTrustUserJSON = digiTrustUserCookie ?
                         DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
+                        
+                        var sendMessage = function (messageValue) {
+                            var messageType = evt.data.syncOnly ?
+                                'DigiTrust.identity.response.syncOnly' :
+                                'DigiTrust.identity.response';
+                            var identity = {
+                                version: 1,
+                                type: messageType,
+                                value: messageValue
+                            };
+                            window.parent.postMessage(identity, evt.origin);
+                        }
 
-                    var messageType = evt.data.syncOnly ?
-                        'DigiTrust.identity.response.syncOnly' :
-                        'DigiTrust.identity.response';
-                    var identity = {
-                        version: 1,
-                        type: messageType,
-                        value: digiTrustUserJSON
-                    };
-                    window.parent.postMessage(identity, evt.origin);
+                        if (helpers.isEmpty(digiTrustUserJSON)) {
+                            sendMessage(digiTrustUserJSON);
+                        } else {
+                            DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
+                                digiTrustUserJSON.id = encryptedUserId;
+                                sendMessage(digiTrustUserJSON);
+                            });
+                        }                    
                     break;
                 case 'DigiTrust.getAppsPreferences.request':
                     var appData = DigiTrustAppContainer.server.getAppForMember(evt.data.value.member);

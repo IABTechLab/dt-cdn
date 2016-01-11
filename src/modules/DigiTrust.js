@@ -136,7 +136,10 @@ DigiTrust.addListener = function (appName, eventName, callback) {
         };
     };
 
+
     var app = helpers.getObjectByKeyFromObject(window.DigiTrust.apps, 'name', appName);
+    console.log(appName);
+    console.log(app);
     if (helpers.isEmpty(app)) {
         throw new Error(configErrors.en.appNameInvalid);
     }

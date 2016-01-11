@@ -1,0 +1,136 @@
+<h1>How to decrypt the DigiTrust ID</h1>
+<h2>OpenSSL</h2>
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">base64 -D -i encrypted_id_from_iframe.txt -o encrypted_id_binary.txt
+/usr/local/bin/openssl pkeyutl -decrypt -inkey pkcs8.pem -pkeyopt rsa_padding_mode:oaep -in encrypted_id_binary.txt
+</pre></div>
+
+
+
+<h2>PHP</h2>
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #BC7A00">&lt;?php</span>
+    <span style="color: #19177C">$pemPrivateKey</span> <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;-----BEGIN PRIVATE KEY-----</span>
+<span style="color: #BA2121">YOUR KEY HERE</span>
+<span style="color: #BA2121">-----END PRIVATE KEY-----&#39;</span>;
+
+    <span style="color: #19177C">$encryptedMessage</span> <span style="color: #666666">=</span>  <span style="color: #BA2121">&#39;BASE64 ENCRYPTED MESSAGE&#39;</span>;
+
+    <span style="color: #19177C">$privateKey</span> <span style="color: #666666">=</span> <span style="color: #008000">openssl_get_privatekey</span>(<span style="color: #19177C">$pemPrivateKey</span>);
+    <span style="color: #008000; font-weight: bold">if</span> (<span style="color: #666666">!</span><span style="color: #19177C">$privateKey</span>) {
+        <span style="color: #008000; font-weight: bold">echo</span> <span style="color: #BA2121">&quot;Cannot get private key&quot;</span>;
+    }
+    
+    <span style="color: #19177C">$binaryMessage</span> <span style="color: #666666">=</span> <span style="color: #008000">base64_decode</span>(<span style="color: #19177C">$encryptedMessage</span>);
+    <span style="color: #19177C">$b</span> <span style="color: #666666">=</span> <span style="color: #008000">openssl_private_decrypt</span>(<span style="color: #19177C">$binaryMessage</span>, <span style="color: #19177C">$decr</span>, <span style="color: #19177C">$privateKey</span>, OPENSSL_PKCS1_OAEP_PADDING);
+    <span style="color: #008000; font-weight: bold">if</span> (<span style="color: #666666">!</span><span style="color: #19177C">$b</span>) {
+        <span style="color: #008000; font-weight: bold">echo</span> <span style="color: #BA2121">&quot;Cannot decode message&quot;</span>;
+    }
+    <span style="color: #008000; font-weight: bold">echo</span> <span style="color: #BA2121">&quot;Decrypted message: &quot;</span> <span style="color: #666666">.</span> <span style="color: #19177C">$decr</span>;
+<span style="color: #BC7A00">?&gt;</span>
+</pre></div>
+
+
+<h2>Java</h2>
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #008000; font-weight: bold">package</span> com<span style="color: #666666">.</span><span style="color: #7D9029">something</span><span style="color: #666666">.</span><span style="color: #7D9029">misc</span><span style="color: #666666">;</span>
+
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">java.io.DataInputStream</span><span style="color: #666666">;</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">java.io.File</span><span style="color: #666666">;</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">java.io.FileInputStream</span><span style="color: #666666">;</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">java.security.Key</span><span style="color: #666666">;</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">java.security.KeyFactory</span><span style="color: #666666">;</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">java.security.spec.PKCS8EncodedKeySpec</span><span style="color: #666666">;</span>
+
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">javax.crypto.Cipher</span><span style="color: #666666">;</span>
+
+<span style="color: #008000; font-weight: bold">public</span> <span style="color: #008000; font-weight: bold">class</span> <span style="color: #0000FF; font-weight: bold">DigiTrustIdParsing</span> <span style="color: #666666">{</span>
+    <span style="color: #008000; font-weight: bold">final</span> <span style="color: #008000; font-weight: bold">protected</span> <span style="color: #008000; font-weight: bold">static</span> <span style="color: #B00040">char</span><span style="color: #666666">[]</span> hexArray <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;0123456789ABCDEF&quot;</span><span style="color: #666666">.</span><span style="color: #7D9029">toCharArray</span><span style="color: #666666">();</span>
+
+    <span style="color: #008000; font-weight: bold">public</span> <span style="color: #008000; font-weight: bold">static</span> <span style="color: #B00040">void</span> <span style="color: #0000FF">main</span><span style="color: #666666">(</span>String<span style="color: #666666">[]</span> args<span style="color: #666666">)</span> <span style="color: #008000; font-weight: bold">throws</span> Exception <span style="color: #666666">{</span>
+
+        Key privKey <span style="color: #666666">=</span> readPrivateKey<span style="color: #666666">();</span>
+
+        <span style="color: #408080; font-style: italic">// read in ciphertext</span>
+        <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> ciphertext <span style="color: #666666">=</span> readFully<span style="color: #666666">(</span><span style="color: #008000; font-weight: bold">new</span> File<span style="color: #666666">(</span><span style="color: #BA2121">&quot;/Users/stingleff/src/digitrust-sandbox/encrypted-string.txt&quot;</span><span style="color: #666666">));</span>
+
+        Cipher cipher <span style="color: #666666">=</span> Cipher<span style="color: #666666">.</span><span style="color: #7D9029">getInstance</span><span style="color: #666666">(</span><span style="color: #BA2121">&quot;RSA/ECB/OAEPWithSHA-1AndMGF1Padding&quot;</span><span style="color: #666666">);</span>
+        cipher<span style="color: #666666">.</span><span style="color: #7D9029">init</span><span style="color: #666666">(</span>Cipher<span style="color: #666666">.</span><span style="color: #7D9029">DECRYPT_MODE</span><span style="color: #666666">,</span> privKey<span style="color: #666666">);</span>
+        <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> plainText <span style="color: #666666">=</span> cipher<span style="color: #666666">.</span><span style="color: #7D9029">doFinal</span><span style="color: #666666">(</span>ciphertext<span style="color: #666666">);</span>
+
+        System<span style="color: #666666">.</span><span style="color: #7D9029">out</span><span style="color: #666666">.</span><span style="color: #7D9029">println</span><span style="color: #666666">(</span><span style="color: #008000; font-weight: bold">new</span> String<span style="color: #666666">(</span>plainText<span style="color: #666666">));</span>
+    <span style="color: #666666">}</span>
+
+    <span style="color: #008000; font-weight: bold">private</span> <span style="color: #008000; font-weight: bold">static</span> Key <span style="color: #0000FF">readPrivateKey</span><span style="color: #666666">()</span> <span style="color: #008000; font-weight: bold">throws</span> Exception <span style="color: #666666">{</span>
+        <span style="color: #408080; font-style: italic">// given an openssl private key in pem format</span>
+        <span style="color: #408080; font-style: italic">// first do this</span>
+        <span style="color: #408080; font-style: italic">// openssl pkcs8 -topk8 -nocrypt -in private.pem -outform DER -out private.pkcs8</span>
+
+        <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> privKeyBytes <span style="color: #666666">=</span> readFully<span style="color: #666666">(</span><span style="color: #008000; font-weight: bold">new</span> File<span style="color: #666666">(</span>
+                <span style="color: #BA2121">&quot;/path-to/private.pkcs8&quot;</span><span style="color: #666666">));</span>
+        PKCS8EncodedKeySpec spec <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">new</span> PKCS8EncodedKeySpec<span style="color: #666666">(</span>privKeyBytes<span style="color: #666666">);</span>
+        KeyFactory kf <span style="color: #666666">=</span> KeyFactory<span style="color: #666666">.</span><span style="color: #7D9029">getInstance</span><span style="color: #666666">(</span><span style="color: #BA2121">&quot;RSA&quot;</span><span style="color: #666666">);</span>
+        Key privKey <span style="color: #666666">=</span> kf<span style="color: #666666">.</span><span style="color: #7D9029">generatePrivate</span><span style="color: #666666">(</span>spec<span style="color: #666666">);</span>
+        <span style="color: #008000; font-weight: bold">return</span> privKey<span style="color: #666666">;</span>
+    <span style="color: #666666">}</span>
+
+    <span style="color: #008000; font-weight: bold">public</span> <span style="color: #008000; font-weight: bold">static</span> <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> <span style="color: #0000FF">hexStringToByteArray</span><span style="color: #666666">(</span>String s<span style="color: #666666">)</span> <span style="color: #666666">{</span>
+        <span style="color: #B00040">int</span> len <span style="color: #666666">=</span> s<span style="color: #666666">.</span><span style="color: #7D9029">length</span><span style="color: #666666">();</span>
+        <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> data <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">new</span> <span style="color: #B00040">byte</span><span style="color: #666666">[</span>len <span style="color: #666666">/</span> <span style="color: #666666">2];</span>
+        <span style="color: #008000; font-weight: bold">for</span> <span style="color: #666666">(</span><span style="color: #B00040">int</span> i <span style="color: #666666">=</span> <span style="color: #666666">0;</span> i <span style="color: #666666">&lt;</span> len<span style="color: #666666">;</span> i <span style="color: #666666">+=</span> <span style="color: #666666">2)</span> <span style="color: #666666">{</span>
+            data<span style="color: #666666">[</span>i <span style="color: #666666">/</span> <span style="color: #666666">2]</span> <span style="color: #666666">=</span> <span style="color: #666666">(</span><span style="color: #B00040">byte</span><span style="color: #666666">)</span> <span style="color: #666666">((</span>Character<span style="color: #666666">.</span><span style="color: #7D9029">digit</span><span style="color: #666666">(</span>s<span style="color: #666666">.</span><span style="color: #7D9029">charAt</span><span style="color: #666666">(</span>i<span style="color: #666666">),</span> <span style="color: #666666">16)</span> <span style="color: #666666">&lt;&lt;</span> <span style="color: #666666">4)</span>
+                                 <span style="color: #666666">+</span> Character<span style="color: #666666">.</span><span style="color: #7D9029">digit</span><span style="color: #666666">(</span>s<span style="color: #666666">.</span><span style="color: #7D9029">charAt</span><span style="color: #666666">(</span>i<span style="color: #666666">+1),</span> <span style="color: #666666">16));</span>
+        <span style="color: #666666">}</span>
+        <span style="color: #008000; font-weight: bold">return</span> data<span style="color: #666666">;</span>
+    <span style="color: #666666">}</span>
+
+    <span style="color: #008000; font-weight: bold">private</span> <span style="color: #008000; font-weight: bold">static</span> String <span style="color: #0000FF">bytesToHex</span><span style="color: #666666">(</span><span style="color: #B00040">byte</span><span style="color: #666666">[]</span> bytes<span style="color: #666666">)</span> <span style="color: #666666">{</span>
+        <span style="color: #B00040">char</span><span style="color: #666666">[]</span> hexChars <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">new</span> <span style="color: #B00040">char</span><span style="color: #666666">[</span>bytes<span style="color: #666666">.</span><span style="color: #7D9029">length</span> <span style="color: #666666">*</span> <span style="color: #666666">2];</span>
+        <span style="color: #008000; font-weight: bold">for</span> <span style="color: #666666">(</span> <span style="color: #B00040">int</span> j <span style="color: #666666">=</span> <span style="color: #666666">0;</span> j <span style="color: #666666">&lt;</span> bytes<span style="color: #666666">.</span><span style="color: #7D9029">length</span><span style="color: #666666">;</span> j<span style="color: #666666">++</span> <span style="color: #666666">)</span> <span style="color: #666666">{</span>
+            <span style="color: #B00040">int</span> v <span style="color: #666666">=</span> bytes<span style="color: #666666">[</span>j<span style="color: #666666">]</span> <span style="color: #666666">&amp;</span> <span style="color: #666666">0xFF;</span>
+            hexChars<span style="color: #666666">[</span>j <span style="color: #666666">*</span> <span style="color: #666666">2]</span> <span style="color: #666666">=</span> hexArray<span style="color: #666666">[</span>v <span style="color: #666666">&gt;&gt;&gt;</span> <span style="color: #666666">4];</span>
+            hexChars<span style="color: #666666">[</span>j <span style="color: #666666">*</span> <span style="color: #666666">2</span> <span style="color: #666666">+</span> <span style="color: #666666">1]</span> <span style="color: #666666">=</span> hexArray<span style="color: #666666">[</span>v <span style="color: #666666">&amp;</span> <span style="color: #666666">0x0F];</span>
+        <span style="color: #666666">}</span>
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">new</span> <span style="color: #0000FF">String</span><span style="color: #666666">(</span>hexChars<span style="color: #666666">);</span>
+    <span style="color: #666666">}</span>
+
+    <span style="color: #008000; font-weight: bold">private</span> <span style="color: #008000; font-weight: bold">static</span> <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> <span style="color: #0000FF">readFully</span><span style="color: #666666">(</span>File f<span style="color: #666666">)</span> <span style="color: #008000; font-weight: bold">throws</span> Exception <span style="color: #666666">{</span>
+        FileInputStream fis <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">new</span> FileInputStream<span style="color: #666666">(</span>f<span style="color: #666666">);</span>
+        DataInputStream dis <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">new</span> DataInputStream<span style="color: #666666">(</span>fis<span style="color: #666666">);</span>
+        <span style="color: #B00040">byte</span><span style="color: #666666">[]</span> bytes <span style="color: #666666">=</span> <span style="color: #008000; font-weight: bold">new</span> <span style="color: #B00040">byte</span><span style="color: #666666">[(</span><span style="color: #B00040">int</span><span style="color: #666666">)</span> f<span style="color: #666666">.</span><span style="color: #7D9029">length</span><span style="color: #666666">()];</span>
+        dis<span style="color: #666666">.</span><span style="color: #7D9029">readFully</span><span style="color: #666666">(</span>bytes<span style="color: #666666">);</span>
+        dis<span style="color: #666666">.</span><span style="color: #7D9029">close</span><span style="color: #666666">();</span>
+        fis<span style="color: #666666">.</span><span style="color: #7D9029">close</span><span style="color: #666666">();</span>
+        <span style="color: #008000; font-weight: bold">return</span> bytes<span style="color: #666666">;</span>
+    <span style="color: #666666">}</span>
+<span style="color: #666666">}</span>
+</pre></div>
+
+<h2>Node.js</h2>
+<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #408080; font-style: italic">// https://www.npmjs.com/package/subtle</span>
+subtle.importKey(
+    <span style="color: #BA2121">&#39;pkcs8&#39;</span>,
+    <span style="color: #008000; font-weight: bold">new</span> Buffer(<span style="color: #BA2121">&#39;base64 encoded private key&#39;</span>, <span style="color: #BA2121">&#39;base64&#39;</span>),
+    {
+        name<span style="color: #666666">:</span> <span style="color: #BA2121">&quot;RSA-OAEP&quot;</span>,
+        hash<span style="color: #666666">:</span> {
+            name<span style="color: #666666">:</span> <span style="color: #BA2121">&quot;SHA-1&quot;</span>
+        }
+    },
+    <span style="color: #008000; font-weight: bold">false</span>,
+    [<span style="color: #BA2121">&quot;decrypt&quot;</span>]
+)
+.then( <span style="color: #008000; font-weight: bold">function</span>(cryptokey) {
+    subtle.decrypt(
+        {
+            name<span style="color: #666666">:</span> <span style="color: #BA2121">&quot;RSA-OAEP&quot;</span>,
+            hash<span style="color: #666666">:</span> {
+                name<span style="color: #666666">:</span> <span style="color: #BA2121">&quot;SHA-1&quot;</span>
+            }
+        },
+        cryptokey,
+        <span style="color: #008000; font-weight: bold">new</span> Buffer(<span style="color: #BA2121">&#39;value to decrypt&#39;</span>, <span style="color: #BA2121">&#39;base64&#39;</span>)
+    )
+    .then( <span style="color: #008000; font-weight: bold">function</span> (decryptedValueArrayBuffer) {
+        console.log(<span style="color: #BA2121">&#39;Just decrypted: &#39;</span>, decryptedValueArrayBuffer.toString());
+    });
+});
+</pre></div>
+

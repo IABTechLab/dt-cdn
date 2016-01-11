@@ -11,7 +11,7 @@
             adblocker: {
                 logoSrc: 'http://i.imgur.com/xfgM1wq.png',
                 logoText: 'The Seattle Times',
-                //pictureSrc: 'http://i.imgur.com/IP5RRah.png',
+                pictureSrc: 'http://i.imgur.com/IP5RRah.png',
                 blockContent: true,
                 detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
                 // popupFontColor: 'white', // @todo add to GitHub spec
@@ -23,12 +23,22 @@
         },
         function (digiTrustResult) {
             console.log(digiTrustResult);
+            /*if (digiTrustResult.success && digiTrustResult.identity.id) {
+                DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
+                    console.log(decryptedId);
+                })
+            }*/
         });
-        /*var json = DigiTrust.getUser({member: ''});
-        var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
-            console.log(digiTrustResult);
-        });*/
+        //var json = DigiTrust.getUser({member: ''});
         // console.log(json);
+        /*var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
+            console.log('3rd party getUser result', digiTrustResult);
+            if (digiTrustResult.identity.id) {
+                DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
+                    console.log(decryptedId);
+                })
+            }
+        });*/
     </script>
 </head>
 <body>

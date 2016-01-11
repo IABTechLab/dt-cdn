@@ -1,0 +1,19 @@
+{
+    "type": "RSA-OAEP",
+    "hash": {
+        "name": "SHA-1"
+    },
+    "version": 4,
+    "spki": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgrdFWb07eQFRtdmXcnVRpSZFoibNFMZDEZHn71j6oa5Ohw7miu/Cpl77h2Pp/0bLt3dHr6RcinqA9cck2nPjJEw2svSzJOHY1409Cxr7cyAhfmueLazL/C8DOyFSe3e4QGNsJtPTlNy6Etmnb4dvctpm/nQ2nDaPw5wnb0hWI6Ik7wtvjbH9SaCRlXcyEKpF1oXy55jDJeovSxQz9eL+bgObD2Lz43gidU4B/zPhbNI+KmMkV539okyFfmcBwrCQARkh9d3eI8kAH+PptTalApVAefPSGZdWkSvkNw7HEbcnLMWWWXKeF7z2lMBd7RbnCyBUmgtHLY6d8HX6JPWB6QIDAQAB",
+    "jwk": {
+        "kty": "RSA",
+        "kid": "fb8cd98a-d21b-4cd6-8b3c-182727effee4",
+        "n": "grdFWb07eQFRtdmXcnVRpSZFoibNFMZDEZHn71j6oa5Ohw7miu_Cpl77h2Pp_0bLt3dHr6RcinqA9cck2nPjJEw2svSzJOHY1409Cxr7cyAhfmueLazL_C8DOyFSe3e4QGNsJtPTlNy6Etmnb4dvctpm_nQ2nDaPw5wnb0hWI6Ik7wtvjbH9SaCRlXcyEKpF1oXy55jDJeovSxQz9eL-bgObD2Lz43gidU4B_zPhbNI-KmMkV539okyFfmcBwrCQARkh9d3eI8kAH-PptTalApVAefPSGZdWkSvkNw7HEbcnLMWWWXKeF7z2lMBd7RbnCyBUmgtHLY6d8HX6JPWB6Q",
+        "e": "AQAB",
+        "alg": "RSA-OAEP",
+        "ext": true,
+        "key_ops": [
+            "encrypt"
+        ]
+    }
+}
