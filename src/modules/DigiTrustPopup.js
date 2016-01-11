@@ -375,11 +375,14 @@ DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
             }
 
             option.className += ' ' + configGeneral.htmlIDs.dtAdbAppSelected + ' '; // keep spaces
-            option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 170px 0';
+            option.style.background = '#CCDFE5 url("' + configGeneral.urls.digitrustHostPath +
+                'selected_mark.png") no-repeat 170px 0';
             if (_mqTablet().matches) {
-                option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 120px 0';
+                option.style.background = '#CCDFE5 url("' + configGeneral.urls.digitrustHostPath +
+                    'selected_mark.png") no-repeat 120px 0';
             } else if (_mqPhone().matches) {
-                option.style.background = '#CCDFE5 url("/misc/selected_mark.png") no-repeat 90px 0';
+                option.style.background = '#CCDFE5 url("' + configGeneral.urls.digitrustHostPath +
+                    'selected_mark.png") no-repeat 90px 0';
             }
 
             /*var app = window.DigiTrust.apps[appId];
