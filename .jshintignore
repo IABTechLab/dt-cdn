@@ -3,3 +3,5 @@ src/tests/**
 dist/**
 coverage/**
 karma.conf.js
+Gruntfile.js
+pages/**

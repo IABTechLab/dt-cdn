@@ -5,13 +5,13 @@ var configGeneral = require('../config/general')[env];
 var helpers = require('./helpers');
 var DTPublicKeyObject = require('../config/key.json');
 
-var crypto = helpers.getBrowserCrypto();
+var crypto_browser = helpers.getBrowserCrypto();
 var DigiTrustCrypto = {};
 
 // Returns base64 string
 DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
-
-    var algorithm, publicKey;
+    var algorithm;
+    var publicKey;
     if (helpers.isSafari()) {
         console.log('encrypting safari');
         algorithm = 'jwk';
@@ -22,7 +22,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
     }
 
-    crypto.subtle.importKey(
+    crypto_browser.subtle.importKey(
         algorithm,
         publicKey,
         {
@@ -32,10 +32,10 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
             }
         },
         false,
-        ["encrypt"]
+        ['encrypt']
     )
-    .then( function(cryptokey) {
-        crypto.subtle.encrypt(
+    .then(function (cryptokey) {
+        crypto_browser.subtle.encrypt(
             {
                 name: DTPublicKeyObject.type,
                 hash: {
@@ -46,7 +46,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
             // string (User ID) to array buffer
             helpers.str2ab(valueToEncrypt)
         )
-        .then( function (encryptedValue) {
+        .then(function (encryptedValue) {
             // Returns an ArrayBuffer containing the encrypted data
             var encryptedValueEncodedB64 = helpers.arrayBufferToBase64String(encryptedValue);
             console.log('just encrypted', algorithm, encryptedValueEncodedB64);
@@ -71,7 +71,7 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
         privateKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.pkcs8);
     }
 
-    crypto.subtle.importKey(
+    crypto_browser.subtle.importKey(
         algorithm,
         privateKey,
         {
@@ -81,10 +81,10 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
             }
         },
         false,
-        ["decrypt"]
+        ['decrypt']
     )
     .then( function(cryptokey) {
-        crypto.subtle.decrypt(
+        crypto_browser.subtle.decrypt(
             {
                 name: DTPublicKeyObject.type,
                 hash: {

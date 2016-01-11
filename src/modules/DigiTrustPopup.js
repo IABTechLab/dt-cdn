@@ -105,7 +105,6 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
         } else {
             throw new Error('App ID string missing');
         }
-        //location.reload();
     };
 
     var publisherLogo;

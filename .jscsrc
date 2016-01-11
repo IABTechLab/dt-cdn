@@ -5,7 +5,9 @@
         "README.md",
         "dist/**",
         "coverage/**",
-        "karma.conf.js"
+        "karma.conf.js",
+        "Gruntfile.js",
+        "pages/**"
     ],
     "disallowEmptyBlocks": null,
     "requireDotNotation": {

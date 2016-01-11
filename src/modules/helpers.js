@@ -259,8 +259,8 @@ helpers.isIE = function  () {
 };
 
 helpers.isSafari = function () {
-    var ua = navigator.userAgent.toLowerCase(); 
-    if (ua.indexOf('safari') != -1) { 
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf('safari') !== -1) {
         if (ua.indexOf('chrome') > -1) {
             return false;
         } else {
@@ -297,18 +297,18 @@ helpers.ab2str = function (buf) {
 };
 
 helpers.str2ab = function (str) {
-    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
     var bufView = new Uint16Array(buf);
-    for (var i=0, strLen=str.length; i<strLen; i++) {
+    for (var i = 0, strLen = str.length; i < strLen; i++) {
         bufView[i] = str.charCodeAt(i);
     }
     return buf;
 };
 
 helpers.arrayBufferToBase64String = function (arrayBuffer) {
-    var byteArray = new Uint8Array(arrayBuffer)
+    var byteArray = new Uint8Array(arrayBuffer);
     var byteString = '';
-    for (var i=0; i<byteArray.byteLength; i++) {
+    for (var i = 0; i < byteArray.byteLength; i++) {
         byteString += String.fromCharCode(byteArray[i]);
     }
     return btoa(byteString);
@@ -317,8 +317,8 @@ helpers.arrayBufferToBase64String = function (arrayBuffer) {
 helpers.base64StringToArrayBuffer = function (base64) {
     var binary_string =  atob(base64);
     var len = binary_string.length;
-    var bytes = new Uint8Array( len );
-    for (var i = 0; i < len; i++)        {
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
         bytes[i] = binary_string.charCodeAt(i);
     }
     return bytes.buffer;
@@ -326,8 +326,9 @@ helpers.base64StringToArrayBuffer = function (base64) {
 
 helpers.asciiToUint8Array = function (str) {
     var chars = [];
-    for (var i = 0; i < str.length; ++i)
+    for (var i = 0; i < str.length; ++i) {
         chars.push(str.charCodeAt(i));
+    }
     return new Uint8Array(chars);
 };
 
@@ -337,6 +338,6 @@ helpers.getBrowserCrypto = function () {
         window.crypto.subtle = window.crypto.webkitSubtle;
     }
     return window.crypto;
-}
+};
 
 module.exports = helpers;
