@@ -9,25 +9,23 @@ module.exports = function(config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine'],
+        frameworks: ['browserify', 'jasmine'],
 
         // list of files / patterns to load in the browser
         files: [
             // This is the tests that will be loaded into the page
-            'dist/tests/digitrust-test.js',
-            {
-                // This is to expose the actual dist files which will be sucked into each test
-                pattern: 'dist/*.js', watched: false, included: false, served: true
-            }
+            'src/tests/digitrust-test.js'
         ],
-
+        preprocessors: {
+            'src/tests/digitrust-test.js': ['browserify']
+        },
+        browserify: {
+            debug: true
+        },
         // list of files to exclude
         exclude: [
         ],
 
-        // preprocess matching files before serving them to the browser
-        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {},
 
         // test results reporter to use
         // possible values: 'dots', 'progress'

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="../dist/digitrust.js"></script>
+    <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
+    <!--<script src="//cdn.digitru.st/prod/v1/digitrust.js"></script>-->
+    <script>
+        DigiTrust.initialize({
+            member: 'example_member_id',
+            site: 'example_site_id',
+            adblocker: {
+                blockContent: true,
+                detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
+                // popupFontColor: 'white', // @todo add to GitHub spec
+                // popupBackgroundColor: 'orange' // @todo add to GitHub spec
+            },
+            apps: {
+                manifest: 'http://local.digitru.st/misc/manifest.json'
+            }
+        },
+        function (digiTrustResult) {
+            console.log(digiTrustResult);
+        });
+        /*var json = DigiTrust.getUser({member: ''});
+        var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
+            console.log(digiTrustResult);
+        });*/
+        // console.log(json);
+    </script>
+</head>
+<body>
+    
+    <h1>Page 2</h1>
+    This is just.
+    <div>A test.</div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+</body>
+</html>

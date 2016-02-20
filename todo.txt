@@ -1,0 +1,29 @@
+- [DONE] ffx iframe
+- [DONE] ffx/safari adblock detector
+- [DONE] css design
+- [DONE] callback if adblocker detected
+- [DONE] deploy script
+- [DONE] error catching (crypto, etc)
+- [DONE] hosting hookup to S3
+- [DONE] browser testing (cryptooo)
+- [DONE] Can you also reconcile the github wiki docs with implemented behavior, and tell me about inconsistencies?
+- [DONE] javascript error logger
+- [DONE] verify appName for addListener
+- [DONE] hide selection of apps for 48 hrs
+
+- add tests for custom logo & image & picture
+- cross-browser APPS
+- https redirect
+- documentation for decrypting
+
+
+
+
+
+
+
+
+
+
+- unit tests
+- detect country<script type="text/javascript">var userLang = navigator.language || navigator.userLanguage; alert ("The language is:" + userLang);</script>

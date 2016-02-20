@@ -1,6 +1,8 @@
 node_modules
 .DS_Store
-dist/*.js
+dist/*
 coverage
 npm-debug.log
 doc
+deployment.json
+src/config/env.json

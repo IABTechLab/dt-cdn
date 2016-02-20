@@ -3,11 +3,11 @@
     "excludeFiles": [
         "node_modules/**",
         "README.md",
-        "doc/**",
-        "src/partials/**",
         "dist/**",
         "coverage/**",
-        "karma.conf.js"
+        "karma.conf.js",
+        "Gruntfile.js",
+        "pages/**"
     ],
     "disallowEmptyBlocks": null,
     "requireDotNotation": {

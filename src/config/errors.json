@@ -1,0 +1,12 @@
+{
+	"en": {
+		"memberId": "[DigiTrust Client Error] Missing member ID, add the member ID to the function call options",
+        "postMessageOrigin": "[DigiTrust Client Error] Origin of postMessage call was not the official DigiTrust domain",
+        "iframeError": "[DigiTrust Iframe Error] Client could not connect to the iframe",
+        "appManifestXHR": "[DigiTrust Publisher Error] Client could not retrieve Publisher App Manifest JSON file",
+        "appManifestInvalid": "[DigiTrust Publisher Error] Publisher App Manifest does not contain valid JSON",
+        "appNameInvalid": "[DigiTrust App Error] App name does not match available apps in manifest.json",
+        "iframeMissingMember": "[DigiTrust Iframe Error] Client did not send Member string",
+        "iframeMissingAppName": "[DigiTrust Iframe Error] Client did not send App Name string",
+	}
+}

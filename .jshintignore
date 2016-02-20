@@ -1,8 +1,7 @@
 node_modules
-script
-doc/**
-src/partials/**
+src/tests/**
 dist/**
-doc/**
 coverage/**
 karma.conf.js
+Gruntfile.js
+pages/**

@@ -5,6 +5,13 @@ The DigiTrust code base relies on Node.js, Grunt and Browserify among other libr
 To initialize your local repository for development, clone this repository and run:
 
     npm install
+    grunt --env local (build script)
+    grunt watch --env local (build & watch script)
+    grunt deploy1 --env dev && grunt deploy2 --env dev (builds & deploys your LOCAL ./dist)
+    grunt deploy1 --env prod && grunt deploy2 --env prod
+    node node-server.js (to run fileserving with CORS *; may need to sudo)
+
+Available environments: local, dev, prod
 
 Before committing, you can run the following to validate your code
 

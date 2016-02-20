@@ -1,0 +1,22 @@
+{
+    "member": "",
+    "site": "",
+    "adblocker": {
+        "blockContent": false,
+        "userMessage": "Did you know advertising pays for this brilliant content? Please disable your ad blocker, then press the Reload button below ... and thank you for your visit!",
+        "popupFontColor": "#5F615D",
+        "popupBackgroundColor": "#FFFFFF",
+        "logoSrc": null,
+        "logoText": null,
+        "pictureSrc": null
+    },
+    "consent": {
+        "requires": "implicit",
+        "userMessage": "Your browser blocks some 3rd party cookies by default. By clicking on this page you allow our partner DigiTrust to place its cookies and help us serve you personalized ads. <em>This notice only appears once.</em>",
+        "popupFontColor": "#ffffff",
+        "popupBackgroundColor": "#000000"
+    },
+    "apps": {
+        "manifest": null
+    }
+}
