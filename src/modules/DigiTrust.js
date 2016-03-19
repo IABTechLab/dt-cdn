@@ -5,6 +5,7 @@ var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustAdblock = require('./DigiTrustAdblock');
+var DigiTrustCommunication = require('./DigiTrustCommunication');
 var rollbar = require('rollbar-browser');
 
 var DigiTrust = {};
@@ -166,10 +167,16 @@ DigiTrust.addListener = function (appName, eventName, callback) {
     }
 };
 
+
+DigiTrust.sendReset = function (options, callback) {
+    DigiTrustCommunication.sendReset();
+};
+
 module.exports = {
     initialize: DigiTrust.initialize,
     initializeOptions: DigiTrust.initializeOptions,
     getUser: DigiTrust.getUser,
+    sendReset: DigiTrust.sendReset,
     isClient: DigiTrust.isClient,
     apps: DigiTrust.apps,
     loadedApps: DigiTrust.loadedApps,

@@ -2,7 +2,6 @@
 <html>
 <head>
     <script src='./digitrust-server.js'></script>
-    <!--<link rel="P3Pv1" href="http://digitrust.s3.amazonaws.com/dev/v1/p3p.xml">-->
     <script>
 
         var cookieKey = configGeneral.cookie.publisher.userObjectKey;
@@ -35,6 +34,18 @@
                                 sendMessage(digiTrustUserJSON);
                             });
                         }                    
+                    break;
+                case 'DigiTrust.identity.reset':
+                    console.log('clearing1');
+                    var DE = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.resetKey);
+                    console.log(document.cookie);
+                    console.log(DE);
+                    if (DE === 'true') {
+                        console.log('clearing2');
+                        DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.resetKey);
+                        DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.userObjectKey);
+                        DigiTrustCookie.expireCookie(configGeneral.cookie.publisher.userObjectKey);
+                    }
                     break;
                 case 'DigiTrust.getAppsPreferences.request':
                     var appData = DigiTrustAppContainer.server.getAppForMember(evt.data.value.member);

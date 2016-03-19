@@ -12,7 +12,7 @@
                 logoSrc: 'http://i.imgur.com/xfgM1wq.png',
                 logoText: 'The Seattle Times',
                 pictureSrc: 'http://i.imgur.com/IP5RRah.png',
-                blockContent: true,
+                blockContent: false,
                 detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
                 // popupFontColor: 'white', // @todo add to GitHub spec
                 // popupBackgroundColor: 'orange' // @todo add to GitHub spec
@@ -48,6 +48,8 @@
     <a href="http://www.seattletimes.com/life/food-drink/5-ways-caliburger-is-better-than-in-n-out/">
         Link external
     </a>
+    <br/><br/><br/>
+    <a href="javascript:void(0)" onclick="window.DigiTrust.sendReset()"> clear cookie</a>
     <br/><br/><br/>
     <a href="page2.html"> Link internal: page.html</a>
     <br/><br/><br/>

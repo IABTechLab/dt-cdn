@@ -135,7 +135,20 @@ DigiTrustCommunication.setAppsPreferences = function (options) {
                 app: options.app
             }
         };
-        console.log(requestPayload);
+        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
+    };
+
+    DigiTrustCommunication.sendRequest(_request, options);
+};
+
+DigiTrustCommunication.sendReset = function (options) {
+    var DigiTrustCookie = require('./DigiTrustCookie');
+    DigiTrustCookie.setResetCookie();
+    var _request = function (options) {
+        var requestPayload = {
+            version: 1,
+            type: 'DigiTrust.identity.reset'
+        };
         DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
     };
 
@@ -146,5 +159,6 @@ module.exports = {
     getIdentity: DigiTrustCommunication.getIdentity,
     startConnection: DigiTrustCommunication.startConnection,
     getAppsPreferences: DigiTrustCommunication.getAppsPreferences,
-    setAppsPreferences: DigiTrustCommunication.setAppsPreferences
+    setAppsPreferences: DigiTrustCommunication.setAppsPreferences,
+    sendReset: DigiTrustCommunication.sendReset
 };
