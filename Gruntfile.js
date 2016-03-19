@@ -24,7 +24,11 @@ module.exports = function (grunt) {
     // Set environment in config file
     grunt.file.write('src/config/env.json', '{"current":"' + argEnv + '"}');
 
-    var deployment = grunt.file.readJSON('deployment.json');
+    try {
+        var deployment = grunt.file.readJSON('deployment.json');
+    } catch (e) {
+        console.log('\n***\n*\n*\n*\n* Create deployment.json file from deployment-sample.json!\n*\n*\n*\n***\n');
+    }
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),

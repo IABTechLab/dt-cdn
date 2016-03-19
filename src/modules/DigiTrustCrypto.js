@@ -13,11 +13,9 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     var algorithm;
     var publicKey;
     if (helpers.isSafari()) {
-        console.log('encrypting safari');
         algorithm = 'jwk';
         publicKey = helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwk));
     } else {
-        console.log('encrypting chrome');
         algorithm = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
     }
@@ -49,7 +47,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         .then(function (encryptedValue) {
             // Returns an ArrayBuffer containing the encrypted data
             var encryptedValueEncodedB64 = helpers.arrayBufferToBase64String(encryptedValue);
-            console.log('just encrypted', algorithm, encryptedValueEncodedB64);
+            // console.log('just encrypted', algorithm, encryptedValueEncodedB64);
             return callback(encryptedValueEncodedB64);
         });
     });

@@ -65,7 +65,7 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "//digitrust.s3.amazonaws.com"
+			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
 		},
 		"app": {
 			"cookie": {
@@ -107,7 +107,7 @@
         },
         "iframe": {
             "timeoutDuration": 10000,
-            "postMessageOrigin": "//local.digitru.st"
+            "postMessageOrigin": "http://local.digitru.st"
         },
         "app": {
             "cookie": {
@@ -149,7 +149,7 @@
         },
         "iframe": {
             "timeoutDuration": 10000,
-            "postMessageOrigin": "//localhost"
+            "postMessageOrigin": "http://localhost"
         },
         "app": {
             "cookie": {
