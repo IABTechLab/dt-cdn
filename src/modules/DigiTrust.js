@@ -167,7 +167,6 @@ DigiTrust.addListener = function (appName, eventName, callback) {
     }
 };
 
-
 DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
