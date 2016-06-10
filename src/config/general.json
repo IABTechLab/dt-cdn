@@ -19,7 +19,8 @@
 				"pathKeyValue": "path=/;",
 				"maxAgeMiliseconds": 157680000000,
 	            "userObjectKey": "DigiTrust.v1.identity",
-                "resetKey": "DeleteEverything"
+                "resetKey": "DeleteEverything",
+                "challenge": "DTChal"
 			}
 		},
 		"iframe": {
@@ -62,7 +63,8 @@
 				"pathKeyValue": "path=/;",
 				"maxAgeMiliseconds": 157680000000,
 	            "userObjectKey": "DigiTrust.v1.identity",
-                "resetKey": "DeleteEverything"
+                "resetKey": "DeleteEverything",
+                "challenge": "DTChal"
 			}
 		},
 		"iframe": {
@@ -105,7 +107,8 @@
                 "pathKeyValue": "path=/;",
                 "maxAgeMiliseconds": 157680000000,
                 "userObjectKey": "DigiTrustLOCALDT.v1.identity",
-                "resetKey": "DeleteEverything"
+                "resetKey": "DeleteEverything",
+                "challenge": "DTChal"
             }
         },
         "iframe": {

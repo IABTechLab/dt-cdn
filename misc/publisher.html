@@ -23,6 +23,18 @@
         },
         function (digiTrustResult) {
             console.log(digiTrustResult);
+            
+            DigiTrust.optOut({}, function(optOutResponse){
+                console.log(optOutResponse);
+                if (optOutResponse.success) {
+                    DigiTrustCrypto.decrypt(optOutResponse.challenge, function(decryptedChallengeString) {
+                        DigiTrust.optOutSolution({ solution: decryptedChallengeString}, function(optOutSolutionResponse){
+                            console.log(optOutSolutionResponse);
+                        });
+                    });
+                }
+            });
+
             /*if (digiTrustResult.success && digiTrustResult.identity.id) {
                 DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
                     console.log(decryptedId);

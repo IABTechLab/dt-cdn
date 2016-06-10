@@ -15,5 +15,20 @@
         "key_ops": [
             "encrypt"
         ]
+    },
+    "jwkPrivate": {
+        "kty": "RSA",
+        "kid": "fb8cd98a-d21b-4cd6-8b3c-182727effee4",
+        "n": "grdFWb07eQFRtdmXcnVRpSZFoibNFMZDEZHn71j6oa5Ohw7miu_Cpl77h2Pp_0bLt3dHr6RcinqA9cck2nPjJEw2svSzJOHY1409Cxr7cyAhfmueLazL_C8DOyFSe3e4QGNsJtPTlNy6Etmnb4dvctpm_nQ2nDaPw5wnb0hWI6Ik7wtvjbH9SaCRlXcyEKpF1oXy55jDJeovSxQz9eL-bgObD2Lz43gidU4B_zPhbNI-KmMkV539okyFfmcBwrCQARkh9d3eI8kAH-PptTalApVAefPSGZdWkSvkNw7HEbcnLMWWWXKeF7z2lMBd7RbnCyBUmgtHLY6d8HX6JPWB6Q",
+        "e": "AQAB",
+        "d": "IsLB-n9MFX24UPewQovYTmbDFb_jwaaHp2B5oTi0TdKgp2HbBQ-FX-DaWsLDM1OMURmzQo4e3eR97t4qer1epgRud2CDU0eL9qZkmVNvksn0nj3YLqVJCaMm5M6TtKm9ocHOvPSPy4J3KRQgZpRJmu1hfkFBVIFd8dLQ2dMOtSK_iBvVgY0vf607DITj8r946hT_aPr6rd31P1YFtGUeY5PEwybWxadd_khanceyND8NTOgWmLbCzun2PzTkr7kP76z8QnfqOyFcqyfSZGV5Bg00TB2PILkkxqEhzakAZABPi5ijaVzP7QHB2Ae_UY-7VMC3RTr6O2Mi7qVk0bwGUQ",
+        "p": "99AUPSGvKI7p3hMZ-KJ4U3aTMc3rlIQG8QDJCro_jlZ35Kqo0cAKh5xuWxgEi_wt3aMMgXC6CuESYrt7Y825N4bPManGCqGnhXdOjImFCS-Z5H5zaBYyNUS4M50eblOTURWQIf7GtKmElo9Q0UhOEC5trfRwbk37HWgNhtGb2ds",
+        "q": "hwjS67fTVza8p39PStPZ_nSpOoUbLa4KclQ77Y9iD22XdWzXXZeduzKPQrFUldZjmu7Jkgbzho9zDaac06aeZN1HeMumW6j5eB_Z2cn8CB5VR8A_jv77_leWaIaCFxj3bGPS72stvmT4hi-3efCnCp55eyOLdgLPSBnTCrGkKIs",
+        "dp": "Jt0lL2km9S9kkgVg31Nrl3tTHk5zEbma9RTwcpQ-_22kI-J3011QyW_JBtQ_cky8TLQTdAFfy_D8Vyub8E0FLSYhPGKpwmUTxqStVvECQiyK8AC8zKgee6gpUz7i1N6aje7ZydsRAqhLOOmE_S1fwL3nSY66SzJDnZsB9BDPZl0",
+        "dq": "KvwWGE8WCYc1GqSeGxXBKQz96dEBS9NBJA_IW-DuuDaMpiaVkAd5gGOh0vscD-6FGoa0x7VKxCTZ3RiSh5VcioMeA0fglwD9GM4azQdNIVB2mTaLhPuKP_alvHRE6RFbgbdtKCWYFCmUKzL5VunSYsD7rsUr2c8fKLZ_xcGyne0",
+        "qi": "r2b6uTDtZAzFmpRViLGxrYFns5_mtRpbE5D6L9Rvddi1X-A-qYQ7ymmy4Av32cCiV4z35_prl1zyEE6PNxq_ksOP3lQCdTbCvoX-UbmKtRcZiWunJf3NJAiwuYT2EcSXF7Wz_8uWuUZHHFFwEYkPj1siqFQ1K89ZBf2v8zgSXoU",
+        "alg": "RSA-OAEP",
+        "ext": true,
+        "key_ops": [ "decrypt" ]
     }
 }

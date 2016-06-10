@@ -36,16 +36,67 @@
                         }                    
                     break;
                 case 'DigiTrust.identity.reset':
-                    console.log('clearing1');
                     var DE = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.resetKey);
-                    console.log(document.cookie);
-                    console.log(DE);
                     if (DE === 'true') {
-                        console.log('clearing2');
                         DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.resetKey);
                         DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.userObjectKey);
                         DigiTrustCookie.expireCookie(configGeneral.cookie.publisher.userObjectKey);
                     }
+                    break;
+                case 'DigiTrust.identity.optOut':
+                    var sendMessage = function (messageValue) {
+                        var identity = {
+                            version: 1,
+                            type: 'DigiTrust.identity.optOutResponse',
+                            value: messageValue
+                        };
+                        window.parent.postMessage(identity, evt.origin);
+                    };
+
+                    var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
+
+                    if (helpers.isEmpty(digiTrustUserCookie)) {
+                        sendMessage({
+                            success: false,
+                            errorMessage: "DigiTrust user cookie does not exist"
+                        });
+                    } else {
+                        var challengeString = helpers.generateUserId();
+                        DigiTrustCookie.setChallengeCookie(challengeString);
+                        DigiTrustCrypto.encrypt(challengeString, function (challengeStringEncrypted) {
+                            sendMessage({
+                                success: true,
+                                challenge: challengeStringEncrypted
+                            });
+                        });
+                    }
+                    break;
+                case 'DigiTrust.identity.optOutSolution':
+                    var responseOptions = {};
+                    var solution = evt.data.value && evt.data.value.solution ? evt.data.value.solution : null;
+                    var sendMessage = function (messageValue) {
+                        var identity = {
+                            version: 1,
+                            type: 'DigiTrust.identity.optOutSolutionResponse',
+                            value: messageValue
+                        };
+                        window.parent.postMessage(identity, evt.origin);
+                    };
+
+                    var origChal = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.challenge);
+
+                    if (origChal == solution) {
+                        responseOptions = {
+                            success: true
+                        };
+                        DigiTrustCookie.setOptout(true);
+                    } else {
+                        responseOptions = {
+                            success: false,
+                            errorMessage: 'Incorrect solution'
+                        };
+                    }
+                    sendMessage(responseOptions);
                     break;
                 case 'DigiTrust.getAppsPreferences.request':
                     var appData = DigiTrustAppContainer.server.getAppForMember(evt.data.value.member);

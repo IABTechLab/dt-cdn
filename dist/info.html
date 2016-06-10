@@ -8,17 +8,21 @@ INFO PAGE
 
 <script>
     function showOptoutStatus() {
-        var cookieKey = configGeneral.cookie.publisher.userObjectKey;
+        var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
         var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
+        var optoutStatus = false;
         if (helpers.isEmpty(userJSON)) {
-            DigiTrustCookie.setOptout(false);
+            // set false by default
+            DigiTrustCookie.setOptout(optoutStatus);
+        } else {
+            if (userJSON.hasOwnProperty('privacy')) {
+                optoutStatus = userJSON.privacy.optout;
+            } else {
+                alert('There was an error.')
+            }
         }
 
-        var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
-        if (userJSON.hasOwnProperty('privacy')) {
-            document.getElementById('optout-status').innerHTML = userJSON.privacy.optout ? 'OUT' : 'IN';
-        }
-        console.log(userJSON);
+        document.getElementById('optout-status').innerHTML = optoutStatus ? 'OUT' : 'IN';
     }
     showOptoutStatus();
 </script>
