@@ -202,7 +202,7 @@ helpers.generateUserId = function () {
 helpers.isEmpty = function (obj) {
 
     // null and undefined are "empty"
-    if (obj === null) {
+    if (obj === null || typeof obj === 'undefined') {
         return true;
     }
 

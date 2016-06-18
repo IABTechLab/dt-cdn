@@ -36,6 +36,7 @@ DigiTrustAppContainer.launch = function (options) {
 
                 // Listen to iFrame response
                 helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.getAppsPreferences.response', function (appFromLS) {
+                    var selectedApp;
                     var _launchAdblockPopup = function () {
                         DigiTrustPopup.createAdblockPopup(options);
                         var appsHTML = DigiTrustPopup.getAppsDivsHtml(window.DigiTrust.apps, null, true);
@@ -50,7 +51,7 @@ DigiTrustAppContainer.launch = function (options) {
 
                     if (!helpers.isEmpty(appFromLS)) {
                         // Is user selected app still made available by Publisher??
-                        var selectedApp = helpers.getObjectByKeyFromObject(
+                        selectedApp = helpers.getObjectByKeyFromObject(
                             window.DigiTrust.apps,
                             'name',
                             appFromLS.name

@@ -67,6 +67,24 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     }
 };
 
+DigiTrustCookie.setResetCookie = function () {
+    var cookieKV = configGeneral.cookie.digitrust.resetKey + '=true;';
+    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
+    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+
+    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
+DigiTrustCookie.expireCookie = function (cookieKey) {
+    var cookieKV = cookieKey + '=;';
+    var expiresKV = 'expires=' + _maxAgeToDate(-10000000000000) + ';';
+    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+
+    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
 DigiTrustCookie.setAppReminderCookie = function () {
     var cookieKV = configGeneral.app.cookie.reminderObjectKey + '=1;';
     var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.app.cookie.reminderMaxAgeMiliseconds) + ';';
@@ -78,6 +96,15 @@ DigiTrustCookie.setAppReminderCookie = function () {
 
 DigiTrustCookie.setDigitrustCookie = function (cookieV) {
     var cookieKV = configGeneral.cookie.digitrust.userObjectKey + '=' + cookieV + ';';
+    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
+    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+
+    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
+DigiTrustCookie.setChallengeCookie = function (cookieV) {
+    var cookieKV = configGeneral.cookie.digitrust.challenge + '=' + cookieV + ';';
     var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
     var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
     var pathKV = configGeneral.cookie.digitrust.pathKeyValue;

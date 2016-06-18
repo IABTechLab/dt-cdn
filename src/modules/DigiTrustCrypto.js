@@ -10,20 +10,18 @@ var DigiTrustCrypto = {};
 
 // Returns base64 string
 DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
-    var algorithm;
+    var keyType;
     var publicKey;
     if (helpers.isSafari()) {
-        console.log('encrypting safari');
-        algorithm = 'jwk';
+        keyType = 'jwk';
         publicKey = helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwk));
     } else {
-        console.log('encrypting chrome');
-        algorithm = 'spki';
+        keyType = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
     }
 
     crypto_browser.subtle.importKey(
-        algorithm,
+        keyType,
         publicKey,
         {
             name: DTPublicKeyObject.type,
@@ -49,30 +47,23 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         .then(function (encryptedValue) {
             // Returns an ArrayBuffer containing the encrypted data
             var encryptedValueEncodedB64 = helpers.arrayBufferToBase64String(encryptedValue);
-            console.log('just encrypted', algorithm, encryptedValueEncodedB64);
+            // console.log('just encrypted', keyType, encryptedValueEncodedB64);
             return callback(encryptedValueEncodedB64);
         });
     });
 };
 
 // Returns string; input is a base64 string
-/*
-FOR TESTING ONLY
+// FOR TESTING ONLY
+// FOR TESTING ONLY - remove
+// FOR TESTING ONLY - remove
+// FOR TESTING ONLY
 DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
-
-    var algorithm, privateKey;
-    if (helpers.isSafari()) {
-        console.log('decrypting safari');
-        algorithm = 'jwk';
-        privateKey = helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwkPrivate));
-    } else {
-        console.log('decrypting chrome');
-        algorithm = 'pkcs8';
-        privateKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.pkcs8);
-    }
+    var keyType = 'jwk';
+    var privateKey = DTPublicKeyObject.jwkPrivate;
 
     crypto_browser.subtle.importKey(
-        algorithm,
+        keyType,
         privateKey,
         {
             name: DTPublicKeyObject.type,
@@ -83,7 +74,7 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
         false,
         ['decrypt']
     )
-    .then( function(cryptokey) {
+    .then(function (cryptokey) {
         crypto_browser.subtle.decrypt(
             {
                 name: DTPublicKeyObject.type,
@@ -95,12 +86,12 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
             // Encrypted User ID (b64) into array buffer
             helpers.base64StringToArrayBuffer(valueToDecrypt)
         )
-        .then( function (decryptedValueArrayBuffer) {
+        .then(function (decryptedValueArrayBuffer) {
             var decryptedValueString = helpers.ab2str(decryptedValueArrayBuffer);
-            console.log('just decrypted', algorithm, decryptedValueString);
+            console.log('just decrypted', keyType, decryptedValueString);
             return callback(decryptedValueString);
         });
     });
-};*/
+};
 
 module.exports = DigiTrustCrypto;

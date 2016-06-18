@@ -5,6 +5,7 @@ var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustAdblock = require('./DigiTrustAdblock');
+var DigiTrustCommunication = require('./DigiTrustCommunication');
 var rollbar = require('rollbar-browser');
 
 var DigiTrust = {};
@@ -166,13 +167,73 @@ DigiTrust.addListener = function (appName, eventName, callback) {
     }
 };
 
+DigiTrust.sendReset = function (options, callback) {
+    DigiTrustCommunication.sendReset();
+};
+
+DigiTrust.optOut = function (options, callback) {
+    try {
+        options = options || {};
+
+        // subscribe before publishing
+        helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.identity.optOutResponse', function (iframeOptOutResponse) {
+            return callback(iframeOptOutResponse);
+        });
+
+        // publish message
+        DigiTrustCommunication.sendOptOut();
+    } catch (e) {
+        console.log(e);
+        return callback({
+            success: false,
+            errorMessage: 'DigiTrust caught exception: ' + e
+        });
+    }
+};
+
+DigiTrust.optOutSolution = function (options, callback) {
+    try {
+        options = options || {};
+        // make sure clients sets "solution" key
+        if (options.solution && options.solution.length > 0) {
+            var optOutSolutionOptions = {
+                solution: options.solution
+            };
+
+            // subscribe before publishing
+            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.identity.optOutSolutionResponse',
+                function (iframeOptOutResponse) {
+                    return callback(iframeOptOutResponse);
+                }
+            );
+
+            // publish message
+            DigiTrustCommunication.sendOptOutSolution(optOutSolutionOptions);
+        } else {
+            return callback({
+                success: false,
+                message: 'Missing argument (options.solution) within DigiTrust.optOutSolution(options, callback) call.'
+            });
+        }
+    } catch (e) {
+        console.log(e);
+        return callback({
+            success: false,
+            message: 'DigiTrust caught exception: ' + e
+        });
+    }
+};
+
 module.exports = {
     initialize: DigiTrust.initialize,
     initializeOptions: DigiTrust.initializeOptions,
     getUser: DigiTrust.getUser,
+    sendReset: DigiTrust.sendReset,
     isClient: DigiTrust.isClient,
     apps: DigiTrust.apps,
     loadedApps: DigiTrust.loadedApps,
     currentApp: DigiTrust.currentApp,
-    addListener: DigiTrust.addListener
+    addListener: DigiTrust.addListener,
+    optOut: DigiTrust.optOut,
+    optOutSolution: DigiTrust.optOutSolution
 };
