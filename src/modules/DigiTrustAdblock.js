@@ -71,14 +71,17 @@ DigiTrustAdblock.checkEndpoint = function () {
 
 DigiTrustAdblock.performIfDetected = function () {
 
+    // Since there are a few methods that can this method, there is a race to call it. Let's only execute the
+    // code if its the first time we detected adblock
     if (DigiTrustAdblock.adblockDetected === false) {
 
         DigiTrustAdblock.adblockDetected = true;
+
         // If publisher has apps enabled
         if (!helpers.isEmpty(window.DigiTrust.initializeOptions.apps.manifest)) {
             DigiTrustAppContainer.launch(window.DigiTrust.initializeOptions);
-        } else {
-            DigiTrustPopup.createAdblockPopup(window.DigiTrust.initializeOptions);
+        } else if (window.DigiTrust.initializeOptions.adblocker.blockContent) {
+            DigiTrustPopup.createAdblockPopup(window.DigiTrust.initializeOptions, false);
         }
 
         if (typeof window.DigiTrust.initializeOptions.adblocker.detectedCallback === 'function') {

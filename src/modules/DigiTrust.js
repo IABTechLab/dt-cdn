@@ -45,7 +45,7 @@ DigiTrust.initialize = function (options, initializeCallback) {
         }
 
         // Does publisher want to check AdBlock (async)
-        if (options.adblocker.blockContent) {
+        if (options.adblocker.detection) {
             DigiTrustAdblock.checkAdblock(options);
         }
 

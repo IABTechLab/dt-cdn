@@ -2,6 +2,7 @@
     "member": "",
     "site": "",
     "adblocker": {
+        "detection": false,
         "blockContent": false,
         "userMessage": "Did you know advertising pays for this brilliant content? Please disable your ad blocker, then press the Reload button below ... and thank you for your visit!",
         "popupFontColor": "#5F615D",
