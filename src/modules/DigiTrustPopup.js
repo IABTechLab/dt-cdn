@@ -21,7 +21,7 @@ var _mqTablet = function () {
     return window.matchMedia(mq.tabletString);
 };
 
-DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
+DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
 
     /* Blur document text
     */
@@ -62,7 +62,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
 
     var reloadDiv = document.createElement('div');
     reloadDiv.id = 'digitrust-adb-reload';
-    reloadDiv.innerHTML = 'SELECT APP & RELOAD THE PAGE';
+    reloadDiv.innerHTML = hasApps ? 'SELECT APP & RELOAD THE PAGE' : 'TURN OFF ADBLOCK & RELOAD THE PAGE';
     reloadDiv.style.cursor = 'pointer';
     reloadDiv.style.background = '#006080';
     reloadDiv.style.color = '#FFF';
@@ -89,23 +89,30 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions) {
         reloadDiv.style.right = '20px';
     }
 
-    reloadDiv.onclick = function () {
-        var selectedAppList = document.getElementsByClassName(configGeneral.htmlIDs.dtAdbAppSelected);
-        var selectedApp = selectedAppList[0];
-        var appId = selectedApp.getAttribute('data-appId');
-        console.log(appId);
-        if (appId.length > 0) {
-            var app = window.DigiTrust.apps[appId];
-            console.log(app);
-            if (app) {
-                helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.reload', [app]);
+    if (hasApps) {
+        reloadDiv.onclick = function () {
+            var selectedAppList = document.getElementsByClassName(configGeneral.htmlIDs.dtAdbAppSelected);
+            var selectedApp = selectedAppList[0];
+            var appId = selectedApp.getAttribute('data-appId');
+            console.log(appId);
+            if (appId.length > 0) {
+                var app = window.DigiTrust.apps[appId];
+                console.log(app);
+                if (app) {
+                    helpers.MinPubSub.publish('DigiTrust.pubsub.app.selected.reload', [app]);
+                } else {
+                    throw new Error('App Object with this ID does not exist');
+                }
             } else {
-                throw new Error('App Object with this ID does not exist');
+                throw new Error('App ID string missing');
             }
-        } else {
-            throw new Error('App ID string missing');
-        }
-    };
+        };
+    } else {
+
+        reloadDiv.onclick = function () {
+            location.reload();
+        };
+    }
 
     var publisherLogo;
     if (initializeOptions.adblocker.logoSrc) {

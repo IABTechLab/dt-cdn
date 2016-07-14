@@ -38,7 +38,7 @@ DigiTrustAppContainer.launch = function (options) {
                 helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.getAppsPreferences.response', function (appFromLS) {
                     var selectedApp;
                     var _launchAdblockPopup = function () {
-                        DigiTrustPopup.createAdblockPopup(options);
+                        DigiTrustPopup.createAdblockPopup(options, true);
                         var appsHTML = DigiTrustPopup.getAppsDivsHtml(window.DigiTrust.apps, null, true);
                         document.getElementById(configGeneral.htmlIDs.dtAdbApps).appendChild(appsHTML);
                     };
