@@ -5,7 +5,7 @@
             "digitrustRedirect": "https://cdn.digitru.st/prod/v1/redirect.html",
 			"digitrustIframe": "https://cdn.digitru.st/prod/v1/dt.html",
 			"optoutInfo": "http://www.digitru.st/about-this-notice/",
-			"adblockCheck": "https://stats.aws.rubiconproject.com/"
+			"adblockCheck": "http://stats.aws.rubiconproject.com/"
 		},
 		"cookie": {
 			"publisher": {
