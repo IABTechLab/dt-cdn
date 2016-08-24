@@ -14,13 +14,15 @@
                 pictureSrc: 'http://i.imgur.com/IP5RRah.png',
                 blockContent: true,
                 detection: true,
+                unstyled: true,
+                customCssPath: './custom-dt.css',
                 detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
                 //popupFontColor: 'white', // @todo add to GitHub spec
                 //popupBackgroundColor: 'orange', // @todo add to GitHub spec
                 //userMessage: "test message"
             },
             apps: {
-                //manifest: 'http://local.digitru.st/misc/manifest.json'
+                manifest: 'http://local.digitru.st/misc/manifest.json'
             }
         },
         function (digiTrustResult) {
