@@ -316,4 +316,79 @@ module.exports = function (grunt) {
     /*
         NOTE: Run "grunt watch --env local" while developing for auto-building with local env setting
     */
+
+    grunt.registerTask('dir-cdn', function () {
+        //digitrustupload
+
+        var done = this.async();
+        var akamai = require('akamai-http-api');
+        var dtFolder = "470638";
+
+        // @todo - pass keyname & key as arguments
+
+        akamai.setConfig({
+          keyName: 'digitrustupload',
+          key: 'kfF9Y5Y28T6w6q7SdWepoR1N5i9p7F0Jj58YeIKfO319Yf8ut2',
+          host: 'digitrust-nsu.akamaihd.net',
+          //ssl: true, // optional, default: false 
+          verbose: true, // optional, default: false 
+          request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
+            timeout: 10000 // 20s is the dafault value 
+          }
+        });
+
+        akamai.dir('/'+dtFolder, function (err, data) {
+            
+            console.log(JSON.stringify(err, null, 4));
+            console.log(JSON.stringify(data, null, 4));
+
+            done();
+        });
+    });
+
+    grunt.registerTask('deploy-cdn', function () {
+        //digitrustupload
+        var fs = require('fs');
+        var files = fs.readdirSync('dist');
+
+        var done = this.async();
+        var akamai = require('akamai-http-api');
+        var dtFolder = "470638";
+
+        // @todo - pass keyname & key as arguments
+
+        akamai.setConfig({
+          keyName: 'digitrustupload',
+          key: 'kfF9Y5Y28T6w6q7SdWepoR1N5i9p7F0Jj58YeIKfO319Yf8ut2',
+          host: 'digitrust-nsu.akamaihd.net',
+          //ssl: true, // optional, default: false 
+          verbose: true, // optional, default: false 
+          request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
+            timeout: 10000 // 20s is the dafault value 
+          }
+        });
+
+        var itemsProcessed = 0;
+        function callback () {
+            console.log('completed deploying!');
+            done();
+        }
+
+        files.forEach( function(file, index, array) {
+            var stream = fs.createReadStream('dist/'+file);
+            console.log('deploying .. ' + file);
+            akamai.upload(stream, '/'+dtFolder+'/'+file, function (err, data) {
+                if (err) {
+                    throw new Error(err);
+                }
+                itemsProcessed++;
+                if(itemsProcessed === array.length) {
+                    callback();
+                }
+            });
+        });
+
+    });
+
+
 };

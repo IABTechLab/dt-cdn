@@ -66,6 +66,7 @@
                         DigiTrustCrypto.encrypt(challengeString, function (challengeStringEncrypted) {
                             sendMessage({
                                 success: true,
+                                keyv: DigiTrustCrypto.getKeyVersion(),
                                 challenge: challengeStringEncrypted
                             });
                         });

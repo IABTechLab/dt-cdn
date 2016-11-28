@@ -4,11 +4,16 @@ The DigiTrust code base relies on Node.js, Grunt and Browserify among other libr
 
 To initialize your local repository for development, clone this repository and run:
 
+    #install dependencies
     npm install
+    # build only
     grunt --env local (build script)
-    grunt watch --env local (build & watch script)
-    grunt deploy1 --env dev && grunt deploy2 --env dev (builds & deploys your LOCAL ./dist)
-    grunt deploy1 --env prod && grunt deploy2 --env prod
+    # build & watch script
+    grunt watch --env local
+    # deploy to cdn
+    grunt --env prod && grunt deploy-cdn
+    # generate new key pair
+    grunt generateKey --keyversion N
 
     # to run fileserving with CORS *; may need to sudo
     npm install connect

@@ -8,6 +8,10 @@ var DTPublicKeyObject = require('../config/key.json');
 var crypto_browser = helpers.getBrowserCrypto();
 var DigiTrustCrypto = {};
 
+DigiTrustCrypto.getKeyVersion = function () {
+    return DTPublicKeyObject.version;
+};
+
 // Returns base64 string
 DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     var keyType;

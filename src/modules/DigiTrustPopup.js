@@ -62,7 +62,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     var reloadDiv = document.createElement('div');
     reloadDiv.id = 'digitrust-adb-reload';
     reloadDiv.innerHTML = hasApps ? 'SELECT APP & RELOAD THE PAGE' : 'TURN OFF ADBLOCK & RELOAD THE PAGE';
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         reloadDiv.style.cursor = 'pointer';
         reloadDiv.style.background = '#006080';
         reloadDiv.style.color = '#FFF';
@@ -119,14 +119,14 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     if (initializeOptions.adblocker.logoSrc) {
         publisherLogo = document.createElement('img');
         publisherLogo.src = initializeOptions.adblocker.logoSrc;
-        if (! initializeOptions.adblocker.unstyled) {
+        if (!initializeOptions.adblocker.unstyled) {
             publisherLogo.style.display = 'block';
             publisherLogo.style.maxWidth = '90%';
         }
     } else {
         publisherLogo = document.createElement('h1');
         publisherLogo.innerHTML = initializeOptions.adblocker.logoText;
-        if (! initializeOptions.adblocker.unstyled) {
+        if (!initializeOptions.adblocker.unstyled) {
             publisherLogo.style.margin = '0';
         }
     }
@@ -139,7 +139,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     poweredByImg.id = 'digitrust-powered-by-logo';
     poweredByImg.src = '//cdn.digitru.st/prod/v1/powered_by.png';
     // can_style
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         poweredByImg.style.width = '150px';
         if (_mqTablet().matches) {
             poweredByImg.style.width = '80px';
@@ -152,7 +152,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     poweredByDiv.id = 'digitrust-powered-by-container';
     poweredByDiv.innerHTML = 'Powered By<br/>';
     // can_style
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         poweredByDiv.style.fontSize = '.8em';
         poweredByDiv.style.color = '#9B9B99';
         poweredByDiv.style.position = 'absolute';
@@ -171,7 +171,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     var messageDiv = document.createElement('div');
     messageDiv.id = configGeneral.htmlIDs.dtAdbMessage;
     messageDiv.innerHTML = initializeOptions.adblocker.userMessage;
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         messageDiv.style.float = 'left';
         messageDiv.style.width = '250px';
         messageDiv.style.margin = '15px 0 85px';
@@ -189,7 +189,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     if (initializeOptions.adblocker.pictureSrc) {
         pictureDiv = document.createElement('img');
         pictureDiv.id = configGeneral.htmlIDs.publisherPicture;
-        if (! initializeOptions.adblocker.unstyled) {
+        if (!initializeOptions.adblocker.unstyled) {
             pictureDiv.style.margin = '15px 0 20px 0';
             pictureDiv.style.float = 'right';
             pictureDiv.style.width = '465px';
@@ -212,7 +212,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     var contentDiv = document.createElement('div');
     contentDiv.id = configGeneral.htmlIDs.dtAdbContainer;
     // can_style
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         contentDiv.style.width = '740px';
         contentDiv.style.fontWeight = '300';
         contentDiv.style.position = 'absolute';
@@ -258,7 +258,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     var scrollContainer = document.createElement('div');
     scrollContainer.id = 'digitrust-scroll-container';
     // can_style
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         scrollContainer.style.overflowY = 'scroll';
         scrollContainer.style.width = '100%';
         scrollContainer.style.height = '100%';
@@ -277,7 +277,7 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
     var bgDiv = document.createElement('div');
     bgDiv.id = 'digitrust-adb-bg';
     bgDiv.style.zIndex = 999999;
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         bgDiv.style.width = '100%';
         bgDiv.style.height = '100%';
         bgDiv.style.top = '0';
@@ -300,15 +300,14 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     optOut.id = configGeneral.htmlIDs.consentLinkId;
     optOut.innerHTML = 'You can read more or opt out of DigiTrust here.';
     optOut.href = configGeneral.urls.optoutInfo;
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         optOut.style.padding = '0 0 0 10px';
     }
-    
 
     var textDiv = document.createElement('div');
     textDiv.id = 'digitrust-c-text';
     textDiv.innerHTML = initializeOptions.consent.userMessage;
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         textDiv.style.padding = '5px 50px';
     }
     textDiv.appendChild(optOut);
@@ -316,7 +315,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     var iDiv = document.createElement('div');
     iDiv.id = 'digitrust-c-info';
     iDiv.innerHTML = 'i';
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         iDiv.style.padding = '5px 15px';
         iDiv.style.float = 'left';
         iDiv.style.background = '#999999';
@@ -333,7 +332,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     var bgDiv = document.createElement('div');
     bgDiv.id = 'digitrust-c-bg';
     bgDiv.style.zIndex = 999998;
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         bgDiv.style.width = '100%';
         bgDiv.style.bottom = '0';
         bgDiv.style.left = '0';
@@ -356,7 +355,7 @@ DigiTrustPopup.createAppOptionsPopup = function (initializeOptions) {
     var bgDiv = document.createElement('div');
     bgDiv.id = 'digitrust-apps-options';
     bgDiv.style.zIndex = 999998;
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         bgDiv.style.bottom = '0';
         bgDiv.style.left = '0';
         bgDiv.style.right = '0';
@@ -372,7 +371,7 @@ DigiTrustPopup.createAppOptionsPopup = function (initializeOptions) {
     var closeDiv = document.createElement('div');
     closeDiv.id = 'digitrust-apps-options-close';
     closeDiv.innerHTML = 'x';
-    if (! initializeOptions.adblocker.unstyled) {
+    if (!initializeOptions.adblocker.unstyled) {
         closeDiv.style.cursor = 'pointer';
         closeDiv.style.position = 'absolute';
         closeDiv.style.right = '7px';
@@ -396,7 +395,7 @@ DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
 
     var appsHTML = document.createElement('div');
     appsHTML.id = 'digitrust-apps-select-container';
-    if (! window.DigiTrust.initializeOptions.adblocker.unstyled) {
+    if (!window.DigiTrust.initializeOptions.adblocker.unstyled) {
         appsHTML.style.height = '370px';
         appsHTML.style.width = '485px';
         appsHTML.style.float = 'right';
@@ -460,7 +459,7 @@ DigiTrustPopup.getAppsDivsHtml = function (appsObject, defaultApp, reload) {
             option.id = 'dt-app-id-' + appId;
             option.className = configGeneral.htmlIDs.dtAdbAppClass;
             option.setAttribute('data-appId', appId);
-            if (! window.DigiTrust.initializeOptions.adblocker.unstyled) {
+            if (!window.DigiTrust.initializeOptions.adblocker.unstyled) {
                 option.style.fontSize = '10px';
                 option.style.width = '200px';
                 option.style.float = 'left';
