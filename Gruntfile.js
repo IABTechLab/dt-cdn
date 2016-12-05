@@ -7,6 +7,8 @@ var collapse = require('bundle-collapser/plugin');
 module.exports = function (grunt) {
     // Project configuration
     'use strict';
+    
+    var digitrustVersion = 'v1';
 
     // Get or Default environment
     var argEnv = grunt.option('env');
@@ -337,7 +339,7 @@ module.exports = function (grunt) {
           }
         });
 
-        akamai.dir('/'+dtFolder, function (err, data) {
+        akamai.dir('/'+dtFolder+'/prod/v1/', function (err, data) {
             
             console.log(JSON.stringify(err, null, 4));
             console.log(JSON.stringify(data, null, 4));
@@ -354,6 +356,16 @@ module.exports = function (grunt) {
         var done = this.async();
         var akamai = require('akamai-http-api');
         var dtFolder = "470638";
+
+        var argEnv = grunt.option('env');
+        if (argEnv === 'prod') {
+            // yes redundant, but makes it obvious for future dev ;)
+            argEnv = 'prod';
+        } else {
+            throw new Error('\n\n\n** Only prod environment allowed for deployment **\n\n\n');
+        }
+
+        console.log('ENVIRONMENT: ', argEnv);
 
         // @todo - pass keyname & key as arguments
 
@@ -377,7 +389,12 @@ module.exports = function (grunt) {
         files.forEach( function(file, index, array) {
             var stream = fs.createReadStream('dist/'+file);
             console.log('deploying .. ' + file);
-            akamai.upload(stream, '/'+dtFolder+'/'+file, function (err, data) {
+
+            /*akamai.delete('/'+dtFolder+'/'+file, function (err, data) {
+                console.log('deleted ' + file);
+            });*/
+
+            akamai.upload(stream, '/'+dtFolder+'/'+argEnv+'/'+digitrustVersion+'/'+file, function (err, data) {
                 if (err) {
                     throw new Error(err);
                 }
@@ -387,6 +404,10 @@ module.exports = function (grunt) {
                 }
             });
         });
+
+
+        akamai.delete('/12345/MyFolder/MyFile.jpg', function (err, data) {});
+
 
     });
 
