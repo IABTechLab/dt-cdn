@@ -175,7 +175,6 @@ helpers.createPageViewClickListener = function () {
 };
 
 helpers.generateUserId = function () {
-    var id = '';
     var buffer = new Uint32Array(2);
     var _getCryptoLib = function () {
         var cryptoLib;
@@ -190,13 +189,7 @@ helpers.generateUserId = function () {
     };
 
     _getCryptoLib().getRandomValues(buffer);
-    for (var i in buffer) {
-        if (buffer.hasOwnProperty(i)) {
-            id = id + buffer[i].toString(16);
-        }
-    }
-
-    return id;
+    return btoa(buffer);
 };
 
 helpers.isEmpty = function (obj) {
