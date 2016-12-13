@@ -329,9 +329,9 @@ module.exports = function (grunt) {
         // @todo - pass keyname & key as arguments
 
         akamai.setConfig({
-          keyName: 'digitrustupload',
-          key: 'kfF9Y5Y28T6w6q7SdWepoR1N5i9p7F0Jj58YeIKfO319Yf8ut2',
-          host: 'digitrust-nsu.akamaihd.net',
+          keyName: deployment.akamai.keyName,
+          key: deployment.akamai.key,
+          host: deployment.akamai.host,
           //ssl: true, // optional, default: false 
           verbose: true, // optional, default: false 
           request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
@@ -370,9 +370,9 @@ module.exports = function (grunt) {
         // @todo - pass keyname & key as arguments
 
         akamai.setConfig({
-          keyName: 'digitrustupload',
-          key: 'kfF9Y5Y28T6w6q7SdWepoR1N5i9p7F0Jj58YeIKfO319Yf8ut2',
-          host: 'digitrust-nsu.akamaihd.net',
+          keyName: deployment.akamai.keyName,
+          key: deployment.akamai.key,
+          host: deployment.akamai.host,
           //ssl: true, // optional, default: false 
           verbose: true, // optional, default: false 
           request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
