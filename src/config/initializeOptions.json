@@ -14,7 +14,7 @@
     },
     "consent": {
         "requires": "none",
-        "userMessage": "Your browser blocks some 3rd party cookies by default. By clicking on this page you allow our partner DigiTrust to place its cookies and help us serve you personalized ads. <em>This notice only appears once.</em>",
+        "userMessage": 'This site uses cookies and is a member of DigiTrust, a non-profit consortium of companies working together to improve your Web experience.  By clicking on this page you agree to the use of cookies. This notice only appears once. <a href="http://www.digitru.st/about-this-notice/">You can read more or opt out of DigiTrust herje</a>.',
         "popupFontColor": "#ffffff",
         "popupBackgroundColor": "#000000"
     },
