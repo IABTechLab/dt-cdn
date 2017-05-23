@@ -2,6 +2,8 @@
 
 The DigiTrust code base relies on Node.js, Grunt and Browserify among other libraries.
 
+### Local Development
+
 To initialize your local repository for development, clone this repository and run:
 
     #install dependencies
@@ -28,3 +30,9 @@ Before committing, you can run the following to validate your code
     npm run validate
 
 They will be automatically run on push to ensure that only clean code makes it into the repository.
+
+### Production Releases
+
+1. Update `digitrustVersion` in `Gruntfile.js`
+2. Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
+3. `runt --env prod deploy-cdn`
