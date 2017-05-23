@@ -8,7 +8,7 @@ var helpers = require('../modules/helpers');
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 
-describe('DigiTrust', function () {
+describe('DigiTrust.getUser', function () {
 
     it('DigiTrust.initialize without member id', function (done) {
         DigiTrust.initialize({
@@ -20,12 +20,16 @@ describe('DigiTrust', function () {
         });
     });
 
-    it('DigiTrust.getUser without member id', function () {
+    it('DigiTrust.getUser without member id', function (done) {
         var getUserResult = DigiTrust.getUser({
             member: null
         });
         expect(getUserResult.success).toBe(false);
+        done();
     });
+});
+
+describe('DigiTrust.initialize() consent window default', function () {
 
     it('DigiTrust.initialize() defaults to no consent window', function (done) {
         DigiTrust.initialize({
@@ -37,6 +41,9 @@ describe('DigiTrust', function () {
             done();
         });
     });
+});
+
+describe('DigiTrust.initialize() consent window none', function () {
 
     it('DigiTrust.initialize() without consent window', function (done) {
         DigiTrust.initialize({
@@ -51,8 +58,11 @@ describe('DigiTrust', function () {
             done();
         });
     });
+});
 
-    /*it('DigiTrust.initialize() with consent window', function (done) {
+describe('DigiTrust.initialize() consent window implicit', function () {
+
+    it('DigiTrust.initialize() with consent window', function (done) {
         DigiTrust.initialize({
             member: 'foo',
             consent: {
@@ -60,11 +70,11 @@ describe('DigiTrust', function () {
             }
         },
         function (identityResponse) {
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId).innerHTML)
-                .toContain('You can read more or opt out of DigiTrust here.');
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+                .toBe(null);
             done();
         });
-    });*/
+    });
 });
 
 describe('DigiTrustAdblock', function () {
