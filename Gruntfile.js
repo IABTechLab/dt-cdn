@@ -8,7 +8,7 @@ module.exports = function (grunt) {
     // Project configuration
     'use strict';
     
-    var digitrustVersion = 'v1';
+    var digitrustVersion = '1.0.0';
 
     // Get or Default environment
     var argEnv = grunt.option('env');
