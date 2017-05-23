@@ -150,8 +150,8 @@ DigiTrustCookie.getUser = function (options, callback) {
                 // No DigiTrust cookie exists on digitru.st domain
                 if (DigiTrustCookie.showCookieConsentPopup) {
                     DigiTrustPopup.createConsentPopup(options);
-                    helpers.createConsentClickListener();
                 }
+                helpers.createConsentClickListener();
                 return callback(true);
             }
         });
