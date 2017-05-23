@@ -51,7 +51,7 @@ var _verifyUserCookieStructure = function (userJSON) {
 };
 
 var DigiTrustCookie = {};
-DigiTrustCookie.showCookieConsentPopup = true;
+DigiTrustCookie.showCookieConsentPopup = false;
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 

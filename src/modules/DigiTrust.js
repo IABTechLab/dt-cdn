@@ -106,7 +106,6 @@ DigiTrust.getUser = function (options, callback) {
             }
             return identityResponseObject;
         } else {
-            DigiTrustCookie.showCookieConsentPopup = false;
             options.ignoreLocalCookies = true;
             DigiTrustCookie.getUser(options, function (err, identityObject) {
                 if (err) {
@@ -114,7 +113,6 @@ DigiTrust.getUser = function (options, callback) {
                 } else {
                     identityResponseObject.success = true;
                     identityResponseObject.identity = identityObject;
-                    DigiTrustCookie.showCookieConsentPopup = true;
                     return callback(identityResponseObject);
                 }
             });

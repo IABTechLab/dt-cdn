@@ -27,6 +27,44 @@ describe('DigiTrust', function () {
         expect(getUserResult.success).toBe(false);
     });
 
+    it('DigiTrust.initialize() defaults to no consent window', function (done) {
+        DigiTrust.initialize({
+            member: 'foo',
+        },
+        function (identityResponse) {
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+                .toBe(null);
+            done();
+        });
+    });
+
+    it('DigiTrust.initialize() without consent window', function (done) {
+        DigiTrust.initialize({
+            member: 'foo',
+            consent: {
+                requires: 'none'
+            }
+        },
+        function (identityResponse) {
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+                .toBe(null);
+            done();
+        });
+    });
+
+    /*it('DigiTrust.initialize() with consent window', function (done) {
+        DigiTrust.initialize({
+            member: 'foo',
+            consent: {
+                requires: 'implicit'
+            }
+        },
+        function (identityResponse) {
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId).innerHTML)
+                .toContain('You can read more or opt out of DigiTrust here.');
+            done();
+        });
+    });*/
 });
 
 describe('DigiTrustAdblock', function () {
