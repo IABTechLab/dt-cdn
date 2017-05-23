@@ -35,4 +35,4 @@ They will be automatically run on push to ensure that only clean code makes it i
 
 1. Update `digitrustVersion` in `Gruntfile.js`
 2. Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
-3. `runt --env prod deploy-cdn`
+3. `grunt --env prod deploy-cdn`
