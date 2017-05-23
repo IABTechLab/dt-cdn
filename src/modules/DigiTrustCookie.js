@@ -201,10 +201,10 @@ DigiTrustCookie.setOptout = function (optoutValue) {
 };
 
 DigiTrustCookie.obfuscateCookieValue = function (value) {
-    return btoa(JSON.stringify(value));
+    return encodeURIComponent(btoa(JSON.stringify(value)));
 };
 DigiTrustCookie.unobfuscateCookieValue = function (value) {
-    return JSON.parse(atob(value));
+    return JSON.parse(atob(decodeURIComponent(value)));
 };
 
 DigiTrustCookie.getCookieByName = function (name) {
