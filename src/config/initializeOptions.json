@@ -1,6 +1,7 @@
 {
     "member": "",
     "site": "",
+    "sample": 1,
     "adblocker": {
         "detection": false,
         "blockContent": false,

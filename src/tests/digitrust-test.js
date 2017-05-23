@@ -29,6 +29,22 @@ describe('DigiTrust.getUser', function () {
     });
 });
 
+describe('DigiTrust.initialize() sample rate 0', function () {
+
+    it('DigiTrust.initialize() fails immediately with sample rate of 0', function (done) {
+        DigiTrust.initialize({
+            member: 'foo',
+            sample: 0
+        },
+        function (identityResponse) {
+            expect(identityResponse.success).toBe(false);
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+                .toBe(null);
+            done();
+        });
+    });
+});
+
 describe('DigiTrust.initialize() consent window default', function () {
 
     it('DigiTrust.initialize() defaults to no consent window', function (done) {

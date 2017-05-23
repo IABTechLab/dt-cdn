@@ -39,6 +39,10 @@ DigiTrust.initialize = function (options, initializeCallback) {
 
         options = DigiTrust._setDigiTrustOptions(options);
 
+        // allow for a circuit break to disable the world
+        if (Math.random() > options.sample)
+            return initializeCallback(identityResponseObject);
+
         if (options.adblocker.unstyled) {
             var head  = document.getElementsByTagName('head')[0];
             var link  = document.createElement('link');
