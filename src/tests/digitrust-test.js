@@ -10,7 +10,7 @@ var configGeneral = require('../config/general.json')[env];
 
 describe('DigiTrust', function () {
 
-    it('DigiTrust.initialize without memebr id', function (done) {
+    it('DigiTrust.initialize without member id', function (done) {
         DigiTrust.initialize({
             member: null
         },
@@ -20,7 +20,7 @@ describe('DigiTrust', function () {
         });
     });
 
-    it('DigiTrust.getUser without memebr id', function () {
+    it('DigiTrust.getUser without member id', function () {
         var getUserResult = DigiTrust.getUser({
             member: null
         });
@@ -39,7 +39,7 @@ describe('DigiTrustAdblock', function () {
 
 describe('DigiTrustCommunication', function () {
 
-    /*it('getUser without memebr id', function () {
+    /*it('getUser without member id', function () {
         var getUserResult = DigiTrust.getUser({
             synchronous: true
         });
@@ -69,7 +69,7 @@ describe('DigiTrustCookie', function () {
         expect(identity.keyv).toBe(0);
         expect(identity.privacy.optout).toBe(true);
     });
-    /*it('getUser without memebr id', function () {
+    /*it('getUser without member id', function () {
         var getUserResult = DigiTrust.getUser({
             synchronous: true
         });
