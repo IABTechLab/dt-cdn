@@ -50,7 +50,7 @@ describe('DigiTrustCommunication', function () {
 describe('DigiTrustCookie', function () {
 
     it('DigiTrustCookie.obfuscateCookieValue()', function() {
-        var identity = { "id": null, keyv: 0, privacy: { "optout": true } };
+        var identity = {'id': null, keyv: 0, privacy: {'optout': true}};
         var encodedUserIdentity = DigiTrustCookie.obfuscateCookieValue(identity);
         var identity2 = DigiTrustCookie.unobfuscateCookieValue(encodedUserIdentity);
         expect(identity2.keyv).toBe(0);
