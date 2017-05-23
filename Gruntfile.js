@@ -406,9 +406,6 @@ module.exports = function (grunt) {
         });
 
 
-        akamai.delete('/12345/MyFolder/MyFile.jpg', function (err, data) {});
-
-
     });
 
 
