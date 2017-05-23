@@ -11,7 +11,7 @@ To initialize your local repository for development, clone this repository and r
     # build & watch script
     grunt watch --env local
     # deploy to cdn
-    grunt --env prod && grunt deploy-cdn
+    grunt --env prod && grunt --env prod deploy-cdn
     # generate new key pair
     grunt generateKey --keyversion N
 
