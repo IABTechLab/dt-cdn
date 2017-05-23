@@ -339,7 +339,7 @@ module.exports = function (grunt) {
           }
         });
 
-        akamai.dir('/'+dtFolder+'/prod/v1/', function (err, data) {
+        akamai.dir('/'+dtFolder+'/prod/'+digitrustVersion+'/', function (err, data) {
             
             console.log(JSON.stringify(err, null, 4));
             console.log(JSON.stringify(data, null, 4));
