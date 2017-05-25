@@ -189,13 +189,6 @@ DigiTrustCookie.setOptout = function (optoutValue) {
         optout: optoutValue
     };
 
-    // If opting in, set consent time
-    if (optoutValue === false) {
-        identityCookieJSON.privacy.consent = {
-            time: (new Date()).getTime()
-        };
-    }
-
     var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(identityCookieJSON);
     _setIdentityCookie(cookieStringEncoded);
 };
