@@ -6,8 +6,7 @@ function createUserCookiesOnDigitrustDomain() {
         id: userId,
         keyv: DigiTrustCrypto.getKeyVersion(),
         privacy: {
-            optout: false,
-            consent: (new Date()).getTime()
+            optout: false
         }
     };
     var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
