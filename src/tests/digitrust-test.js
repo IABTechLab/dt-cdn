@@ -4,6 +4,7 @@ var DigiTrustAdblock = require('../modules/DigiTrustAdblock');
 var DigiTrustCommunication = require('../modules/DigiTrustCommunication');
 var DigiTrustPopup = require('../modules/DigiTrustPopup');
 var DigiTrustCookie = require('../modules/DigiTrustCookie');
+var DigiTrustCrypto = require('../modules/DigiTrustCrypto');
 var helpers = require('../modules/helpers');
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
@@ -125,6 +126,17 @@ describe('DigiTrustCookie', function () {
         var identity2 = DigiTrustCookie.unobfuscateCookieValue(encodedUserIdentity);
         expect(identity2.keyv).toBe(0);
         expect(identity2.privacy.optout).toBe(true);
+    });
+    it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
+        // set a bad identity cookie
+        var cookieKey = "DigiTrust.v1.identity";
+        var cookieExpires = new Date();
+        cookieExpires.setTime(cookieExpires.getTime() + 1000*60);
+        document.cookie = cookieKey + "=foobared; expires=" + cookieExpires.toUTCString() + ";path=/;";
+        var user = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
+        // we should have generated a new value
+        expect(user.id).not.toBe(null);
+        expect(user.privacy.optout).toBe(false);
     });
     it('DigiTrustCookie.optoutCookieValue()', function () {
         var identity = DigiTrustCookie.unobfuscateCookieValue

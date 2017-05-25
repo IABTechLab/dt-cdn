@@ -56,7 +56,18 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
     if (localUserCookie) {
-        var localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
+        var localUserCookieJSON = {};
+        try {
+            localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
+        } catch(e) {
+            localUserCookieJSON = {
+                id: helpers.generateUserId(),
+                privacy: {
+                    optout: false
+                }
+            };
+            _setIdentityCookie(DigiTrustCookie.obfuscateCookieValue(localUserCookieJSON));
+        }
         if (_verifyUserCookieStructure(localUserCookieJSON)) {
             return localUserCookieJSON;
         } else {
