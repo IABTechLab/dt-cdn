@@ -131,7 +131,7 @@ describe('DigiTrustCookie', function () {
         // set a bad identity cookie
         var cookieKey = 'DigiTrust.v1.identity';
         var cookieExpires = new Date();
-        cookieExpires.setTime(cookieExpires.getTime() + (1000*60));
+        cookieExpires.setTime(cookieExpires.getTime() + 60000);
         document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
         var user = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
         // we should have generated a new value
