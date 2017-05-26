@@ -129,10 +129,10 @@ describe('DigiTrustCookie', function () {
     });
     it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
         // set a bad identity cookie
-        var cookieKey = "DigiTrust.v1.identity";
+        var cookieKey = 'DigiTrust.v1.identity';
         var cookieExpires = new Date();
-        cookieExpires.setTime(cookieExpires.getTime() + 1000*60);
-        document.cookie = cookieKey + "=foobared; expires=" + cookieExpires.toUTCString() + ";path=/;";
+        cookieExpires.setTime(cookieExpires.getTime() + (1000*60));
+        document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
         var user = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
         // we should have generated a new value
         expect(user.id).not.toBe(null);

@@ -59,7 +59,7 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
         var localUserCookieJSON = {};
         try {
             localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
-        } catch(e) {
+        } catch (e) {
             localUserCookieJSON = {
                 id: helpers.generateUserId(),
                 privacy: {
