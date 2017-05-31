@@ -221,4 +221,17 @@ DigiTrustCookie.getCookieByName = function (name) {
     }
 };
 
+DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
+    var userId = helpers.generateUserId();
+    var userJSON = {
+        id: userId,
+        privacy: {
+            optout: false
+        }
+    };
+    var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
+
+    DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
+};
+
 module.exports = DigiTrustCookie;
