@@ -26,15 +26,18 @@
                             window.parent.postMessage(identity, evt.origin);
                         }
 
-                        if (helpers.isEmpty(digiTrustUserJSON)) {
-                            sendMessage(digiTrustUserJSON);
-                        } else {
+                        if ((helpers.isEmpty(digiTrustUserJSON)) && (!evt.data.redirects)) {
+                                digiTrustUserJSON = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+                        }
+                        if (digiTrustUserJSON.id) {
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
                                 digiTrustUserJSON.id = encryptedUserId;
                                 digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
                                 sendMessage(digiTrustUserJSON);
                             });
-                        }                    
+                        } else {
+                            sendMessage(digiTrustUserJSON);
+                        }
                     break;
                 case 'DigiTrust.identity.reset':
                     var DE = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.resetKey);

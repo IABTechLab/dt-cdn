@@ -102,6 +102,7 @@ DigiTrustCommunication.getIdentity = function (options) {
             version: 1,
             type: 'DigiTrust.identity.request',
             syncOnly: options.syncOnly ? options.syncOnly : false,
+            redirects: options.redirects ? options.redirects : false,
             value: {}
         };
         DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, DigiTrustCommunication.iframe.src);

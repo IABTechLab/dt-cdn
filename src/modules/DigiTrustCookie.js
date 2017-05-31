@@ -183,7 +183,7 @@ DigiTrustCookie.getUser = function (options, callback) {
                 return callback(false, localUserCookieJSON);
             } else {
                 // Connect to iframe to check remote cookies
-                DigiTrustCommunication.getIdentity();
+                DigiTrustCommunication.getIdentity({syncOnly:false, redirects:options.redirects});
             }
         }
     }
@@ -232,6 +232,7 @@ DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
     var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
 
     DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
+    return userJSON;
 };
 
 module.exports = DigiTrustCookie;
