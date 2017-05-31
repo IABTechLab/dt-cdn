@@ -94,6 +94,39 @@ describe('DigiTrust.initialize() consent window implicit', function () {
     });
 });
 
+describe('DigiTrust.initialize() redirects false', function () {
+
+    /*it('DigiTrust.initialize() does not rewrite links when redirects=false', function (done) {
+        DigiTrust.initialize({
+            member: 'foo',
+            redirects: false
+        },
+        function (identityResponse) {
+            expect(window.onclick).toBe(null);
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+                .toBe(null);
+            done();
+        });
+    });*/
+});
+
+describe('DigiTrust.initialize() redirects true', function () {
+
+    /*it('DigiTrust.initialize() does rewrite links when redirects=true', function (done) {
+        DigiTrust.initialize({
+            member: 'foo',
+            redirects: true
+        },
+        function (identityResponse) {
+            expect(window.onclick).not.toBe(null);
+            expect(identityResponse.success).toBe(false);
+            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+                .toBe(null);
+            done();
+        });
+    });*/
+});
+
 describe('DigiTrustAdblock', function () {
 
     /*it('DigiTrustAdblock.checkEndpoint', function () {
