@@ -31,7 +31,7 @@
                         } else {
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
                                 digiTrustUserJSON.id = encryptedUserId;
-                                digiTrustUserJSON.keyv: DigiTrustCrypto.getKeyVersion(),
+                                digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
                                 sendMessage(digiTrustUserJSON);
                             });
                         }                    
