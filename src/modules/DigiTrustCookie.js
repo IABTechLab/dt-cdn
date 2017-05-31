@@ -162,7 +162,9 @@ DigiTrustCookie.getUser = function (options, callback) {
                 if (DigiTrustCookie.showCookieConsentPopup) {
                     DigiTrustPopup.createConsentPopup(options);
                 }
-                helpers.createConsentClickListener();
+                if (options.redirects) {
+                    helpers.createConsentClickListener();
+                }
                 return callback(true);
             }
         });
