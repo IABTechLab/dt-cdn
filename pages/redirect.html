@@ -4,7 +4,6 @@ function createUserCookiesOnDigitrustDomain() {
     var userId = helpers.generateUserId();
     var userJSON = {
         id: userId,
-        keyv: DigiTrustCrypto.getKeyVersion(),
         privacy: {
             optout: false
         }
