@@ -29,10 +29,7 @@
                         if (helpers.isEmpty(digiTrustUserJSON)) {
                             // see if we can write and read cookies from within the iframe
                             DigiTrustCookie.createUserCookiesOnDigitrustDomain();
-                            console.log("cookieKey: " + cookieKey);
                             digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
-                            console.log("wrote cookie. read:");
-                            console.log(JSON.stringify(digiTrustUserJSON));
                         }
                         if (digiTrustUserJSON.id) {
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
