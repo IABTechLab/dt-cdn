@@ -4,7 +4,7 @@
     <script src='./digitrust-server.js'></script>
     <script>
 
-        var cookieKey = configGeneral.cookie.publisher.userObjectKey;
+        var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
         var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
 
         function messageHandler(evt) {
@@ -26,8 +26,10 @@
                             window.parent.postMessage(identity, evt.origin);
                         }
 
-                        if ((helpers.isEmpty(digiTrustUserJSON)) && (!evt.data.redirects)) {
-                                digiTrustUserJSON = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+                        if (helpers.isEmpty(digiTrustUserJSON)) {
+                            // see if we can write and read cookies from within the iframe
+                            DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+                            digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
                         }
                         if (digiTrustUserJSON.id) {
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
