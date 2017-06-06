@@ -12,7 +12,7 @@ DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: read
 
 DigiTrustCommunication._messageHandler = function (evt) {
     if (evt.origin !== configGeneral.iframe.postMessageOrigin) {
-        throw new Error(configErrors.en.postMessageOrigin);
+        // do nothing. tbd enable console logging in dev.
     } else {
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
