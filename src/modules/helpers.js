@@ -143,7 +143,18 @@ helpers.getAbsolutePath = function (href) {
     return (link.protocol + '//' + link.host + link.pathname + link.search + link.hash);
 };
 
+helpers.inIframe = function () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+};
+
 helpers.createConsentClickListener = function () {
+    if (helpers.inIframe()) {
+        return;
+    }
     window.onclick = function (e) {
         e = e || window.event;
         var t = e.target || e.srcElement;
