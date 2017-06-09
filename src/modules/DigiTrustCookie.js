@@ -34,7 +34,7 @@ var _verifyUserCookieStructure = function (userJSON) {
     var hasUserId = userJSON.hasOwnProperty('id');
     var hasPrivacy = userJSON.hasOwnProperty('privacy');
 
-    if (!hasUserId || userJSON.id.length < 1) {
+    if (!hasUserId || ((!userJSON.privacy.optout) && (userJSON.id.length < 1))) {
         return false;
     }
 

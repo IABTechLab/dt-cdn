@@ -13,6 +13,8 @@
                     var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
                     var digiTrustUserJSON = digiTrustUserCookie ?
                         DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
+                    var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
+                    digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
                         
                         var sendMessage = function (messageValue) {
                             var messageType = evt.data.syncOnly ?
@@ -26,12 +28,12 @@
                             window.parent.postMessage(identity, evt.origin);
                         }
 
-                        if (helpers.isEmpty(digiTrustUserJSON)) {
+                        if ((!isOptOut) && (helpers.isEmpty(digiTrustUserJSON))) {
                             // see if we can write and read cookies from within the iframe
                             DigiTrustCookie.createUserCookiesOnDigitrustDomain();
                             digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
                         }
-                        if (digiTrustUserJSON.id) {
+                        if (digiTrustUserJSON.hasOwnProperty('id')) {
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
                                 digiTrustUserJSON.id = encryptedUserId;
                                 digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();

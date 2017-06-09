@@ -20,7 +20,9 @@
 				"maxAgeMiliseconds": 157680000000,
 	            "userObjectKey": "DigiTrust.v1.identity",
                 "resetKey": "DeleteEverything",
-                "challenge": "DTChal"
+                "challenge": "DTChal",
+                "optout": "optout",
+                "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
 			}
 		},
 		"iframe": {
@@ -64,7 +66,9 @@
 				"maxAgeMiliseconds": 157680000000,
 	            "userObjectKey": "DigiTrust.v1.identity",
                 "resetKey": "DeleteEverything",
-                "challenge": "DTChal"
+                "challenge": "DTChal",
+                "optout": "optout",
+                "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
 			}
 		},
 		"iframe": {
@@ -108,7 +112,9 @@
                 "maxAgeMiliseconds": 157680000000,
                 "userObjectKey": "DigiTrustLOCALDT.v1.identity",
                 "resetKey": "DeleteEverything",
-                "challenge": "DTChal"
+                "challenge": "DTChal",
+                "optout": "optout",
+                "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
             }
         },
         "iframe": {
