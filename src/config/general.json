@@ -1,9 +1,9 @@
 {
 	"prod": {
 		"urls": {
-            "digitrustHostPath": "https://cdn.digitru.st/prod/1.3.3/",
-            "digitrustRedirect": "https://cdn.digitru.st/prod/1.3.3/redirect.html",
-			"digitrustIframe": "https://cdn.digitru.st/prod/1.3.3/dt.html",
+            "digitrustHostPath": "https://cdn.digitru.st/prod/1.3.4.beta/",
+            "digitrustRedirect": "https://cdn.digitru.st/prod/1.3.4.beta/redirect.html",
+			"digitrustIframe": "https://cdn.digitru.st/prod/1.3.4.beta/dt.html",
 			"optoutInfo": "http://www.digitru.st/about-this-notice/",
 			"adblockCheck": "http://stats.aws.rubiconproject.com/"
 		},
