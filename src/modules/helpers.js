@@ -186,7 +186,7 @@ helpers.createPageViewClickListener = function () {
 };
 
 helpers.generateUserId = function () {
-    var buffer = new Uint32Array(2);
+    var buffer = new Uint8Array(8);
     var _getCryptoLib = function () {
         var cryptoLib;
         if (typeof crypto !== 'undefined') {
@@ -200,7 +200,7 @@ helpers.generateUserId = function () {
     };
 
     _getCryptoLib().getRandomValues(buffer);
-    return btoa(buffer);
+    return helpers.arrayBufferToBase64String(buffer);
 };
 
 helpers.isEmpty = function (obj) {
