@@ -8,6 +8,7 @@
 			"adblockCheck": "http://stats.aws.rubiconproject.com/"
 		},
 		"cookie": {
+      "version": 2,
 			"publisher": {
 				"domainKeyValue": "",
 				"pathKeyValue": "path=/;",
@@ -54,6 +55,7 @@
 			"adblockCheck": "//stats.aws.rubiconproject.com/"
 		},
 		"cookie": {
+      "version": 2,
 			"publisher": {
 				"domainKeyValue": "",
 				"pathKeyValue": "path=/;",
@@ -100,6 +102,7 @@
             "adblockCheck": "//stats.aws.rubiconproject.com/"
         },
         "cookie": {
+      "version": 2,
             "publisher": {
                 "domainKeyValue": "domain=;",
                 "pathKeyValue": "path=/;",

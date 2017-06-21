@@ -62,6 +62,7 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
         } catch (e) {
             localUserCookieJSON = {
                 id: helpers.generateUserId(),
+                version: configGeneral.cookie.version,
                 privacy: {
                     optout: false
                 }
@@ -225,6 +226,7 @@ DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
     var userId = helpers.generateUserId();
     var userJSON = {
         id: userId,
+        version: configGeneral.cookie.version,
         privacy: {
             optout: false
         }
