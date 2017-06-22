@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     // Project configuration
     'use strict';
     
+    var digitrustMajorVersion = '1';
     var digitrustVersion = '1.4.2.beta';
 
     // Get or Default environment
@@ -294,8 +295,7 @@ module.exports = function (grunt) {
 
     // Deployment tasks
     if (argEnv === 'prod') {
-        grunt.registerTask('deploy1', ['default', 'ssh_deploy:prod1']);
-        grunt.registerTask('deploy2', ['default', 'ssh_deploy:prod2']);
+        grunt.registerTask('deploy', ['default', 'deploy-cdn', 'deploy-cdn-major']);
     } else if (argEnv === 'dev') {
         grunt.registerTask('deploy1', ['default', 'ssh_deploy:dev1']);
         grunt.registerTask('deploy2', ['default', 'ssh_deploy:dev2']);
@@ -406,6 +406,48 @@ module.exports = function (grunt) {
         });
 
 
+    });
+
+    grunt.registerTask('deploy-cdn-major', function () {
+        //digitrustupload
+        var fs = require('fs');
+
+        var done = this.async();
+        var akamai = require('akamai-http-api');
+        var dtFolder = "470638";
+
+        var argEnv = grunt.option('env');
+        if (argEnv === 'prod') {
+            // yes redundant, but makes it obvious for future dev ;)
+            argEnv = 'prod';
+        } else {
+            throw new Error('\n\n\n** Only prod environment allowed for deployment **\n\n\n');
+        }
+
+        console.log('ENVIRONMENT: ', argEnv);
+
+        // @todo - pass keyname & key as arguments
+
+        akamai.setConfig({
+          keyName: deployment.akamai.keyName,
+          key: deployment.akamai.key,
+          host: deployment.akamai.host,
+          //ssl: true, // optional, default: false 
+          verbose: true, // optional, default: false 
+          request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
+            timeout: 10000 // 20s is the dafault value 
+          }
+        });
+
+        var stream = fs.createReadStream('dist/digitrust.min.js');
+        console.log('deploying digitrust.min.js.. ');
+
+        akamai.upload(stream, '/'+dtFolder+'/'+argEnv+'/'+digitrustMajorVersion+'/digitrust.min.js', function (err, data) {
+            if (err) {
+                throw new Error(err);
+            }
+            done();
+        });
     });
 
 
