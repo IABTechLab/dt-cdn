@@ -30,12 +30,6 @@ DigiTrustCommunication._messageHandler = function (evt) {
             case 'DigiTrust.setAppsPreferences.response':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.app.setAppsPreferences.response', [evt.data.value]);
                 break;
-            case 'DigiTrust.identity.optOutResponse':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.app.identity.optOutResponse', [evt.data.value]);
-                break;
-            case 'DigiTrust.identity.optOutSolutionResponse':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.app.identity.optOutSolutionResponse', [evt.data.value]);
-                break;
         }
     }
 };
@@ -162,42 +156,10 @@ DigiTrustCommunication.sendReset = function (options) {
     DigiTrustCommunication.sendRequest(_request, options);
 };
 
-DigiTrustCommunication.sendOptOut = function () {
-
-    var _request = function () {
-        var requestPayload = {
-            version: 1,
-            type: 'DigiTrust.identity.optOut',
-            value: {}
-        };
-        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
-    };
-
-    DigiTrustCommunication.sendRequest(_request);
-};
-
-DigiTrustCommunication.sendOptOutSolution = function (options) {
-
-    var _request = function (options) {
-        var requestPayload = {
-            version: 1,
-            type: 'DigiTrust.identity.optOutSolution',
-            value: {
-                solution: options.solution
-            }
-        };
-        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
-    };
-
-    DigiTrustCommunication.sendRequest(_request, options);
-};
-
 module.exports = {
     getIdentity: DigiTrustCommunication.getIdentity,
     startConnection: DigiTrustCommunication.startConnection,
     getAppsPreferences: DigiTrustCommunication.getAppsPreferences,
     setAppsPreferences: DigiTrustCommunication.setAppsPreferences,
-    sendReset: DigiTrustCommunication.sendReset,
-    sendOptOut: DigiTrustCommunication.sendOptOut,
-    sendOptOutSolution: DigiTrustCommunication.sendOptOutSolution
+    sendReset: DigiTrustCommunication.sendReset
 };

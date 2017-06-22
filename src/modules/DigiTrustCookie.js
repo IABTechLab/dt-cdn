@@ -185,23 +185,6 @@ DigiTrustCookie.getUser = function (options, callback) {
     }
 };
 
-DigiTrustCookie.setOptout = function (optoutValue) {
-    optoutValue = optoutValue ? true : false;
-    var cookieConfig = window.DigiTrust.isClient ? configGeneral.cookie.publisher : configGeneral.cookie.digitrust;
-    var identityCookieJSON = DigiTrustCookie.getIdentityCookieJSON(cookieConfig.userObjectKey);
-
-    if (helpers.isEmpty(identityCookieJSON)) {
-        identityCookieJSON.id = helpers.generateUserId();
-    }
-
-    identityCookieJSON.privacy = {
-        optout: optoutValue
-    };
-
-    var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(identityCookieJSON);
-    _setIdentityCookie(cookieStringEncoded);
-};
-
 DigiTrustCookie.obfuscateCookieValue = function (value) {
     return encodeURIComponent(btoa(JSON.stringify(value)));
 };
