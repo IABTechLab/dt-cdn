@@ -107,32 +107,6 @@
                     }
                     sendMessage(responseOptions);
                     break;
-                case 'DigiTrust.getAppsPreferences.request':
-                    var appData = DigiTrustAppContainer.server.getAppForMember(evt.data.value.member);
-                    var identity = {
-                        version: 1,
-                        type: 'DigiTrust.getAppsPreferences.response',
-                        value: appData
-                    };
-                    window.parent.postMessage(identity, evt.origin);
-                    break;
-                case 'DigiTrust.setAppsPreferences.request':
-                    var success;
-                    if (DigiTrustAppContainer.server.setAppForMember(evt.data.value.member, evt.data.value.app)) {
-                        success = true;
-                    } else {
-                        success = false;
-                    }
-                    var identity = {
-                        version: 1,
-                        type: 'DigiTrust.setAppsPreferences.response',
-                        value: {
-                            success: success,
-                            app: evt.data.value.app
-                        }
-                    };
-                    window.parent.postMessage(identity, evt.origin);
-                    break;
             }
         }
 
