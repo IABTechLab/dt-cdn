@@ -1,6 +1,5 @@
 var DigiTrust = require('../modules/DigiTrust');
 window.DigiTrust = DigiTrust;
-var DigiTrustAdblock = require('../modules/DigiTrustAdblock');
 var DigiTrustCommunication = require('../modules/DigiTrustCommunication');
 var DigiTrustPopup = require('../modules/DigiTrustPopup');
 var DigiTrustCookie = require('../modules/DigiTrustCookie');
@@ -127,14 +126,6 @@ describe('DigiTrust.initialize() redirects true', function () {
     });*/
 });
 
-describe('DigiTrustAdblock', function () {
-
-    /*it('DigiTrustAdblock.checkEndpoint', function () {
-        var getUserResult = DigiTrustAdblock.checkEndpoint();
-        expect(getUserResult.success).toBe(false);
-    });*/
-});
-
 describe('DigiTrustCommunication', function () {
 
     /*it('getUser without member id', function () {
@@ -200,23 +191,6 @@ describe('DigiTrustPopup', function () {
             popupBackgroundColor: 'black'
         }
     };
-
-    it('DigiTrustPopup.createAdblockPopup', function () {
-        DigiTrustPopup.createAdblockPopup(configInitializeOptions);
-
-        expect(document.getElementById('digitrust-adb-bg').id)
-            .toEqual('digitrust-adb-bg');
-        expect(document.getElementById('digitrust-adb-reload').innerHTML)
-            .toContain('RELOAD THE PAGE');
-        expect(document.getElementById(configGeneral.htmlIDs.dtAdbMessage).innerHTML)
-            .toContain(configInitializeOptions.adblocker.userMessage);
-        expect(document.getElementById(configGeneral.htmlIDs.dtAdbContainer).style.background)
-            .toEqual(configInitializeOptions.adblocker.popupBackgroundColor);
-        expect(document.getElementById(configGeneral.htmlIDs.dtAdbContainer).style.color)
-            .toEqual(configInitializeOptions.adblocker.popupFontColor);
-        expect(document.getElementById('digitrust-adb-blur').id)
-            .toBeTruthy();
-    });
 
     it('DigiTrustPopup.createConsentPopup', function () {
         DigiTrustPopup.createConsentPopup(configInitializeOptions);

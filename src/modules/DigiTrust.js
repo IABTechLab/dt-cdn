@@ -4,7 +4,6 @@ var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustCookie = require('./DigiTrustCookie');
-var DigiTrustAdblock = require('./DigiTrustAdblock');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 var rollbar = require('rollbar-browser');
 
@@ -57,11 +56,6 @@ DigiTrust.initialize = function (options, initializeCallback) {
         // Verify Publisher's Member ID
         if (!DigiTrust._isMemberIdValid(options.member)) {
             return initializeCallback(identityResponseObject);
-        }
-
-        // Does publisher want to check AdBlock (async)
-        if (options.adblocker.detection) {
-            DigiTrustAdblock.checkAdblock(options);
         }
 
         DigiTrustCookie.getUser(options, function (err, identityObject) {
