@@ -1,7 +1,6 @@
 var DigiTrust = require('../modules/DigiTrust');
 window.DigiTrust = DigiTrust;
 var DigiTrustCommunication = require('../modules/DigiTrustCommunication');
-var DigiTrustPopup = require('../modules/DigiTrustPopup');
 var DigiTrustCookie = require('../modules/DigiTrustCookie');
 var DigiTrustCrypto = require('../modules/DigiTrustCrypto');
 var helpers = require('../modules/helpers');
@@ -175,37 +174,6 @@ describe('DigiTrustCookie', function () {
         });
         expect(getUserResult.success).toBe(false);
     });*/
-});
-
-describe('DigiTrustPopup', function () {
-
-    var configInitializeOptions = {
-        adblocker: {
-            userMessage: 'foobar',
-            popupFontColor: 'white',
-            popupBackgroundColor: 'orange'
-        },
-        consent: {
-            userMessage: 'cookies_cookies',
-            popupFontColor: 'white',
-            popupBackgroundColor: 'black'
-        }
-    };
-
-    it('DigiTrustPopup.createConsentPopup', function () {
-        DigiTrustPopup.createConsentPopup(configInitializeOptions);
-
-        expect(document.getElementById(configGeneral.htmlIDs.consentLinkId).innerHTML)
-            .toContain('You can read more or opt out of DigiTrust here.');
-        expect(document.getElementById('digitrust-c-text').id)
-            .toBeTruthy();
-        expect(document.getElementById('digitrust-c-info').id)
-            .toBeTruthy();
-        expect(document.getElementById('digitrust-c-bg').style.background)
-            .toEqual(configInitializeOptions.consent.popupBackgroundColor);
-        expect(document.getElementById('digitrust-c-bg').style.color)
-            .toEqual(configInitializeOptions.consent.popupFontColor);
-    });
 });
 
 describe('helpers', function () {

@@ -3,7 +3,6 @@
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var DigiTrustCommunication = require('./DigiTrustCommunication');
-var DigiTrustPopup = require('./DigiTrustPopup');
 var helpers = require('./helpers');
 
 var _maxAgeToDate = function (milliseconds) {
@@ -51,7 +50,6 @@ var _verifyUserCookieStructure = function (userJSON) {
 };
 
 var DigiTrustCookie = {};
-DigiTrustCookie.showCookieConsentPopup = false;
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
@@ -160,9 +158,6 @@ DigiTrustCookie.getUser = function (options, callback) {
                 return callback(false, userJSON);
             } else {
                 // No DigiTrust cookie exists on digitru.st domain
-                if (DigiTrustCookie.showCookieConsentPopup) {
-                    DigiTrustPopup.createConsentPopup(options);
-                }
                 if (options.redirects) {
                     helpers.createConsentClickListener();
                 }
