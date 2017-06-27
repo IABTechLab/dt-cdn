@@ -10,8 +10,8 @@ var configGeneral = require('../config/general.json')[env];
 describe('DigiTrust.getUser', function () {
 
     beforeAll(function (done) {
-        document.cookie = configGeneral.cookie.publisher.userObjectKey + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = configGeneral.cookie.digitrust.userObjectKey + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = configGeneral.cookie.publisher.userObjectKey + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = configGeneral.cookie.digitrust.userObjectKey + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         done();
     });
 
