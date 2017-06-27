@@ -113,15 +113,6 @@ DigiTrustCookie.setDigitrustCookie = function (cookieV) {
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
-DigiTrustCookie.setChallengeCookie = function (cookieV) {
-    var cookieKV = configGeneral.cookie.digitrust.challenge + '=' + cookieV + ';';
-    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
-    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
-
-    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
-};
-
 DigiTrustCookie.getUser = function (options, callback) {
 
     options = options || {};
