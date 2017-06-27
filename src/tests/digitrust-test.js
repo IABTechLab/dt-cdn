@@ -184,9 +184,7 @@ describe('DigiTrustCookie', function () {
     it('DigiTrustCookie.optoutCookieValue()', function () {
         var identity = DigiTrustCookie.unobfuscateCookieValue
             ('eyJpZCI6bnVsbCwia2V5diI6MCwicHJpdmFjeSI6eyJvcHRvdXQiOnRydWV9fQ%3D%3D');
-        expect(identity.id).toBe(null);
-        expect(identity.keyv).toBe(0);
-        expect(identity.privacy.optout).toBe(true);
+        expect(identity).toEqual({id: null, keyv: 0, privacy: {optout: true}});
     });
     /*it('getUser without member id', function () {
         var getUserResult = DigiTrust.getUser({
