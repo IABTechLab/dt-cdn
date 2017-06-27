@@ -205,4 +205,15 @@ describe('helpers', function () {
         expect(helpers.getAbsolutePath('#test')).toBe('http://localhost:9876/context.html#test');
         expect(helpers.getAbsolutePath('../test')).toBe('http://localhost:9876/test');
     });
+
+    it('generateUserId', function () {
+        // generate an id
+        var id = helpers.generateUserId();
+        expect(id).toBeDefined();
+        var binaryId = helpers.base64StringToArrayBuffer(id);
+        expect(binaryId).not.toBe(null);
+        expect(binaryId.byteLength).toBe(8);
+        // convert back to base64 string
+        expect(id).toBe(helpers.arrayBufferToBase64String(binaryId));
+    });
 });
