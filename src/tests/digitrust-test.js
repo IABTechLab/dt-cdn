@@ -9,6 +9,12 @@ var configGeneral = require('../config/general.json')[env];
 
 describe('DigiTrust.getUser', function () {
 
+    beforeAll(function (done) {
+        document.cookie = configGeneral.cookie.publisher.userObjectKey + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = configGeneral.cookie.digitrust.userObjectKey + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        done();
+    });
+
     it('DigiTrust.initialize without member id', function (done) {
         DigiTrust.initialize({
             member: null
@@ -152,7 +158,7 @@ describe('DigiTrustCookie', function () {
     });
     it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
         // set a bad identity cookie
-        var cookieKey = 'DigiTrust.v1.identity';
+        var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
         var cookieExpires = new Date();
         cookieExpires.setTime(cookieExpires.getTime() + 60000);
         document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
