@@ -68,7 +68,6 @@ DigiTrust.initialize = function (options, initializeCallback) {
             }
         });
     } catch (e) {
-        console.log(e);
         if (DigiTrust.Rollbar === false) {
             helpers.getRollbar(function (Rollbar) {
                 DigiTrust.Rollbar = Rollbar;
@@ -117,7 +116,6 @@ DigiTrust.getUser = function (options, callback) {
             });
         }
     } catch (e) {
-        console.log(e);
         if (DigiTrust.Rollbar === false) {
             helpers.getRollbar(function (Rollbar) {
                 DigiTrust.Rollbar = Rollbar;
