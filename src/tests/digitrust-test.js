@@ -149,6 +149,14 @@ describe('DigiTrustCookie', function () {
         done();
     });
 
+    it('DigiTrustCookie.cookies', function () {
+        var cookieKey = 'testcookie', cookieValue = 'foobar';
+        document.cookie = cookieKey + '=' + cookieValue + '; expires=Thu, 01 Jan 2037 00:00:00 UTC; path=/;';
+        document.cookie = 'SomeOtherCookie=SomeOtherCookieValue; expires=Thu, 01 Jan 2037 00:00:00 UTC; path=/;';
+        expect(DigiTrustCookie.getCookieByName(cookieKey)).toBe(cookieValue);
+        DigiTrustCookie.expireCookie(cookieKey);
+        expect(DigiTrustCookie.getCookieByName(cookieKey)).toBeUndefined();
+    });
     it('DigiTrustCookie.obfuscateCookieValue()', function () {
         var identity = {
             id: null,
