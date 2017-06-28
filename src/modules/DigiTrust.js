@@ -11,9 +11,6 @@ var DigiTrust = {};
 DigiTrust.isClient = false; // Is client or server?
 DigiTrust.initializeOptions = {};
 DigiTrust.Rollbar = false;
-DigiTrust.apps = {};
-DigiTrust.currentApp = {};
-DigiTrust.loadedApps = [];
 
 DigiTrust._isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
@@ -119,49 +116,6 @@ DigiTrust.getUser = function (options, callback) {
     }
 };
 
-DigiTrust.addListener = function (appName, eventName, callback) {
-    var _callbackArgs = function () {
-        return {
-            identity: DigiTrustCookie.getUser(),
-            preferences: {},
-            context: {
-                publisher: window.DigiTrust.initializeOptions.member,
-                site: window.DigiTrust.initializeOptions.site,
-                url: location.href
-            }
-        };
-    };
-
-    var app = helpers.getObjectByKeyFromObject(window.DigiTrust.apps, 'name', appName);
-    if (helpers.isEmpty(app)) {
-        throw new Error(configErrors.en.appNameInvalid);
-    }
-
-    switch (eventName) {
-        case 'enable':
-            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.enable', function (pubsubAppName) {
-                if (appName === pubsubAppName) {
-                    callback(_callbackArgs());
-                }
-            });
-            break;
-        case 'disable':
-            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.disable', function (pubsubAppName) {
-                if (appName === pubsubAppName) {
-                    callback(_callbackArgs());
-                }
-            });
-            break;
-        case 'page-view':
-            helpers.MinPubSub.subscribe('DigiTrust.pubsub.app.event.pageView', function () {
-                if (appName === window.DigiTrust.currentApp.name) {
-                    callback(_callbackArgs());
-                }
-            });
-            break;
-    }
-};
-
 DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
@@ -171,9 +125,5 @@ module.exports = {
     initializeOptions: DigiTrust.initializeOptions,
     getUser: DigiTrust.getUser,
     sendReset: DigiTrust.sendReset,
-    isClient: DigiTrust.isClient,
-    apps: DigiTrust.apps,
-    loadedApps: DigiTrust.loadedApps,
-    currentApp: DigiTrust.currentApp,
-    addListener: DigiTrust.addListener
+    isClient: DigiTrust.isClient
 };
