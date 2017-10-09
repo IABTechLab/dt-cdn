@@ -116,35 +116,9 @@ module.exports = function (grunt) {
         environments: {
             options: {
                 local_path: 'dist',
-                username: deployment.ec2.username,
-                privateKey: require('fs').readFileSync(deployment.ec2.privateKeyPath),
                 releases_to_keep: '3',
                 current_symlink: 'v1',
                 debug: true
-            },
-            dev1: {
-                options: {
-                    host: deployment.ec2.host1,
-                    deploy_path: '/var/www/cdn.digitru.st/dev/'
-                }
-            },
-            dev2: {
-                options: {
-                    host: deployment.ec2.host2,
-                    deploy_path: '/var/www/cdn.digitru.st/dev'
-                }
-            },
-            prod1: {
-                options: {
-                    host: deployment.ec2.host1,
-                    deploy_path: '/var/www/cdn.digitru.st/prod'
-                }
-            },
-            prod2: {
-                options: {
-                    host: deployment.ec2.host2,
-                    deploy_path: '/var/www/cdn.digitru.st/prod'
-                }
             },
         }
 
