@@ -25,8 +25,8 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
     }
     if (window.crypto && !window.crypto.subtle && helpers.isChrome()) {
-      // chrome 61 removes crypto.subtle on insecure origins
-      crypto_browser.subtle = ServerCrypto.mockCryptoSubtle();
+        // chrome 61 removes crypto.subtle on insecure origins
+        crypto_browser.subtle = ServerCrypto.mockCryptoSubtle();
     }
 
     crypto_browser.subtle.importKey(
@@ -55,16 +55,16 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         )
         .then(function (encryptedValue) {
             // Returns an ArrayBuffer containing the encrypted data
-            var encryptedValueEncodedB64 = (typeof(encryptedValue) === 'string')
-                ? encryptedValue
-                : helpers.arrayBufferToBase64String(encryptedValue)
+            var encryptedValueEncodedB64 = (typeof(encryptedValue) === 'string') ?
+                encryptedValue :
+                helpers.arrayBufferToBase64String(encryptedValue);
             // console.log('just encrypted', keyType, encryptedValueEncodedB64);
             return callback(encryptedValueEncodedB64);
         })
-        .catch(function(err) {
+        .catch(function (err) {
         });
     })
-    .catch(function(err) {
+    .catch(function (err) {
     });
 };
 

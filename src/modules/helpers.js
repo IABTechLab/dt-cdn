@@ -32,28 +32,28 @@ var parseXHR = function (req) {
 };
 
 var xhrPromise = function (method, url, data) {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.withCredentials = true;
-    xhr.onload = function () {
-      if (this.status >= 200 && this.status < 300) {
-        resolve(xhr.response);
-      } else {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText
-      });
-    };
-    xhr.send();
-  });
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.withCredentials = true;
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
 };
 
 var xhrRequest = function (type, url, data, async) {
@@ -306,7 +306,7 @@ helpers.isSafari = function () {
 helpers.isChrome = function () {
     var ua = navigator.userAgent.toLowerCase();
     if (ua.indexOf('chrome') !== -1) {
-      return true;
+        return true;
     }
     return false;
 };
