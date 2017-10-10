@@ -31,6 +31,31 @@ var parseXHR = function (req) {
     return [result, req];
 };
 
+var xhrPromise = function (method, url, data) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.withCredentials = true;
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        resolve(xhr.response);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText
+      });
+    };
+    xhr.send();
+  });
+};
+
 var xhrRequest = function (type, url, data, async) {
     // if async not passed, default TRUE; if async is passed then check if truthy
     async = async ? (async ? true : false) : true;
@@ -82,6 +107,10 @@ xhr.post = function (url, data, async) {
 
 xhr.delete = function (url, data, async) {
     return xhrRequest('DELETE', url, data, async);
+};
+
+xhr.promise = function (method, url, data) {
+    return xhrPromise(method, url, data);
 };
 
 helpers.xhr = xhr;
@@ -270,6 +299,14 @@ helpers.isSafari = function () {
         } else {
             return true;
         }
+    }
+    return false;
+};
+
+helpers.isChrome = function () {
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf('chrome') !== -1) {
+      return true;
     }
     return false;
 };

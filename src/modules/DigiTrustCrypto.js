@@ -3,6 +3,7 @@
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general')[env];
 var helpers = require('./helpers');
+var ServerCrypto = require('./ServerCrypto');
 var DTPublicKeyObject = require('../config/key.json');
 
 var crypto_browser = helpers.getBrowserCrypto();
@@ -22,6 +23,10 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     } else {
         keyType = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
+    }
+    if (window.crypto && !window.crypto.subtle && helpers.isChrome()) {
+      // chrome 61 removes crypto.subtle on insecure origins
+      crypto_browser.subtle = ServerCrypto.mockCryptoSubtle();
     }
 
     crypto_browser.subtle.importKey(
@@ -50,10 +55,16 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         )
         .then(function (encryptedValue) {
             // Returns an ArrayBuffer containing the encrypted data
-            var encryptedValueEncodedB64 = helpers.arrayBufferToBase64String(encryptedValue);
+            var encryptedValueEncodedB64 = (typeof(encryptedValue) === 'string')
+                ? encryptedValue
+                : helpers.arrayBufferToBase64String(encryptedValue)
             // console.log('just encrypted', keyType, encryptedValueEncodedB64);
             return callback(encryptedValueEncodedB64);
+        })
+        .catch(function(err) {
         });
+    })
+    .catch(function(err) {
     });
 };
 
@@ -92,7 +103,6 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
         )
         .then(function (decryptedValueArrayBuffer) {
             var decryptedValueString = helpers.ab2str(decryptedValueArrayBuffer);
-            console.log('just decrypted', keyType, decryptedValueString);
             return callback(decryptedValueString);
         });
     });
