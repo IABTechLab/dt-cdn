@@ -1,98 +1,98 @@
 {
-	"prod": {
-		"urls": {
+    "prod": {
+        "urls": {
             "digitrustHostPath": "https://cdn.digitru.st/prod/1.4.3/",
             "digitrustRedirect": "https://cdn.digitru.st/prod/1.4.3/redirect.html",
-			"digitrustIframe": "https://cdn.digitru.st/prod/1.4.3/dt.html",
-			"optoutInfo": "http://www.digitru.st/about-this-notice/",
-			"adblockCheck": "http://stats.aws.rubiconproject.com/"
-		},
-		"cookie": {
+            "digitrustIframe": "https://cdn.digitru.st/prod/1.4.3/dt.html",
+            "optoutInfo": "http://www.digitru.st/about-this-notice/",
+            "adblockCheck": "http://stats.aws.rubiconproject.com/"
+        },
+        "cookie": {
       "version": 2,
-			"publisher": {
-				"domainKeyValue": "",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrust.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain=.digitru.st;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-	            "userObjectKey": "DigiTrust.v1.identity",
+            "publisher": {
+                "domainKeyValue": "",
+                "pathKeyValue": "path=/;",
+                "maxAgeMiliseconds": 604800000,
+                "userObjectKey": "DigiTrust.v1.identity"
+            },
+            "digitrust": {
+                "domainKeyValue": "domain=.digitru.st;",
+                "pathKeyValue": "path=/;",
+                "maxAgeMiliseconds": 157680000000,
+                "userObjectKey": "DigiTrust.v1.identity",
                 "resetKey": "DeleteEverything",
                 "challenge": "DTChal",
                 "optout": "optout",
                 "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
-			}
-		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "https://cdn.digitru.st"
-		},
-		"app": {
-			"cookie": {
-				"reminderMaxAgeMiliseconds": 172800000,
-				"reminderObjectKey": "DigiTrust.v1.ar"
-			}
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"dtAdbApps": "digitrust-adb-apps",
-			"dtAdbAppClass": "dt-app",
-			"dtAdbAppSelected": "dt-app-selected",
-			"publisherPicture": "dt-pub-pic"
-		}
-	},
-	"dev": {
-		"urls": {
+            }
+        },
+        "iframe": {
+            "timeoutDuration": 10000,
+            "postMessageOrigin": "https://cdn.digitru.st"
+        },
+        "app": {
+            "cookie": {
+                "reminderMaxAgeMiliseconds": 172800000,
+                "reminderObjectKey": "DigiTrust.v1.ar"
+            }
+        },
+        "htmlIDs": {
+            "consentLinkId": "digitrust-optout",
+            "dtAdbContainer": "digitrust-adb-container",
+            "dtAdbMessage": "digitrust-adb-message",
+            "dtAdbApps": "digitrust-adb-apps",
+            "dtAdbAppClass": "dt-app",
+            "dtAdbAppSelected": "dt-app-selected",
+            "publisherPicture": "dt-pub-pic"
+        }
+    },
+    "dev": {
+        "urls": {
             "digitrustHostPath": "//digitrust.s3.amazonaws.com/dev/v1/",
-			"digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
-			"digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
-			"optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
-			"adblockCheck": "//stats.aws.rubiconproject.com/"
-		},
-		"cookie": {
+            "digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
+            "digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
+            "optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
+            "adblockCheck": "//stats.aws.rubiconproject.com/"
+        },
+        "cookie": {
       "version": 2,
-			"publisher": {
-				"domainKeyValue": "",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrust.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-	            "userObjectKey": "DigiTrust.v1.identity",
+            "publisher": {
+                "domainKeyValue": "",
+                "pathKeyValue": "path=/;",
+                "maxAgeMiliseconds": 604800000,
+                "userObjectKey": "DigiTrust.v1.identity"
+            },
+            "digitrust": {
+                "domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
+                "pathKeyValue": "path=/;",
+                "maxAgeMiliseconds": 157680000000,
+                "userObjectKey": "DigiTrust.v1.identity",
                 "resetKey": "DeleteEverything",
                 "challenge": "DTChal",
                 "optout": "optout",
                 "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
-			}
-		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
-		},
-		"app": {
-			"cookie": {
-				"reminderMaxAgeMiliseconds": 172800000,
-				"reminderObjectKey": "DigiTrust.v1.ar"
-			}
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"dtAdbApps": "digitrust-adb-apps",
-			"dtAdbAppClass": "dt-app",
-			"dtAdbAppSelected": "dt-app-selected",
-			"publisherPicture": "dt-pub-pic"
-		}
-	},
+            }
+        },
+        "iframe": {
+            "timeoutDuration": 10000,
+            "postMessageOrigin": "http://digitrust.s3.amazonaws.com"
+        },
+        "app": {
+            "cookie": {
+                "reminderMaxAgeMiliseconds": 172800000,
+                "reminderObjectKey": "DigiTrust.v1.ar"
+            }
+        },
+        "htmlIDs": {
+            "consentLinkId": "digitrust-optout",
+            "dtAdbContainer": "digitrust-adb-container",
+            "dtAdbMessage": "digitrust-adb-message",
+            "dtAdbApps": "digitrust-adb-apps",
+            "dtAdbAppClass": "dt-app",
+            "dtAdbAppSelected": "dt-app-selected",
+            "publisherPicture": "dt-pub-pic"
+        }
+    },
     "local": {
         "urls": {
             "digitrustHostPath": "//localhost/dist/",
