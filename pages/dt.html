@@ -16,32 +16,32 @@
                     var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
                     digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
                         
-                        var sendMessage = function (messageValue) {
-                            var messageType = evt.data.syncOnly ?
-                                'DigiTrust.identity.response.syncOnly' :
-                                'DigiTrust.identity.response';
-                            var identity = {
-                                version: 1,
-                                type: messageType,
-                                value: messageValue
-                            };
-                            window.parent.postMessage(identity, evt.origin);
-                        }
+                    var sendMessage = function (messageValue) {
+                        var messageType = evt.data.syncOnly ?
+                            'DigiTrust.identity.response.syncOnly' :
+                            'DigiTrust.identity.response';
+                        var identity = {
+                            version: 1,
+                            type: messageType,
+                            value: messageValue
+                        };
+                        window.parent.postMessage(identity, evt.origin);
+                    }
 
-                        if ((!isOptOut) && (helpers.isEmpty(digiTrustUserJSON))) {
-                            // see if we can write and read cookies from within the iframe
-                            DigiTrustCookie.createUserCookiesOnDigitrustDomain();
-                            digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
-                        }
-                        if (digiTrustUserJSON.hasOwnProperty('id')) {
-                            DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
-                                digiTrustUserJSON.id = encryptedUserId;
-                                digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
-                                sendMessage(digiTrustUserJSON);
-                            });
-                        } else {
+                    if ((!isOptOut) && (helpers.isEmpty(digiTrustUserJSON))) {
+                        // see if we can write and read cookies from within the iframe
+                        DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+                        digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
+                    }
+                    if (digiTrustUserJSON.hasOwnProperty('id')) {
+                        DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
+                            digiTrustUserJSON.id = encryptedUserId;
+                            digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
                             sendMessage(digiTrustUserJSON);
-                        }
+                        });
+                    } else {
+                        sendMessage(digiTrustUserJSON);
+                    }
                     break;
                 case 'DigiTrust.identity.reset':
                     var DE = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.resetKey);
