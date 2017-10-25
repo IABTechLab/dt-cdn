@@ -34,11 +34,15 @@
                         digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
                     }
                     if (digiTrustUserJSON.hasOwnProperty('id')) {
-                        DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
-                            digiTrustUserJSON.id = encryptedUserId;
-                            digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
+                        try {
+                            DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
+                                digiTrustUserJSON.id = encryptedUserId;
+                                digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
+                                sendMessage(digiTrustUserJSON);
+                            });
+                        } catch (e) {
                             sendMessage(digiTrustUserJSON);
-                        });
+                        }
                     } else {
                         sendMessage(digiTrustUserJSON);
                     }
