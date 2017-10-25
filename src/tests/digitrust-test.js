@@ -162,6 +162,13 @@ describe('DigiTrustCookie', function () {
         DigiTrustCookie.expireCookie(cookieKey);
         expect(DigiTrustCookie.getCookieByName(cookieKey)).toBeUndefined();
     });
+    it('DigiTrustCookie.createUserCookiesOnDigitrustDomain()', function () {
+        var identity = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+        expect(identity.id).not.toBe(null);
+        expect(identity.version).toBe(2);
+        expect(identity.producer).toBe('SIx8cS71Eo');
+        expect(identity.privacy.optout).toBe(false);
+    });
     it('DigiTrustCookie.obfuscateCookieValue()', function () {
         var identity = {
             id: null,
@@ -184,6 +191,8 @@ describe('DigiTrustCookie', function () {
         var user = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
         // we should have generated a new value
         expect(user.id).not.toBe(null);
+        expect(user.version).toBe(2);
+        expect(user.producer).toBe('SIx8cS71Eo');
         expect(user.privacy.optout).toBe(false);
     });
     it('DigiTrustCookie.optoutCookieValue()', function () {
