@@ -202,9 +202,11 @@ describe('DigiTrustCookie', function () {
     });
     it('DigiTrustCookie.verifyPublisherDomainCookie()', function () {
         expect(DigiTrustCookie.verifyPublisherDomainCookie({})).toBe(false);
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({ id: 'abc' })).toBe(false);
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({ id: 'abc', version: 2, privacy: { optout: false }})).toBe(false);
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({ id: 'abc', version: 2, keyv: 4, privacy: { optout: false }})).toBe(true);
+        expect(DigiTrustCookie.verifyPublisherDomainCookie({id: 'abc'})).toBe(false);
+        expect(DigiTrustCookie.verifyPublisherDomainCookie({id: 'abc', version: 2,
+            privacy: {optout: false}})).toBe(false);
+        expect(DigiTrustCookie.verifyPublisherDomainCookie({id: 'abc', version: 2,
+            keyv: 4, privacy: {optout: false}})).toBe(true);
     });
     /*it('getUser without member id', function () {
         var getUserResult = DigiTrust.getUser({
