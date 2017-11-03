@@ -33,7 +33,7 @@ var _verifyUserCookieStructure = function (userJSON) {
     var hasUserId = userJSON.hasOwnProperty('id');
     var hasPrivacy = userJSON.hasOwnProperty('privacy');
 
-    if (!hasUserId || ((!userJSON.privacy.optout) && (userJSON.id.length < 1))) {
+    if (!hasUserId || !hasPrivacy || ((!userJSON.privacy.optout) && (userJSON.id.length < 1))) {
         return false;
     }
 
@@ -163,7 +163,7 @@ DigiTrustCookie.getUser = function (options, callback) {
             localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(
                 configGeneral.cookie.publisher.userObjectKey
             );
-            if (!helpers.isEmpty(localUserCookieJSON)) {
+            if (DigiTrustCookie.verifyPublisherDomainCookie(localUserCookieJSON)) {
                 // OK to proceed & show content
                 // Grab remote cookie & update local
                 _createSyncOnlySubscription();
@@ -206,6 +206,13 @@ DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
 
     DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
     return userJSON;
+};
+
+DigiTrustCookie.verifyPublisherDomainCookie = function (userJSON) {
+    if (helpers.isEmpty(userJSON) || !_verifyUserCookieStructure(userJSON)) { return false; }
+    if (!userJSON.hasOwnProperty('keyv')) { return false; }
+
+    return true;
 };
 
 module.exports = DigiTrustCookie;

@@ -46,13 +46,11 @@ DigiTrust.initialize = function (options, initializeCallback) {
         }
 
         DigiTrustCookie.getUser(options, function (err, identityObject) {
-            if (err || helpers.isEmpty(identityObject)) {
-                return initializeCallback(identityResponseObject);
-            } else {
+            if (!err) {
                 identityResponseObject.success = true;
                 identityResponseObject.identity = identityObject;
-                return initializeCallback(identityResponseObject);
             }
+            return initializeCallback(identityResponseObject);
         });
     } catch (e) {
         if (DigiTrust.Rollbar === false) {
