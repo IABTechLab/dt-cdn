@@ -9,7 +9,7 @@ module.exports = function (grunt) {
     'use strict';
     
     var digitrustMajorVersion = '1';
-    var digitrustVersion = '1.5.1.beta';
+    var digitrustVersion = '1.5.1';
 
     // Get or Default environment
     var argEnv = grunt.option('env');
@@ -350,7 +350,7 @@ module.exports = function (grunt) {
           //ssl: true, // optional, default: false 
           verbose: true, // optional, default: false 
           request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
-            timeout: 10000 // 20s is the dafault value 
+            timeout: 20000 // 20s is the dafault value 
           }
         });
 
