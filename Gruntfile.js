@@ -9,7 +9,7 @@ module.exports = function (grunt) {
     'use strict';
     
     var digitrustMajorVersion = '1';
-    var digitrustVersion = '1.5.1';
+    var digitrustVersion = '1.5.2.beta';
 
     // Get or Default environment
     var argEnv = grunt.option('env');
