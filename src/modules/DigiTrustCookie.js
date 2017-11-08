@@ -122,7 +122,7 @@ DigiTrustCookie.getUser = function (options, callback) {
     var _createSyncOnlySubscription = function () {
         // LISTENER: Only update publisher cookie, do not return anywhere
         helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
-            if (_verifyUserCookieStructure(userJSON)) {
+            if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);
             }
@@ -144,7 +144,7 @@ DigiTrustCookie.getUser = function (options, callback) {
             LISTENER: listen for message from digitrust iframe
         */
         helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
-            if (_verifyUserCookieStructure(userJSON)) {
+            if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);
                 return callback(false, userJSON);
