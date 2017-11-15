@@ -41,7 +41,7 @@
                                 sendMessage(digiTrustUserJSON);
                             });
                         } catch (e) {
-                            sendMessage({});
+                            sendMessage(configGeneral.cookie.digitrust.errorUser);
                         }
                     } else {
                         sendMessage(digiTrustUserJSON);

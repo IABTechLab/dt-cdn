@@ -24,7 +24,8 @@
                 "resetKey": "DeleteEverything",
                 "challenge": "DTChal",
                 "optout": "optout",
-                "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
+                "optoutUser": { 'id': '', 'privacy': { 'optout': true } },
+                "errorUser": { 'error': true }
             }
         },
         "iframe": {
@@ -72,7 +73,8 @@
                 "resetKey": "DeleteEverything",
                 "challenge": "DTChal",
                 "optout": "optout",
-                "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
+                "optoutUser": { 'id': '', 'privacy': { 'optout': true } },
+                "errorUser": { 'error': true }
             }
         },
         "iframe": {
@@ -120,7 +122,8 @@
                 "resetKey": "DeleteEverything",
                 "challenge": "DTChal",
                 "optout": "optout",
-                "optoutUser": { 'id': '', 'privacy': { 'optout': true } }
+                "optoutUser": { 'id': '', 'privacy': { 'optout': true } },
+                "errorUser": { 'error': true }
             }
         },
         "iframe": {
