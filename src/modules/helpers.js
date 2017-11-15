@@ -140,7 +140,7 @@ var _getElementHref = function (current) {
 helpers.getAbsolutePath = function (href) {
     var link = document.createElement('a');
     link.href = href;
-    return (link.protocol + '//' + link.host + link.pathname + link.search + link.hash);
+    return link.cloneNode(false).href;
 };
 
 helpers.inIframe = function () {
