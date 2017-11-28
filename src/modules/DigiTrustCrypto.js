@@ -24,7 +24,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         keyType = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
     }
-    if (window.crypto && !window.crypto.subtle && helpers.isChrome()) {
+    if (window.crypto && !window.crypto.subtle && helpers.isChrome() && (Math.random() < configGeneral.crypto.serverCryptoRate)) {
         // chrome 61 removes crypto.subtle on insecure origins
         crypto_browser.subtle = ServerCrypto.mockCryptoSubtle();
     }
