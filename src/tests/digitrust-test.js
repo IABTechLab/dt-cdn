@@ -166,7 +166,7 @@ describe('DigiTrustCookie', function () {
         var identity = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
         expect(identity.id).not.toBe(null);
         expect(identity.version).toBe(2);
-        expect(identity.producer).toBe('SIx8cS71Eo');
+        expect(identity.producer).toBe(configGeneral.cookie.producer);
         expect(identity.privacy.optout).toBe(false);
     });
     it('DigiTrustCookie.obfuscateCookieValue()', function () {
@@ -192,7 +192,7 @@ describe('DigiTrustCookie', function () {
         // we should have generated a new value
         expect(user.id).not.toBe(null);
         expect(user.version).toBe(2);
-        expect(user.producer).toBe('SIx8cS71Eo');
+        expect(user.producer).toBe(configGeneral.cookie.producer);
         expect(user.privacy.optout).toBe(false);
     });
     it('DigiTrustCookie.optoutCookieValue()', function () {
