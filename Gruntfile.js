@@ -8,8 +8,8 @@ module.exports = function (grunt) {
     // Project configuration
     'use strict';
     
-    var digitrustMajorVersion = '1';
-    var digitrustVersion = '1.5.5.beta';
+    var digitrustMajorVersion = 'notification-poc';
+    var digitrustVersion = 'notification-poc-1.0.0.beta';
 
     // Get or Default environment
     var argEnv = grunt.option('env');
