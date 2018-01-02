@@ -5,6 +5,7 @@ var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
+var DigiTrustPopup = require('./DigiTrustPopup');
 var rollbar = require('rollbar-browser');
 
 var DigiTrust = {};
@@ -45,6 +46,14 @@ DigiTrust.initialize = function (options, initializeCallback) {
             return initializeCallback(identityResponseObject);
         }
 
+        if ('explicit' === options.consent.requires) {
+            if (DigiTrustCookie.getCookieByName("consent") !== "true") {
+                DigiTrustPopup.createConsentPopup(options);
+                document.getElementById('consent-href').addEventListener("click", function(){
+                    document.cookie = "consent=true;";
+                });
+            }
+        }
         DigiTrustCookie.getUser(options, function (err, identityObject) {
             if (!err) {
                 identityResponseObject.success = true;
