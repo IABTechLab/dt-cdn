@@ -46,11 +46,11 @@ DigiTrust.initialize = function (options, initializeCallback) {
             return initializeCallback(identityResponseObject);
         }
 
-        if ('explicit' === options.consent.requires) {
-            if (DigiTrustCookie.getCookieByName("consent") !== "true") {
+        if (options.consent.requires === 'explicit') {
+            if (DigiTrustCookie.getCookieByName('consent') !== 'true') {
                 DigiTrustPopup.createConsentPopup(options);
-                document.getElementById('consent-href').addEventListener("click", function(){
-                    document.cookie = "consent=true;";
+                document.getElementById('consent-href').addEventListener('click', function () {
+                    document.cookie = 'consent=true;';
                 });
             }
         }
