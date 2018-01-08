@@ -47,10 +47,10 @@ DigiTrust.initialize = function (options, initializeCallback) {
         }
 
         if (options.consent.requires === 'explicit') {
-            if (DigiTrustCookie.getCookieByName('consent') !== 'true') {
+            if (DigiTrustCookie.getCookieByName('daacaconsent') !== 'true') {
                 DigiTrustPopup.createConsentPopup(options);
-                document.getElementById('consent-href').addEventListener('click', function () {
-                    document.cookie = 'consent=true;';
+                document.getElementById('digitrust-x-consent-close').addEventListener('click', function () {
+                    document.cookie = 'daacaconsent=true;';
                 });
             }
         }
