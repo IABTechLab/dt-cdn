@@ -15,9 +15,9 @@
     },
     "consent": {
         "requires": "none",
-        "userMessage": 'This site uses cookies and is a member of DigiTrust, a non-profit consortium of companies working together to improve your Web experience. <a href="#" id="consent-href">Click here</a> to agree and make this notice disappear. You can read more or opt out of DigiTrust <a href="http://www.digitru.st/about-this-notice/">here</a>.',
-        "popupFontColor": "#ffffff",
-        "popupBackgroundColor": "#000000"
+        "userMessage": "We care about your privacy and giving you control. We pledge to adhere to the AdChoices program principles to respect your choices for interest-based ads. By visiting this page, you allow our partner DigiTrust to place its cookies. You can read more or opt out of DigiTrust <a href='https://youradchoices.ca/understanding-online-advertising/'>here</a>. <i>This notice only appears once</i>.",
+        "popupFontColor": "#333333",
+        "popupBackgroundColor": "#eeeeee"
     },
     "apps": {
         "manifest": null

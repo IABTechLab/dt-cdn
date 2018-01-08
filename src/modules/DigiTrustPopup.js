@@ -269,23 +269,16 @@ DigiTrustPopup.createAdblockPopup = function (initializeOptions, hasApps) {
 
 DigiTrustPopup.createConsentPopup = function (initializeOptions) {
 
-    var optOut = document.createElement('a');
-    optOut.id = configGeneral.htmlIDs.consentLinkId;
-    optOut.innerHTML = 'You can read more or opt out of DigiTrust here.';
-    optOut.style.padding = '0 0 0 10px';
-    optOut.href = configGeneral.urls.optoutInfo;
-
     var textDiv = document.createElement('div');
     textDiv.id = 'digitrust-c-text';
     textDiv.style.padding = '5px 50px';
     textDiv.innerHTML = initializeOptions.consent.userMessage;
-    textDiv.appendChild(optOut);
 
     var iDiv = document.createElement('div');
     iDiv.id = 'digitrust-c-info';
     iDiv.style.padding = '5px 15px';
     iDiv.style.float = 'left';
-    iDiv.style.background = '#999999';
+    iDiv.style.background = '#eeeeee';
     iDiv.style.color = '#ffffff';
     iDiv.style.fontFamily = 'serif';
     iDiv.style.fontSize = '16px';
@@ -294,7 +287,22 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     iDiv.style.left = '0';
     iDiv.style.position = 'absolute';
     iDiv.style.borderBottomRightRadius = '5px';
-    iDiv.innerHTML = 'i';
+    iDiv.innerHTML = '<img src="http://youradchoices.com/DAA_style/YAC/Icon_White_Box.png" width="20" height="20"/>';
+
+    var xDiv = document.createElement('div');
+    xDiv.id = 'digitrust-x-info';
+    xDiv.style.padding = '5px 15px';
+    xDiv.style.float = 'right';
+    xDiv.style.background = '#eeeeee';
+    xDiv.style.color = '#ffffff';
+    xDiv.style.fontFamily = 'serif';
+    xDiv.style.fontSize = '16px';
+    xDiv.style.fontStyle = 'bold';
+    xDiv.style.top = '0';
+    xDiv.style.right = '0';
+    xDiv.style.position = 'absolute';
+    xDiv.style.borderBottomRightRadius = '5px';
+    xDiv.innerHTML = '<a href="#" id="digitrust-x-consent-close">X</a>';
 
     var bgDiv = document.createElement('div');
     bgDiv.id = 'digitrust-c-bg';
@@ -310,6 +318,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     bgDiv.style.color = initializeOptions.consent.popupFontColor;
 
     bgDiv.appendChild(iDiv);
+    bgDiv.appendChild(xDiv);
     bgDiv.appendChild(textDiv);
 
     document.body.appendChild(bgDiv);
