@@ -50,7 +50,7 @@ DigiTrust.initialize = function (options, initializeCallback) {
             if (DigiTrustCookie.getCookieByName('daacaconsent') !== 'true') {
                 DigiTrustPopup.createConsentPopup(options);
                 document.getElementById('digitrust-x-consent-close').addEventListener('click', function () {
-                    document.cookie = 'daacaconsent=true;';
+                    document.cookie = 'daacaconsent=true; path=/;';
                 });
             }
         }
