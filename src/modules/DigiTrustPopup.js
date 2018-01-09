@@ -287,7 +287,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     iDiv.style.left = '0';
     iDiv.style.position = 'absolute';
     iDiv.style.borderBottomRightRadius = '5px';
-    iDiv.innerHTML = '<img src="//cdn.digitru.st/prod/notification-poc-1.0.3.beta/prod/notification-poc-1.0.3.beta" width="20" height="20"/>';
+    iDiv.innerHTML = '<img src="//cdn.digitru.st/prod/notification-poc-1.0.3.beta/adchoices-20x20.png" width="20" height="20"/>';
 
     var xDiv = document.createElement('div');
     xDiv.id = 'digitrust-x-info';
