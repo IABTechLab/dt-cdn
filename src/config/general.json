@@ -1,9 +1,9 @@
 {
     "prod": {
         "urls": {
-            "digitrustHostPath": "https://cdn.digitru.st/prod/notification-poc-1.0.3.beta/",
-            "digitrustRedirect": "https://cdn.digitru.st/prod/notification-poc-1.0.3.beta/redirect.html",
-            "digitrustIframe": "https://cdn.digitru.st/prod/notification-poc-1.0.3.beta/dt.html",
+            "digitrustHostPath": "https://cdn.digitru.st/prod/notification-poc-1.0.4.beta/",
+            "digitrustRedirect": "https://cdn.digitru.st/prod/notification-poc-1.0.4.beta/redirect.html",
+            "digitrustIframe": "https://cdn.digitru.st/prod/notification-poc-1.0.4.beta/dt.html",
             "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
             "optoutInfo": "http://www.digitru.st/about-this-notice/",
             "adblockCheck": "http://stats.aws.rubiconproject.com/"
