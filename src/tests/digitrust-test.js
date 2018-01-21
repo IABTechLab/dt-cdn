@@ -100,6 +100,16 @@ describe('DigiTrust.initialize() consent window implicit', function () {
     });
 });
 
+describe('DigiTrust.initialize() undefined callback', function () {
+
+    it('DigiTrust.initialize() with undefined callback', function (done) {
+        DigiTrust.initialize({
+            member: 'foo'
+        });
+        done();
+    });
+});
+
 describe('DigiTrust.initialize() redirects false', function () {
 
     /*it('DigiTrust.initialize() does not rewrite links when redirects=false', function (done) {
