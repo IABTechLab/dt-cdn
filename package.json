@@ -1,11 +1,11 @@
 {
   "name": "DigiTrust",
-  "version": "1.0.0",
+  "version": "1.5.6.beta",
   "description": "DigiTrust",
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:rubicon-project/digitrust.git"
+    "url": "git@github.com:digi-trust/dt-cdn.git"
   },
   "devDependencies": {
     "akamai-http-api": "^0.5.*",
