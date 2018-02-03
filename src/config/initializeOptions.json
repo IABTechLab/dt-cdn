@@ -15,7 +15,7 @@
     },
     "consent": {
         "requires": "none",
-        "userMessage": "We care about your privacy and giving you control. We pledge to adhere to the AdChoices program principles to respect your choices for interest-based ads. By visiting this page, you allow our partner DigiTrust to place its cookies. You can read more or opt out of DigiTrust <a href='https://youradchoices.ca/understanding-online-advertising/'>here</a>. <i>This notice only appears once</i>.",
+        "userMessage": 'We care about your online privacy and providing you with ways to control it. Our company adheres to the AdChoices principles for interest-based advertising. By continuing to use this page, you are agreeing to the use of cookies through our partner DigiTrust. You can read more or opt out <a href="https://youradchoices.ca/understanding-online-advertising/" target="_blank">here</a>. This notice only appears once.',
         "popupFontColor": "#333333",
         "popupBackgroundColor": "#eeeeee"
     },

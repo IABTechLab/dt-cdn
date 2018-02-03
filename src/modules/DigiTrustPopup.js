@@ -287,7 +287,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     iDiv.style.left = '0';
     iDiv.style.position = 'absolute';
     iDiv.style.borderBottomRightRadius = '5px';
-    iDiv.innerHTML = '<img src="//cdn.digitru.st/prod/notification-poc-1.0.4.beta/adchoices-20x20.png" width="20" height="20"/>';
+    iDiv.innerHTML = '<img src="//cdn.digitru.st/prod/notification-poc-1.0.6.beta/adchoices-40x40.png" width="40" height="40"/>';
 
     var xDiv = document.createElement('div');
     xDiv.id = 'digitrust-x-info';
@@ -302,7 +302,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
     xDiv.style.right = '0';
     xDiv.style.position = 'absolute';
     xDiv.style.borderBottomRightRadius = '5px';
-    xDiv.innerHTML = '<a href="#" id="digitrust-x-consent-close">X</a>';
+    xDiv.innerHTML = '<a href="#" id="digitrust-x-consent-close" style="text-decoration: none;">X</a>';
 
     var bgDiv = document.createElement('div');
     bgDiv.id = 'digitrust-c-bg';
