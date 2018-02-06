@@ -15,7 +15,7 @@
     },
     "consent": {
         "requires": "none",
-        "userMessage": 'This site uses cookies and is a member of DigiTrust, a non-profit consortium of companies working together to improve your Web experience.  By clicking on this page you agree to the use of cookies. This notice only appears once. <a href="http://www.digitru.st/about-this-notice/">You can read more or opt out of DigiTrust herje</a>.',
+        "userMessage": "This site uses cookies and is a member of DigiTrust, a non-profit consortium of companies working together to improve your Web experience.  By clicking on this page you agree to the use of cookies. This notice only appears once. <a href=\"http://www.digitru.st/about-this-notice/\">You can read more or opt out of DigiTrust here</a>.",
         "popupFontColor": "#ffffff",
         "popupBackgroundColor": "#000000"
     },
