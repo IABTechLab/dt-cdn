@@ -1,13 +1,2 @@
 {
-    "ec2": {
-        "host1": "",
-        "host2": "",
-        "username": "",
-        "privateKeyPath": "/path-to-private-key"
-    },
-    "akamai": {
-        "keyName": "foo",
-        "key": "bar",
-        "host": "foobar-nsu.akamaihd.net"
-    }
 }

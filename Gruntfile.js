@@ -296,30 +296,6 @@ module.exports = function (grunt) {
     grunt.registerTask('dir-cdn', function () {
         //digitrustupload
 
-        var done = this.async();
-        var akamai = require('akamai-http-api');
-        var dtFolder = "470638";
-
-        // @todo - pass keyname & key as arguments
-
-        akamai.setConfig({
-          keyName: deployment.akamai.keyName,
-          key: deployment.akamai.key,
-          host: deployment.akamai.host,
-          //ssl: true, // optional, default: false 
-          verbose: true, // optional, default: false 
-          request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
-            timeout: 10000 // 20s is the dafault value 
-          }
-        });
-
-        akamai.dir('/'+dtFolder+'/prod/'+digitrustVersion+'/', function (err, data) {
-            
-            console.log(JSON.stringify(err, null, 4));
-            console.log(JSON.stringify(data, null, 4));
-
-            done();
-        });
     });
 
     grunt.registerTask('deploy-cdn', function () {
@@ -328,8 +304,6 @@ module.exports = function (grunt) {
         var files = fs.readdirSync('dist');
 
         var done = this.async();
-        var akamai = require('akamai-http-api');
-        var dtFolder = "470638";
 
         var argEnv = grunt.option('env');
         if (argEnv === 'prod') {
@@ -340,19 +314,6 @@ module.exports = function (grunt) {
         }
 
         console.log('ENVIRONMENT: ', argEnv);
-
-        // @todo - pass keyname & key as arguments
-
-        akamai.setConfig({
-          keyName: deployment.akamai.keyName,
-          key: deployment.akamai.key,
-          host: deployment.akamai.host,
-          //ssl: true, // optional, default: false 
-          verbose: true, // optional, default: false 
-          request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
-            timeout: 20000 // 20s is the dafault value 
-          }
-        });
 
         var itemsProcessed = 0;
         function callback () {
@@ -364,19 +325,6 @@ module.exports = function (grunt) {
             var stream = fs.createReadStream('dist/'+file);
             console.log('deploying .. ' + file);
 
-            /*akamai.delete('/'+dtFolder+'/'+file, function (err, data) {
-                console.log('deleted ' + file);
-            });*/
-
-            akamai.upload(stream, '/'+dtFolder+'/'+argEnv+'/'+digitrustVersion+'/'+file, function (err, data) {
-                if (err) {
-                    throw new Error(err);
-                }
-                itemsProcessed++;
-                if(itemsProcessed === array.length) {
-                    callback();
-                }
-            });
         });
 
 
@@ -387,8 +335,6 @@ module.exports = function (grunt) {
         var fs = require('fs');
 
         var done = this.async();
-        var akamai = require('akamai-http-api');
-        var dtFolder = "470638";
 
         var argEnv = grunt.option('env');
         if (argEnv === 'prod') {
@@ -400,28 +346,8 @@ module.exports = function (grunt) {
 
         console.log('ENVIRONMENT: ', argEnv);
 
-        // @todo - pass keyname & key as arguments
-
-        akamai.setConfig({
-          keyName: deployment.akamai.keyName,
-          key: deployment.akamai.key,
-          host: deployment.akamai.host,
-          //ssl: true, // optional, default: false 
-          verbose: true, // optional, default: false 
-          request: { // optional, request.js options, see: https://github.com/request/request#requestoptions-callback 
-            timeout: 10000 // 20s is the dafault value 
-          }
-        });
-
         var stream = fs.createReadStream('dist/digitrust.min.js');
         console.log('deploying digitrust.min.js.. ');
-
-        akamai.upload(stream, '/'+dtFolder+'/'+argEnv+'/'+digitrustMajorVersion+'/digitrust.min.js', function (err, data) {
-            if (err) {
-                throw new Error(err);
-            }
-            done();
-        });
     });
 
 

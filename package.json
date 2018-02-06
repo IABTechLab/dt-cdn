@@ -8,7 +8,6 @@
     "url": "git@github.com:digi-trust/dt-cdn.git"
   },
   "devDependencies": {
-    "akamai-http-api": "^0.5.*",
     "browserify": "^11.0.1",
     "bundle-collapser": "^1.2.1",
     "global": "^4.3.0",
