@@ -271,7 +271,7 @@ DigiTrustPopup.createConsentPopup = function (initializeOptions) {
 
     var textDiv = document.createElement('div');
     textDiv.id = 'digitrust-c-text';
-    textDiv.style.padding = '5px 50px';
+    textDiv.style.padding = '5px 70px';
     textDiv.innerHTML = initializeOptions.consent.userMessage;
 
     var iDiv = document.createElement('div');
