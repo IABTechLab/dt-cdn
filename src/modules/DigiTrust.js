@@ -32,6 +32,10 @@ DigiTrust._setDigiTrustOptions = function (options) {
 
 DigiTrust.initialize = function (options, initializeCallback) {
     try {
+        if (initializeCallback === undefined) {
+            initializeCallback = function (x) { };
+        }
+
         var identityResponseObject = {success: false};
 
         options = DigiTrust._setDigiTrustOptions(options);
