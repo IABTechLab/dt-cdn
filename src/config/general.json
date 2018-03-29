@@ -34,7 +34,7 @@
             "postMessageOrigin": "https://cdn.digitru.st"
         },
         "crypto": {
-            "serverCryptoRate": 0.001
+            "serverCryptoRate": 0.02
         },
         "app": {
             "cookie": {
