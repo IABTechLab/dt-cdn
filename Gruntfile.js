@@ -132,7 +132,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-strip-code');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
-    grunt.loadNpmTasks('grunt-ssh-deploy');
 
     grunt.event.on('watch', function (action, filepath, target) {
         grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
@@ -270,9 +269,6 @@ module.exports = function (grunt) {
     // Deployment tasks
     if (argEnv === 'prod') {
         grunt.registerTask('deploy', ['default', 'deploy-cdn', 'deploy-cdn-major']);
-    } else if (argEnv === 'dev') {
-        grunt.registerTask('deploy1', ['default', 'ssh_deploy:dev1']);
-        grunt.registerTask('deploy2', ['default', 'ssh_deploy:dev2']);
     } else {
         var deployMissingEnv = function () {
             grunt.log.error('***************************************************');
