@@ -27,6 +27,12 @@ jobs:
           - v1-dependencies-
 
       - run:
+          name: Install grunt
+          command: |
+            npm install -g grunt-cli
+            npm install grunt --save-dev
+
+      - run:
           name: Install PhantomJS Dependencies
           command: |
             [ -f /usr/local/bin/phantomjs ] || sudo apt-get update
