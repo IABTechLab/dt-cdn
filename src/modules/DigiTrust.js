@@ -5,12 +5,10 @@ var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
-var rollbar = require('rollbar-browser');
 
 var DigiTrust = {};
 DigiTrust.isClient = false; // Is client or server?
 DigiTrust.initializeOptions = {};
-DigiTrust.Rollbar = false;
 
 DigiTrust._isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
@@ -56,14 +54,6 @@ DigiTrust.initialize = function (options, initializeCallback) {
             return initializeCallback(identityResponseObject);
         });
     } catch (e) {
-        if (DigiTrust.Rollbar === false) {
-            helpers.getRollbar(function (Rollbar) {
-                DigiTrust.Rollbar = Rollbar;
-                DigiTrust.Rollbar.error('Error caught DigiTrust.initialize()', e);
-            });
-        } else {
-            DigiTrust.Rollbar.error('Error caught DigiTrust.initialize()', e);
-        }
 
         return initializeCallback({success: false});
     }
@@ -104,15 +94,6 @@ DigiTrust.getUser = function (options, callback) {
             });
         }
     } catch (e) {
-        if (DigiTrust.Rollbar === false) {
-            helpers.getRollbar(function (Rollbar) {
-                DigiTrust.Rollbar = Rollbar;
-                DigiTrust.Rollbar.error('Error caught DigiTrust.getUser()', e);
-            });
-        } else {
-            DigiTrust.Rollbar.error('Error caught DigiTrust.getUser()', e);
-        }
-
         return (async === false) ? identityResponseObject : callback(identityResponseObject);
     }
 };
