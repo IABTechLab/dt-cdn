@@ -170,8 +170,6 @@ describe('DigiTrustCookie', function () {
         document.cookie = 'SomeOtherCookie=SomeOtherCookieValue; expires=Thu, 01 Jan 2037 00:00:00 UTC; path=/;';
         expect(DigiTrustCookie.getCookieByName(cookieKey)).toBe(cookieValue);
         DigiTrustCookie.expireCookie(cookieKey);
-        console.log('env: ');
-        console.log(JSON.stringify(env));
         if (env !== 'prod') {
             expect(DigiTrustCookie.getCookieByName(cookieKey)).toBeUndefined();
         }
