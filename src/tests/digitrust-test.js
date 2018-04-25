@@ -173,7 +173,7 @@ describe('DigiTrustCookie', function () {
         console.log('env: ');
         console.log(JSON.stringify(env));
         if (env !== 'prod') {
-          expect(DigiTrustCookie.getCookieByName(cookieKey)).toBeUndefined();
+            expect(DigiTrustCookie.getCookieByName(cookieKey)).toBeUndefined();
         }
     });
     it('DigiTrustCookie.createUserCookiesOnDigitrustDomain()', function () {
