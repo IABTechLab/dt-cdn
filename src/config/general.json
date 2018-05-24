@@ -1,161 +1,182 @@
 {
-    "prod": {
-        "urls": {
-            "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.10.beta/",
-            "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.10.beta/redirect.html",
-            "digitrustIframe": "https://cdn.digitru.st/prod/1.5.10.beta/dt.html",
-            "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
-            "optoutInfo": "http://www.digitru.st/about-this-notice/",
-            "adblockCheck": "http://stats.aws.rubiconproject.com/"
-        },
-        "cookie": {
-      "version": 2,
-            "producer": "1CrsdUNAo6",
-            "publisher": {
-                "domainKeyValue": "",
-                "pathKeyValue": "path=/;",
-                "maxAgeMiliseconds": 604800000,
-                "userObjectKey": "DigiTrust.v1.identity"
-            },
-            "digitrust": {
-                "domainKeyValue": "domain=.digitru.st;",
-                "pathKeyValue": "path=/;",
-                "maxAgeMiliseconds": 157680000000,
-                "userObjectKey": "DigiTrust.v1.identity",
-                "resetKey": "DeleteEverything",
-                "challenge": "DTChal",
-                "optout": "optout",
-                "optoutUser": { "id": "", "privacy": { "optout": true } },
-                "errorUser": { "error": true }
-            }
-        },
-        "iframe": {
-            "timeoutDuration": 10000,
-            "postMessageOrigin": "https://cdn.digitru.st"
-        },
-        "crypto": {
-            "serverCryptoRate": 0.4
-        },
-        "app": {
-            "cookie": {
-                "reminderMaxAgeMiliseconds": 172800000,
-                "reminderObjectKey": "DigiTrust.v1.ar"
-            }
-        },
-        "htmlIDs": {
-            "consentLinkId": "digitrust-optout",
-            "dtAdbContainer": "digitrust-adb-container",
-            "dtAdbMessage": "digitrust-adb-message",
-            "dtAdbApps": "digitrust-adb-apps",
-            "dtAdbAppClass": "dt-app",
-            "dtAdbAppSelected": "dt-app-selected",
-            "publisherPicture": "dt-pub-pic"
-        }
-    },
-    "dev": {
-        "urls": {
-            "digitrustHostPath": "//digitrust.s3.amazonaws.com/dev/v1/",
-            "digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
-            "digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
-            "digitrustIdService": "//lambda-dev.digitru.st/id/v1",
-            "optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
-            "adblockCheck": "//stats.aws.rubiconproject.com/"
-        },
-        "cookie": {
-      "version": 2,
-            "producer": "SIx8cS71Eo",
-            "publisher": {
-                "domainKeyValue": "",
-                "pathKeyValue": "path=/;",
-                "maxAgeMiliseconds": 604800000,
-                "userObjectKey": "DigiTrust.v1.identity"
-            },
-            "digitrust": {
-                "domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
-                "pathKeyValue": "path=/;",
-                "maxAgeMiliseconds": 157680000000,
-                "userObjectKey": "DigiTrust.v1.identity",
-                "resetKey": "DeleteEverything",
-                "challenge": "DTChal",
-                "optout": "optout",
-                "optoutUser": { "id": "", "privacy": { "optout": true } },
-                "errorUser": { "error": true }
-            }
-        },
-        "iframe": {
-            "timeoutDuration": 10000,
-            "postMessageOrigin": "http://digitrust.s3.amazonaws.com"
-        },
-        "crypto": {
-            "serverCryptoRate": 1.0
-        },
-        "app": {
-            "cookie": {
-                "reminderMaxAgeMiliseconds": 172800000,
-                "reminderObjectKey": "DigiTrust.v1.ar"
-            }
-        },
-        "htmlIDs": {
-            "consentLinkId": "digitrust-optout",
-            "dtAdbContainer": "digitrust-adb-container",
-            "dtAdbMessage": "digitrust-adb-message",
-            "dtAdbApps": "digitrust-adb-apps",
-            "dtAdbAppClass": "dt-app",
-            "dtAdbAppSelected": "dt-app-selected",
-            "publisherPicture": "dt-pub-pic"
-        }
-    },
-    "local": {
-        "urls": {
-            "digitrustHostPath": "//localhost/dist/",
-            "digitrustRedirect": "//localhost/dist/redirect.html",
-            "digitrustIframe": "//localhost/dist/dt.html",
-            "digitrustIdService": "//localhost:8080/p/id/v1",
-            "optoutInfo": "//localhost/dist/info.html",
-            "adblockCheck": "//stats.aws.rubiconproject.com/"
-        },
-        "cookie": {
-      "version": 2,
-            "producer": "SIx8cS71Eo",
-            "publisher": {
-                "domainKeyValue": "domain=;",
-                "pathKeyValue": "path=/;",
-                "maxAgeMiliseconds": 604800000,
-                "userObjectKey": "DigiTrustLOCALPUB.v1.identity"
-            },
-            "digitrust": {
-                "domainKeyValue": "domain=;",
-                "pathKeyValue": "path=/;",
-                "maxAgeMiliseconds": 157680000000,
-                "userObjectKey": "DigiTrustLOCALDT.v1.identity",
-                "resetKey": "DeleteEverything",
-                "challenge": "DTChal",
-                "optout": "optout",
-                "optoutUser": { "id": "", "privacy": { "optout": true } },
-                "errorUser": { "error": true }
-            }
-        },
-        "iframe": {
-            "timeoutDuration": 10000,
-            "postMessageOrigin": "http://localhost"
-        },
-        "crypto": {
-            "serverCryptoRate": 1.0
-        },
-        "app": {
-            "cookie": {
-                "reminderMaxAgeMiliseconds": 172800000,
-                "reminderObjectKey": "DigiTrustLOCAL.v1.ar"
-            }
-        },
-        "htmlIDs": {
-            "consentLinkId": "digitrust-optout",
-            "dtAdbContainer": "digitrust-adb-container",
-            "dtAdbMessage": "digitrust-adb-message",
-            "dtAdbApps": "digitrust-adb-apps",
-            "dtAdbAppClass": "dt-app",
-            "dtAdbAppSelected": "dt-app-selected",
-            "publisherPicture": "dt-pub-pic"
-        }
-    }
+	"prod": {
+		"urls": {
+			"digitrustHostPath": "https://cdn.digitru.st/prod/1.5.10.beta/",
+			"digitrustRedirect": "https://cdn.digitru.st/prod/1.5.10.beta/redirect.html",
+			"digitrustIframe": "https://cdn.digitru.st/prod/1.5.10.beta/dt.html",
+			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
+			"optoutInfo": "http://www.digitru.st/about-this-notice/",
+			"adblockCheck": "http://stats.aws.rubiconproject.com/"
+		},
+		"cookie": {
+			"version": 2,
+			"producer": "1CrsdUNAo6",
+			"publisher": {
+				"domainKeyValue": "",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrust.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain=.digitru.st;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+				"userObjectKey": "DigiTrust.v1.identity",
+				"resetKey": "DeleteEverything",
+				"challenge": "DTChal",
+				"optout": "optout",
+				"optoutUser": {
+					"id": "",
+					"privacy": {
+						"optout": true
+					}
+				},
+				"errorUser": {
+					"error": true
+				}
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "https://cdn.digitru.st"
+		},
+		"crypto": {
+			"serverCryptoRate": 0.4
+		},
+		"app": {
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrust.v1.ar"
+			}
+		},
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
+		}
+	},
+	"dev": {
+		"urls": {
+			"digitrustHostPath": "//digitrust.s3.amazonaws.com/dev/v1/",
+			"digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
+			"digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
+			"digitrustIdService": "//lambda-dev.digitru.st/id/v1",
+			"optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
+			"adblockCheck": "//stats.aws.rubiconproject.com/"
+		},
+		"cookie": {
+			"version": 2,
+			"producer": "SIx8cS71Eo",
+			"publisher": {
+				"domainKeyValue": "",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrust.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+				"userObjectKey": "DigiTrust.v1.identity",
+				"resetKey": "DeleteEverything",
+				"challenge": "DTChal",
+				"optout": "optout",
+				"optoutUser": {
+					"id": "",
+					"privacy": {
+						"optout": true
+					}
+				},
+				"errorUser": {
+					"error": true
+				}
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
+		},
+		"crypto": {
+			"serverCryptoRate": 1.0
+		},
+		"app": {
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrust.v1.ar"
+			}
+		},
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
+		}
+	},
+	"local": {
+		"urls": {
+			"digitrustHostPath": "//localhost/dist/",
+			"digitrustRedirect": "//localhost/dist/redirect.html",
+			"digitrustIframe": "//localhost/dist/dt.html",
+			"digitrustIdService": "//localhost:8080/p/id/v1",
+			"optoutInfo": "//localhost/dist/info.html",
+			"adblockCheck": "//stats.aws.rubiconproject.com/"
+		},
+		"cookie": {
+			"version": 2,
+			"producer": "SIx8cS71Eo",
+			"publisher": {
+				"domainKeyValue": "domain=;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrustLOCALPUB.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain=;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+				"userObjectKey": "DigiTrustLOCALDT.v1.identity",
+				"resetKey": "DeleteEverything",
+				"challenge": "DTChal",
+				"optout": "optout",
+				"optoutUser": {
+					"id": "",
+					"privacy": {
+						"optout": true
+					}
+				},
+				"errorUser": {
+					"error": true
+				}
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "http://localhost"
+		},
+		"crypto": {
+			"serverCryptoRate": 1.0
+		},
+		"app": {
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrustLOCAL.v1.ar"
+			}
+		},
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
+		}
+	}
 }
