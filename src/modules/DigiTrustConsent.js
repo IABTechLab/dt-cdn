@@ -19,18 +19,18 @@ DigiTrustConsent.cmpConsent = function (languages) {
 };
 
 DigiTrustConsent.gdprApplies = function (options) {
-    const browserLanguageCheckResult = DigiTrustConsent.browserLanguageIsEU(navigator.languages
-            || [navigator.browserLanguage]);
+    var browserLanguageCheckResult = DigiTrustConsent.browserLanguageIsEU(navigator.languages ||
+        [navigator.browserLanguage]);
     return browserLanguageCheckResult;
 };
 
 DigiTrustConsent.hasConsent = function (options, callback) {
-    const applies = DigiTrustConsent.gdprApplies();
+    var applies = DigiTrustConsent.gdprApplies();
     if (typeof(window.__cmp) !== 'undefined') {
         window.__cmp('ping', null, function (pingReturn) {
             if (applies || (pingReturn.gdprAppliesGlobally)) {
                 window.__cmp('getVendorConsents', [configGeneral.gvlVendorId], function (result) {
-                    const myconsent = result.vendorConsents[configGeneral.gvlVendorId];
+                    var myconsent = result.vendorConsents[configGeneral.gvlVendorId];
                     callback(myconsent);
                 });
             } else {
