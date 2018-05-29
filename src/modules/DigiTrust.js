@@ -3,6 +3,7 @@
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
+var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 
@@ -46,12 +47,18 @@ DigiTrust.initialize = function (options, initializeCallback) {
             return initializeCallback(identityResponseObject);
         }
 
-        DigiTrustCookie.getUser(options, function (err, identityObject) {
-            if (!err) {
-                identityResponseObject.success = true;
-                identityResponseObject.identity = identityObject;
+        DigiTrustConsent.hasConsent(null, function (consent) {
+            if (consent) {
+                DigiTrustCookie.getUser(options, function (err, identityObject) {
+                    if (!err) {
+                        identityResponseObject.success = true;
+                        identityResponseObject.identity = identityObject;
+                    }
+                    return initializeCallback(identityResponseObject);
+                });
+            } else {
+                return initializeCallback(identityResponseObject);
             }
-            return initializeCallback(identityResponseObject);
         });
     } catch (e) {
 
@@ -82,13 +89,19 @@ DigiTrust.getUser = function (options, callback) {
             }
             return identityResponseObject;
         } else {
-            options.ignoreLocalCookies = true;
-            DigiTrustCookie.getUser(options, function (err, identityObject) {
-                if (err) {
-                    return callback(identityResponseObject);
+            DigiTrustConsent.hasConsent(null, function (consent) {
+                if (consent) {
+                    options.ignoreLocalCookies = true;
+                    DigiTrustCookie.getUser(options, function (err, identityObject) {
+                        if (err) {
+                            return callback(identityResponseObject);
+                        } else {
+                            identityResponseObject.success = true;
+                            identityResponseObject.identity = identityObject;
+                            return callback(identityResponseObject);
+                        }
+                    });
                 } else {
-                    identityResponseObject.success = true;
-                    identityResponseObject.identity = identityObject;
                     return callback(identityResponseObject);
                 }
             });
