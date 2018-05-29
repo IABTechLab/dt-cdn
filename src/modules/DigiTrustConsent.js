@@ -19,7 +19,8 @@ DigiTrustConsent.cmpConsent = function (languages) {
 };
 
 DigiTrustConsent.gdprApplies = function (options) {
-    const browserLanguageCheckResult = DigiTrustConsent.browserLanguageIsEU(navigator.languages || [ navigator.browserLanguage ]);
+    const browserLanguageCheckResult = DigiTrustConsent.browserLanguageIsEU(navigator.languages
+            || [navigator.browserLanguage]);
     return browserLanguageCheckResult;
 };
 
