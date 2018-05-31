@@ -131,7 +131,7 @@
 			"br",
 			"eo"
 		],
-                "gvlVendorId": 64
+		"gvlVendorId": 64
 	},
 	"dev": {
 		"urls": {
@@ -265,7 +265,7 @@
 			"br",
 			"eo"
 		],
-                "gvlVendorId": 64
+		"gvlVendorId": 64
 	},
 	"local": {
 		"urls": {
@@ -399,6 +399,6 @@
 			"br",
 			"eo"
 		],
-                "gvlVendorId": 64
+		"gvlVendorId": 64
 	}
 }
