@@ -11,6 +11,9 @@ module.exports = function(config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['browserify', 'jasmine'],
 
+        // https://stackoverflow.com/questions/18523947/cannot-install-phantomjs-in-karma
+        plugins : ['karma-browserify', 'karma-jasmine', 'karma-phantomjs-launcher'],
+
         // list of files / patterns to load in the browser
         files: [
             // This is the tests that will be loaded into the page
@@ -47,7 +50,7 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome', 'PhantomJS', 'Firefox', 'Safari'],
+        browsers: ['PhantomJS'],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits

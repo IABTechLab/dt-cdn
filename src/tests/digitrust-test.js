@@ -3,9 +3,13 @@ window.DigiTrust = DigiTrust;
 var DigiTrustCommunication = require('../modules/DigiTrustCommunication');
 var DigiTrustCookie = require('../modules/DigiTrustCookie');
 var DigiTrustCrypto = require('../modules/DigiTrustCrypto');
+var StorageAccess = require('../modules/StorageAccess');
 var helpers = require('../modules/helpers');
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
+var configGeneral = require('../config/general.json')[env];
+
+var Promise = require('./polyfill.min').default;
 
 describe('DigiTrust.getUser', function () {
 
@@ -263,5 +267,17 @@ describe('helpers', function () {
         expect(total).not.toBe(0);
         // convert back to base64 string
         expect(id).toBe(helpers.arrayBufferToBase64String(binaryId));
+    });
+});
+
+describe('helpers', function () {
+    it('hasStorageAccess', function () {
+        var p = StorageAccess.hasStorageAccess();
+		expect(p).not.toBe(null);
+    });
+
+    it('requestStorageAccess', function () {
+        var p = StorageAccess.requestStorageAccess();
+		expect(p).not.toBe(null);
     });
 });
