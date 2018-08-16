@@ -150,7 +150,7 @@ DigiTrustCookie.getUser = function (options, callback) {
                 return callback(false, userJSON);
             } else {
                 // No DigiTrust cookie exists on digitru.st domain
-                if (!helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
+                if (helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
                     if (options.redirects) {
                         helpers.createConsentClickListener();
                     }
