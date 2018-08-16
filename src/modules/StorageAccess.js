@@ -8,7 +8,7 @@ StorageAccess.hasStorageAccess = function () {
     if (typeof document.hasStorageAccess === 'function') {
         p = document.hasStorageAccess();
     } else {
-        p = new Promise(function(resolve, reject) {
+        p = new Promise(function (resolve, reject) {
             resolve(true);
         });
     }
@@ -21,7 +21,7 @@ StorageAccess.requestStorageAccess = function () {
     if (typeof document.requestStorageAccess === 'function') {
         p = document.requestStorageAccess();
     } else {
-        p = new Promise(function(resolve, reject) {
+        p = new Promise(function (resolve, reject) {
             reject();
         });
     }
