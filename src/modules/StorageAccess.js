@@ -9,7 +9,7 @@ StorageAccess.hasStorageAccess = function () {
       p = document.hasStorageAccess();
     } else {
       p = new Promise(function(resolve, reject) {
-        resolve(false);
+        resolve(true);
       });
     }
     return p;
@@ -22,7 +22,7 @@ StorageAccess.requestStorageAccess = function () {
       p = document.requestStorageAccess();
     } else {
       p = new Promise(function(resolve, reject) {
-        reject(false);
+        reject();
       });
     }
     return p;

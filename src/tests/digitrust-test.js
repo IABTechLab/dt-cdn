@@ -271,13 +271,28 @@ describe('helpers', function () {
 });
 
 describe('helpers', function () {
-    it('hasStorageAccess', function () {
+    it('hasStorageAccess', function (done) {
         var p = StorageAccess.hasStorageAccess();
-		expect(p).not.toBe(null);
+        expect(p).not.toBe(null);
+        p.then(
+            function (hasAccess) {
+                expect(hasAccess).toBe(true);
+                done();
+            },
+            function () {
+                fail();
+            });
     });
 
-    it('requestStorageAccess', function () {
+    it('requestStorageAccess', function (done) {
         var p = StorageAccess.requestStorageAccess();
-		expect(p).not.toBe(null);
+        expect(p).not.toBe(null);
+        p.then(
+            function () {
+                fail();
+            },
+            function () {
+                done();
+            });
     });
 });
