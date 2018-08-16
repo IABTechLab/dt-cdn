@@ -8,14 +8,16 @@
     DigiTrust.initialize({
       member: "IzXoEURCkm",
       site: "ztnV3gXrYQ",
-      redirects: true,
+      redirects: true
+    });
+	DigiTrust.getUser({},
       function (digiTrustResult) {
         console.log(digiTrustResult);
         if (digiTrustResult && digiTrustResult.success) {
           document.getElementById("digitrustid").innerHTML = digiTrustResult.identity.id;
         }
       }
-    });
+    );
   </script>
 
   <p>Content here.</p>
