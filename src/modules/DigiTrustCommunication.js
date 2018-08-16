@@ -12,22 +12,31 @@ DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: read
 
 DigiTrustCommunication._messageHandler = function (evt) {
     if (evt.origin !== configGeneral.iframe.postMessageOrigin) {
+        console.log("evt.origin !== configGeneral.iframe.postMessageOrigin");
+        console.log(evt.origin);
+        console.log(configGeneral.iframe.postMessageOrigin);
         // do nothing. tbd enable console logging in dev.
     } else {
+        console.log("else (evt.origin is acceptable)");
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
+                console.log("event: DigiTrust.iframe.ready");
                 helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.ready', [true]);
                 break;
             case 'DigiTrust.identity.response':
+                console.log("event: DigiTrust.identity.response");
                 helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response', [evt.data.value]);
                 break;
             case 'DigiTrust.identity.response.syncOnly':
+                console.log("event: DigiTrust.identity.response.syncOnly");
                 helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
                 break;
             case 'DigiTrust.getAppsPreferences.response':
+                console.log("event: DigiTrust.getAppsPreferences.response");
                 helpers.MinPubSub.publish('DigiTrust.pubsub.app.getAppsPreferences.response', [evt.data.value]);
                 break;
             case 'DigiTrust.setAppsPreferences.response':
+                console.log("event: DigiTrust.setAppsPreferences.response");
                 helpers.MinPubSub.publish('DigiTrust.pubsub.app.setAppsPreferences.response', [evt.data.value]);
                 break;
         }
@@ -81,8 +90,11 @@ DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {
         // Create communication gateway with digitru.st iframe
         DigiTrustCommunication.startConnection(function (loadSuccess) {
             if (loadSuccess) {
+                console.log("loadSuccess true");
                 sendRequestFunction(options);
             } else {
+                console.log("loadSuccess false");
+                console.log(loadSuccess);
                 throw new Error(configErrors.en.iframeError);
             }
         });

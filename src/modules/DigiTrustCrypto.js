@@ -19,7 +19,13 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     var publicKey;
     if (helpers.isSafari()) {
         keyType = 'jwk';
-        publicKey = helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwk));
+        console.log("jwk keyType");
+        console.log("pub key:");
+        console.log(DTPublicKeyObject.jwk);
+        console.log(JSON.stringify(DTPublicKeyObject.jwk));
+        console.log(helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwk)));
+        //publicKey = helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwk));
+        publicKey = DTPublicKeyObject.jwk;
     } else {
         keyType = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
@@ -65,7 +71,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         })
         .catch(function (err) {
         });
-    });
+    }, function (err) { console.log(err); });
 };
 
 // Returns string; input is a base64 string

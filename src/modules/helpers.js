@@ -181,24 +181,30 @@ helpers.inIframe = function () {
 };
 
 helpers.createConsentClickListener = function () {
+    console.log("inside helpers.createConsentClickListener()");
     if (helpers.inIframe()) {
+        console.log("inside iframe. exiting");
         return;
     }
     window.onclick = function (e) {
+        console.log("inside onclick event");
         e = e || window.event;
         var t = e.target || e.srcElement;
 
         // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
         if (t.id === configGeneral.htmlIDs.consentLinkId) {
+            console.log("opt out link");
             return true;
         }
 
         var possibleHref = _getElementHref(t);
         if (possibleHref && (possibleHref !== '#')) {
+            console.log("ajax link");
             possibleHref = helpers.getAbsolutePath(possibleHref);
             window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
         }
+        console.log("maybe I should return something here");
     };
 };
 

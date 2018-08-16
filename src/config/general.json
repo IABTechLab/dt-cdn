@@ -1,9 +1,9 @@
 {
 	"prod": {
 		"urls": {
-			"digitrustHostPath": "https://cdn.digitru.st/prod/1.5.10-itp2proto/",
-			"digitrustRedirect": "https://cdn.digitru.st/prod/1.5.10-itp2proto/redirect.html",
-			"digitrustIframe": "https://cdn.digitru.st/prod/1.5.10-itp2proto/dt.html",
+			"digitrustHostPath": "http://itp2proto.digitru.st:8000/",
+			"digitrustRedirect": "http://itp2proto.digitru.st:8000/redirect.html",
+			"digitrustIframe": "http://itp2proto.digitru.st:8000/dt.html",
 			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
 			"optoutInfo": "http://www.digitru.st/about-this-notice/",
 			"adblockCheck": "http://stats.aws.rubiconproject.com/"
@@ -38,10 +38,10 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "https://cdn.digitru.st"
+			"postMessageOrigin": "http://itp2proto.digitru.st:8000"
 		},
 		"crypto": {
-			"serverCryptoRate": 0.4
+			"serverCryptoRate": 1.0
 		},
 		"app": {
 			"cookie": {

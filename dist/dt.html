@@ -8,15 +8,20 @@
         var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
 
         function messageHandler(evt) {
+            console.log("inside messageHandler()");
             switch (evt.data.type) {
                 case 'DigiTrust.identity.request':
+                    console.log("DigiTrust.identity.request");
                     var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
                     var digiTrustUserJSON = digiTrustUserCookie ?
                         DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
                     var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
                     digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
+                    console.log("userJSON:");
+                    console.log(digiTrustUserJSON);
                         
                     var sendMessage = function (messageValue) {
+                        console.log("DigiTrust.identity.request:sendMessage");
                         var messageType = evt.data.syncOnly ?
                             'DigiTrust.identity.response.syncOnly' :
                             'DigiTrust.identity.response';
@@ -27,13 +32,16 @@
                         };
                         window.parent.postMessage(identity, evt.origin);
                     }
+                    console.log("calling isEmpty()");
 
                     if ((!isOptOut) && (helpers.isEmpty(digiTrustUserJSON))) {
+                        console.log("DigiTrust.identity.request:isEmpty");
                         // see if we can write and read cookies from within the iframe
                         DigiTrustCookie.createUserCookiesOnDigitrustDomain();
                         digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
                     }
                     if (!digiTrustUserJSON.hasOwnProperty('id')) {
+                        console.log("no id property");
                         // check storage access API
                         try {
                             StorageAccess.hasStorageAccess().then(
@@ -57,16 +65,22 @@
                         }
                     }
                     if (digiTrustUserJSON.hasOwnProperty('id')) {
+                        console.log("has ID");
                         try {
+                            console.log("calling DigiTrustCrypto.encrypt()");
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
                                 digiTrustUserJSON.id = encryptedUserId;
                                 digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
                                 sendMessage(digiTrustUserJSON);
                             });
                         } catch (e) {
+                            console.log("catch error calling encrypt()");
+                            console.log(e);
                             sendMessage(configGeneral.cookie.digitrust.errorUser);
                         }
                     } else {
+                        console.log("calling sendMessage with contents");
+                        console.log(digiTrustUserJSON);
                         sendMessage(digiTrustUserJSON);
                     }
                     break;
@@ -81,19 +95,25 @@
             }
         }
 
+        console.log("adding event listener");
         if (window.addEventListener) {
+            console.log("calling window.addEventListener()");
             window.addEventListener('message', messageHandler, false);
         } else {
+            console.log("calling window.attachEvent()");
             window.attachEvent('onmessage', messageHandler);
         }
 
+        console.log("iframeReady");
         // Iframe JavaScript is loaded, send READY message to parent
         var iframeReady = {
             version: 1,
             type: 'DigiTrust.iframe.ready',
             value: {}
         };
+        console.log("calling postMessage()");
         window.parent.postMessage(iframeReady, document.referrer);
+        console.log("called postMessage()");
 
     </script>
 </head>

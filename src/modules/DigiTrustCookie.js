@@ -116,10 +116,12 @@ DigiTrustCookie.setDigitrustCookie = function (cookieV) {
 
 DigiTrustCookie.getUser = function (options, callback) {
 
+    console.log("inside getUser()");
     options = options || {};
     var useCallback = (typeof callback === 'function') ? true : false;
     var localUserCookieJSON = {};
     var _createSyncOnlySubscription = function () {
+        console.log("_createSyncOnlySubscription()");
         // LISTENER: Only update publisher cookie, do not return anywhere
         helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
             if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
@@ -130,12 +132,14 @@ DigiTrustCookie.getUser = function (options, callback) {
     };
 
     if (useCallback === false) {
+        console.log("useCallback === false");
         localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
         // Do a sync with digitrust official domain
         _createSyncOnlySubscription();
         DigiTrustCommunication.getIdentity({syncOnly:true});
         return (!helpers.isEmpty(localUserCookieJSON)) ? localUserCookieJSON : {};
     } else {
+        console.log("useCallback === true");
         /*
             postMessage doesn't have a callback, so we listen for an event emitted by the
             DigiTrustCommunication module telling us that a message arrived from http://digitru.st
@@ -144,14 +148,21 @@ DigiTrustCookie.getUser = function (options, callback) {
             LISTENER: listen for message from digitrust iframe
         */
         helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
+            console.log("DigiTrust.pubsub.identity.response");
+            console.log(userJSON);
             if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
+                console.log("DigiTrustCookie.verifyPublisherDomainCookie returned true");
+                console.log(userJSON);
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);
+                console.log("set identity cookie");
                 return callback(false, userJSON);
             } else {
                 // No DigiTrust cookie exists on digitru.st domain
-                if (!helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
+                if (helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
+                    console.log("empty json and no error property");
                     if (options.redirects) {
+                        console.log("creating click listener");
                         helpers.createConsentClickListener();
                     }
                 }
