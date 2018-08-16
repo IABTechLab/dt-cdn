@@ -19,7 +19,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     var publicKey;
     if (helpers.isSafari()) {
         keyType = 'jwk';
-        publicKey = helpers.asciiToUint8Array(JSON.stringify(DTPublicKeyObject.jwk));
+        publicKey = DTPublicKeyObject.jwk;
     } else {
         keyType = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
