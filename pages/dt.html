@@ -33,6 +33,29 @@
                         DigiTrustCookie.createUserCookiesOnDigitrustDomain();
                         digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
                     }
+                    if (!digiTrustUserJSON.hasOwnProperty('id')) {
+                        // check storage access API
+                        try {
+                            StorageAccess.hasStorageAccess().then(
+                                function (hasAccess) {
+                                    console.log("StorageAccess.hasStorageAccess: " + hasAccess);
+                                    if (hasAccess) {
+									    StorageAccess.requestStorageAccess().then(
+										    function () {
+										        console.log("StorageAccess.requestStorageAccess granted");
+											},
+											function () {
+										        console.log("StorageAccess.requestStorageAccess denied");
+											});
+									}
+                                },
+                                function () {
+                                    console.log("StorageAccess.hasStorageAccess rejected");
+                                });
+                        } catch (e) {
+                            console.log("error calling into storage access", e);
+                        }
+                    }
                     if (digiTrustUserJSON.hasOwnProperty('id')) {
                         try {
                             DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {

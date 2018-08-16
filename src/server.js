@@ -5,6 +5,7 @@ var DigiTrust = require('./modules/DigiTrust');
 DigiTrust.isClient = false;
 var DigiTrustCookie = require('./modules/DigiTrustCookie');
 var DigiTrustCrypto = require('./modules/DigiTrustCrypto');
+var StorageAccess = require('./modules/StorageAccess');
 var helpers = require('./modules/helpers');
 
 if (window !== undefined) {
