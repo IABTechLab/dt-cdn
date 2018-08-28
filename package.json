@@ -39,7 +39,6 @@
   },
   "scripts": {
     "jscs": "jscs .",
-    "echo": "echo Hello World",
     "jshint": "jshint -c .jshintrc .",
     "validate": "npm run jscs && npm run jshint",
     "test": "jest --verbose",
