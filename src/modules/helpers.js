@@ -360,12 +360,20 @@ helpers.asciiToUint8Array = function (str) {
     return new Uint8Array(chars);
 };
 
+/**
+* Wrapper to get the web crypto object
+*
+*/
 helpers.getBrowserCrypto = function () {
     // WebKit crypto subtle
+    var cryptoObj = window.crypto || window.msCrypto;
+
+    // This is outdated and probably should be removed
     if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
         window.crypto.subtle = window.crypto.webkitSubtle;
     }
-    return window.crypto;
+	
+    return cryptoObj;
 };
 
 module.exports = helpers;
