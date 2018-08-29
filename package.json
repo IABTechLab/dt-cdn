@@ -12,6 +12,8 @@
     "jscs": "jscs .",
     "jshint": "jshint -c .jshintrc .",
     "echo": "echo Hello Digitrust",
+    "start": "serve build -s -c 1",
+    "prestart": "npm run build",
     "lint": "eslint src test",
     "fooserve": "npx http-server --cors",
     "validate": "npm run jscs && npm run jshint",
