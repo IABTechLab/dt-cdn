@@ -37,8 +37,8 @@ jobs:
       - run: sleep 5
       - run: yarn test
 
-      - deploy:
-          command: |
-            npm run build
-            sudo apt-get -y -qq install awscli
-            aws s3 sync build/ s3://cmp-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
+      # deploy:
+      #    command: |
+      #      npm run build
+      #      sudo apt-get -y -qq install awscli
+      #      aws s3 sync build/ s3://cmp-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
