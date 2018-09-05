@@ -34,10 +34,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run:
-          name: dev server background
-          command: npm run dev
-          background: true
       - run: sleep 5
       - run: yarn test
 
