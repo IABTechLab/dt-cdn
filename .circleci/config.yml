@@ -37,7 +37,7 @@ jobs:
       - run: sleep 5
       - run: yarn test
 
-       deploy:
+      - deploy:
           command: |
             npm run build
             sudo apt-get -y -qq install awscli
