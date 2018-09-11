@@ -14,6 +14,10 @@ describe('Fake test to init', function(){
 	it('Should init with an addition problem', function(){
 		expect(2).toBe(2);
 	});
+	
+	it('Should init compare strings', function(){
+		expect('a').toBe('a');
+	});
 });
 
 describe('DigiTrust.getUser', function () {
