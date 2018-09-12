@@ -45,5 +45,5 @@ jobs:
             pwd
             ls -l
             echo "Ready aws client"
-            echo.
+            echo "."
             aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
