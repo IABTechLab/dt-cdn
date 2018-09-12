@@ -39,6 +39,8 @@ jobs:
 
       - deploy:
           command: |
-            npm run build
+            yarn run build
             sudo apt-get -y -qq install awscli
-            aws s3 sync build/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
+			echo "Here I am"
+			pwd
+            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
