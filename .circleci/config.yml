@@ -46,4 +46,4 @@ jobs:
             ls -l
             echo "Ready aws client"
             echo "."
-            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
+            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
