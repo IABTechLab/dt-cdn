@@ -41,6 +41,6 @@ jobs:
           command: |
             yarn run build
             sudo apt-get -y -qq install awscli
-			echo "Here I am"
-			pwd
+            echo "Here I am"
+            pwd
             aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete
