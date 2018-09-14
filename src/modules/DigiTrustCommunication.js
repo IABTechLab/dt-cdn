@@ -65,7 +65,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     DigiTrustCommunication.iframe.style.display = 'none';
     DigiTrustCommunication.iframe.src = configGeneral.urls.digitrustIframe;
     DigiTrustCommunication.iframeStatus = 1;
-    document.head.appendChild(DigiTrustCommunication.iframe);
+    document.body.appendChild(DigiTrustCommunication.iframe);
 };
 
 DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {

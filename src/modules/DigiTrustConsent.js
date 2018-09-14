@@ -26,6 +26,8 @@ DigiTrustConsent.gdprApplies = function (options) {
 
 DigiTrustConsent.hasConsent = function (options, callback) {
     var applies = DigiTrustConsent.gdprApplies();
+	if(env === 'local' || env === 'localdev'){ applies = false; } // dev test
+	
     if (typeof(window.__cmp) !== 'undefined') {
         window.__cmp('ping', null, function (pingReturn) {
             if (applies || (pingReturn.gdprAppliesGlobally)) {

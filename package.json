@@ -14,7 +14,8 @@
 	"uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
 	"uglify": "./node_modules/.bin/run-s uglifys uglifyc",
     "build": "./node_modules/.bin/run-s buildclient buildserver uglify copypages",
-    "dev": "watchify index.js -do dist/app.js"
+    "devclient": "watchify src/client.js -do dist/digitrust.js",
+    "devserver": "watchify src/server.js -do dist/digitrust-server.js"
   },
   "repository": {
     "type": "git",

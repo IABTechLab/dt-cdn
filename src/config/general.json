@@ -400,5 +400,139 @@
 			"eo"
 		],
 		"gvlVendorId": 64
+	},
+	"localdev": {
+		"urls": {
+			"digitrustHostPath": "//http://local.digitru.st/dist/",
+			"digitrustRedirect": "//http://local.digitru.st/dist/redirect.html",
+			"digitrustIframe": "//http://local.digitru.st/dist/dt.html",
+			"digitrustIdService": "//localhost:8080/p/id/v1",
+			"optoutInfo": "//http://local.digitru.st/dist/info.html",
+			"adblockCheck": "//stats.aws.rubiconproject.com/"
+		},
+		"cookie": {
+			"version": 2,
+			"producer": "SIx8cS71Eo",
+			"publisher": {
+				"domainKeyValue": "domain=;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 604800000,
+				"userObjectKey": "DigiTrustLOCALPUB.v1.identity"
+			},
+			"digitrust": {
+				"domainKeyValue": "domain=;",
+				"pathKeyValue": "path=/;",
+				"maxAgeMiliseconds": 157680000000,
+				"userObjectKey": "DigiTrustLOCALDT.v1.identity",
+				"resetKey": "DeleteEverything",
+				"challenge": "DTChal",
+				"optout": "optout",
+				"optoutUser": {
+					"id": "",
+					"privacy": {
+						"optout": true
+					}
+				},
+				"errorUser": {
+					"error": true
+				}
+			}
+		},
+		"iframe": {
+			"timeoutDuration": 10000,
+			"postMessageOrigin": "http://localhost"
+		},
+		"crypto": {
+			"serverCryptoRate": 1.0
+		},
+		"app": {
+			"cookie": {
+				"reminderMaxAgeMiliseconds": 172800000,
+				"reminderObjectKey": "DigiTrustLOCAL.v1.ar"
+			}
+		},
+		"htmlIDs": {
+			"consentLinkId": "digitrust-optout",
+			"dtAdbContainer": "digitrust-adb-container",
+			"dtAdbMessage": "digitrust-adb-message",
+			"dtAdbApps": "digitrust-adb-apps",
+			"dtAdbAppClass": "dt-app",
+			"dtAdbAppSelected": "dt-app-selected",
+			"publisherPicture": "dt-pub-pic"
+		},
+		"gdprLanguages": [
+			"bg",
+			"hr",
+			"tr",
+			"cs",
+			"da",
+			"et",
+			"fi",
+			"fr",
+			"fr-be",
+			"fr-fr",
+			"fr-lu",
+			"fr-mc",
+			"fr-ch",
+			"de",
+			"de-at",
+			"de-de",
+			"de-li",
+			"de-lu",
+			"de-ch",
+			"el",
+			"hu",
+			"gd-ie",
+			"ga",
+			"it",
+			"it-ch",
+			"lv",
+			"lt",
+			"lb",
+			"mt",
+			"nl",
+			"nl-be",
+			"pl",
+			"pt",
+			"rm",
+			"ro",
+			"ro-mo",
+			"sk",
+			"sl",
+			"es",
+			"es-es",
+			"cy",
+			"sv",
+			"sv-fi",
+			"sv-sv",
+			"en-gb",
+			"en-ie",
+			"mo",
+			"ru-mo",
+			"eu",
+			"ca",
+			"co",
+			"fo",
+			"fy",
+			"fur",
+			"gd",
+			"gl",
+			"is",
+			"la",
+			"no",
+			"nb",
+			"nn",
+			"oc",
+			"sc",
+			"sb",
+			"hsb",
+			"vo",
+			"wa",
+			"ar",
+			"ast",
+			"br",
+			"eo"
+		],
+		"gvlVendorId": 64
 	}
 }

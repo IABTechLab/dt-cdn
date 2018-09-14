@@ -28,7 +28,10 @@ DigiTrust._setDigiTrustOptions = function (options) {
     return options;
 };
 
-DigiTrust.initialize = function (options, initializeCallback) {
+
+function initFunction (options, initializeCallback) {
+	
+	
     try {
         if (initializeCallback === undefined) {
             initializeCallback = function (x) { };
@@ -64,6 +67,25 @@ DigiTrust.initialize = function (options, initializeCallback) {
 
         return initializeCallback({success: false});
     }
+};
+
+DigiTrust.initialize = function (options, initializeCallback) {
+	let ready = document.readyState;
+	console.log(ready);
+	
+	switch(ready){
+		case 'loading':
+			document.addEventListener("DOMContentLoaded", function(event) {
+				DigiTrust.initialize(options, initializeCallback);
+			});
+			break;
+			
+		default:
+			initFunction(options, initializeCallback);
+			break;
+		
+	}
+	
 };
 
 DigiTrust.getUser = function (options, callback) {
