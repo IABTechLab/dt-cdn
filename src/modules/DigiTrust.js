@@ -69,10 +69,10 @@ var initInternal = function(options, initializeCallback) {
 }
 
 DigiTrust.initialize = function (options, initializeCallback) {
-	let ready = document.readyState;
-	console.log(ready);
+	var document = document || {};
+	var ready = document.readyState;
 	
-	if(ready ==='loading') { 
+	if(ready == 'loading') { 
 		document.addEventListener("DOMContentLoaded", function(event) {
 			DigiTrust.initialize(options, initializeCallback);
 		});
