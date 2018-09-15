@@ -73,19 +73,14 @@ DigiTrust.initialize = function (options, initializeCallback) {
 	let ready = document.readyState;
 	console.log(ready);
 	
-	switch(ready){
-		case 'loading':
-			document.addEventListener("DOMContentLoaded", function(event) {
-				DigiTrust.initialize(options, initializeCallback);
-			});
-			break;
-			
-		default:
-			initFunction(options, initializeCallback);
-			break;
-		
+	if(ready ==='loading') { 
+		document.addEventListener("DOMContentLoaded", function(event) {
+			DigiTrust.initialize(options, initializeCallback);
+		});
 	}
-	
+	else{			
+		initFunction(options, initializeCallback);
+	}	
 };
 
 DigiTrust.getUser = function (options, callback) {
