@@ -29,7 +29,7 @@ DigiTrust._setDigiTrustOptions = function (options) {
 };
 
 
-let initInternal = function(options, initializeCallback) {
+var initInternal = function(options, initializeCallback) {
 	
 }
 
