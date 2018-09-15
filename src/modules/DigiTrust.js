@@ -28,6 +28,11 @@ DigiTrust._setDigiTrustOptions = function (options) {
     return options;
 };
 
+
+let initInternal = function(options, initializeCallback) {
+	
+}
+
 DigiTrust.initialize = function (options, initializeCallback) {
     try {
         if (initializeCallback === undefined) {
