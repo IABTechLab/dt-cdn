@@ -21,7 +21,7 @@
     "type": "git",
     "url": "git@github.com:digi-trust/dt-cdn.git"
   },
-  "author": "IAB Tech Lab / Digitrust",
+  "author": "IAB Tech Lab / Digitrust <info@digitru.st> (http://www.digitru.st/)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/digi-trust/dt-cdn/issues"
