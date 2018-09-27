@@ -8,6 +8,8 @@ var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 
 var DigiTrust = {};
+var noop = function(){}
+
 DigiTrust.isClient = false; // Is client or server?
 DigiTrust.initializeOptions = {};
 
@@ -19,20 +21,24 @@ DigiTrust._isMemberIdValid = function (memberId) {
     }
 };
 
+/**
+* @function
+* Set options on the global DigiTrust object by merging base options
+* with consumer supplied options.
+* @param {object} Consumer-supplied initialization options
+* @return {object} The combined options object that was assigned to DigiTrust.initializeOptions
+*/
 DigiTrust._setDigiTrustOptions = function (options) {
-    options = (!options) ?
-            configInitializeOptions :
-            helpers.extend(configInitializeOptions, options);
-    // Set DigiTrust options on global object
-    window.DigiTrust.initializeOptions = options;
-    return options;
+	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
+	window.DigiTrust.initializeOptions = Object.assign({}, configInitializeOptions, options);
+    return window.DigiTrust.initializeOptions;
 };
 
 
 var initInternal = function(options, initializeCallback) {
     try {
         if (initializeCallback === undefined) {
-            initializeCallback = function (x) { };
+            initializeCallback = noop;
         }
         var identityResponseObject = {success: false};
 
@@ -62,17 +68,17 @@ var initInternal = function(options, initializeCallback) {
             }
         });
     } catch (e) {
-
+		console.error('Error in DigiTrust initializer', e);
         return initializeCallback({success: false});
     }
 	
 }
 
 DigiTrust.initialize = function (options, initializeCallback) {
-	var document = document || {};
+	var document = window.document;
 	var ready = document.readyState;
 	
-	if(ready == 'loading') { 
+	if(!ready || ready == 'loading') { 
 		document.addEventListener("DOMContentLoaded", function(event) {
 			DigiTrust.initialize(options, initializeCallback);
 		});

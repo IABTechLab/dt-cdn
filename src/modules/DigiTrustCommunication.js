@@ -13,6 +13,7 @@ DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: read
 DigiTrustCommunication._messageHandler = function (evt) {
     if (evt.origin !== configGeneral.iframe.postMessageOrigin) {
         // do nothing. tbd enable console logging in dev.
+		console.debug('message origin error. allowed: ' + configGeneral.iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
     } else {
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':

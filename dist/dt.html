@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src='./digitrust-server.min.js'></script>
+    <script src='./digitrust-server.js'></script>
     <script>
 
         var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
         var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
 
         function messageHandler(evt) {
+		debugger;
             switch (evt.data.type) {
                 case 'DigiTrust.identity.request':
                     var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);

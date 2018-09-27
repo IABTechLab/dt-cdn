@@ -10,8 +10,10 @@ To initialize your local repository for development, clone this repository and r
     yarn install
     # build only
     yarn build
-    # build & watch script
-    yarn dev
+    
+	# build & watch script for client
+    yarn devclient
+	
     # deploy to cdn
     yarn deploy
 	
