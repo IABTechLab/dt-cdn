@@ -5,15 +5,85 @@ var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 var helpers = require('./helpers');
 
+var LOGID = 'DigiTrustCommunication';
+var logObj = require('./logger');
+var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+
 var DigiTrustCommunication = {};
+
+
+/**
+* @function
+* Wrapper method that merges any initialized options into the general configuration.
+*/
+function getConfig(){
+	var opts = window.DigiTrust.initializeOptions;
+	var env = opts && opts.environment;
+	
+	var i;
+	var config = Object.assign({}, configGeneral);
+	
+	// go for specific items
+	var keys = ['urls', 'iframe']
+	
+	var setVals = function(target, source, key){
+		try{
+			var k;
+			if(source[key] == null){ return; }
+			if(target[key] == null){
+				if(source[key] == null){ return; }
+			}
+			else{
+				target[key] = {}
+			}
+			for(k in source[key]){
+				if(source[key].hasOwnProperty(k)){
+					target[key][k] = source[key][k];
+				}
+			}
+		}
+		catch(ex){}
+	}
+	
+	for(i=0;i<keys.length;i++){
+		setVals(config, env, keys[i]);
+	}
+	
+	return config;
+}
+
+/**
+* Pull in options information from global Digitrust object
+*/
+function initOptions(){
+	initLog();
+}
+
+function initLog(){
+	var opts = window.DigiTrust.initializeOptions;
+	if(opts.logging != null){
+		if(opts.logging.enable == false){
+			// disable logging
+			log = logObj.createLogger(LOGID, {level: 'ERROR'});
+			log.enabled = false;
+		}
+		else{
+			if(opts.logging.level == null){
+				opts.logging.level = "INFO";
+			}
+			log = logObj.createLogger(LOGID, opts.logging);
+		}			
+	}
+}
+
 
 DigiTrustCommunication.iframe = null;
 DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
 
 DigiTrustCommunication._messageHandler = function (evt) {
-    if (evt.origin !== configGeneral.iframe.postMessageOrigin) {
+    if (evt.origin !== getConfig().iframe.postMessageOrigin) {
         // do nothing. tbd enable console logging in dev.
-		console.debug('message origin error. allowed: ' + configGeneral.iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
+		log.warn('message origin error. allowed: ' + getConfig().iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
     } else {
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
@@ -36,6 +106,8 @@ DigiTrustCommunication._messageHandler = function (evt) {
 };
 
 DigiTrustCommunication.startConnection = function (loadSuccess) {
+	initOptions(); // initialization point
+	
     /*
         If there is a connection problem, or if adblocker blocks the request,
         start a 10 second timeout to notify the caller. Clear the timeout upon
@@ -47,7 +119,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     var iframeLoadErrorTimeout = setTimeout(function () {
         loadSuccess(false);
         DigiTrustCommunication.iframeStatus = 0;
-    }, configGeneral.iframe.timeoutDuration);
+    }, getConfig().iframe.timeoutDuration);
 
     helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
         clearTimeout(iframeLoadErrorTimeout);
@@ -64,9 +136,10 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
 
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
-    DigiTrustCommunication.iframe.src = configGeneral.urls.digitrustIframe;
+    DigiTrustCommunication.iframe.src = getConfig().urls.digitrustIframe;
     DigiTrustCommunication.iframeStatus = 1;
     document.body.appendChild(DigiTrustCommunication.iframe);
+	log.debug('communication frame added');
 };
 
 DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {

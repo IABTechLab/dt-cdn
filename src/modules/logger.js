@@ -12,8 +12,8 @@ var DEF_LOGLEVEL = "ERROR";
 
 
 var logLevels = {
-		"DEBUG":   {val: 0, log: 'debug'},
-		"INFO":    {val: 1, log: 'info'},		
+		"DEBUG":   {val: 0, log: 'log'},
+		"INFO":    {val: 1, log: 'log'},		
 		"WARN":    {val: 2, log: 'warn'},
 		"ERROR":   {val: 3, log: 'error'},
 		"LOG": {val: 99, log: 'log'}
@@ -81,7 +81,7 @@ function Logger(){
 
 	this.name = 'Logger'
 	this.opts = { level: DEF_LOGLEVEL };
-	this.logLevel = this.opts.level
+	this.enabled = true;
 	var passedArgs = toArray(arguments);
 	var me = this;
 
@@ -120,7 +120,7 @@ function Logger(){
 	function doLog(level){
 		var lvl = logLevels[level];
 		var level = (lvl && lvl.val) || 0;
-		var myLevel = doLog(me.opts.level || DEF_LOGLEVEL);
+		var myLevel = getLevelVal(me.opts.level);
 		
 		return (level >= myLevel);
 	}
@@ -133,13 +133,13 @@ function Logger(){
 		var lvlType = typeof(level);
 		var lvlObj;
 		if(lvlType === 'string'){
-			this.logLevel = this.opts.level = level;
+			this.opts.level = level;
 		}
 		else if(typeof(args[args.length - 1]) === 'number'){
 			lvlObj = logLevelsByNum[level];
 			if(lvlObj){
 				try{
-					this.logLevel = this.opts.level = lvlObj.log.toUpperCase();
+					this.opts.level = lvlObj.log.toUpperCase();
 				}
 				catch(ex){}
 			}
@@ -155,7 +155,13 @@ function Logger(){
 		var msg, lvlArg;
 		var logIt = true;
 		var levelDef = logLevels.LOG;
+		var doTrace = false;
 		var i;
+		
+		if(this.enabled != true){
+			return;
+		}
+		
 		if(args.length >= 2){
 			if(typeof(args[args.length - 1]) === 'string'){
 				lvlArg = args.pop();
@@ -164,7 +170,7 @@ function Logger(){
 			}
 			else if(typeof(args[args.length - 1]) === 'number'){
 				lvlArg = args.pop();
-				logIt = (lvlArg >= (doLog(me.opts.level || DEF_LOGLEVEL)));
+				logIt = (lvlArg >= getLevelVal(me.opts.level));
 				levelDef = logLevelsByNum[lvlArg];
 			}
 		}
@@ -186,12 +192,19 @@ function Logger(){
 		}
 		
 		args.unshift(msg);
+		doTrace = (levelDef.val == logObj.WARN || levelDef.val == logObj.ERROR);
+		if(doTrace || levelDef.val == logObj.DEBUG){
+			args.push({ page: document.location.href });
+		}
 		
 		if(console[levelDef.log]){
 			console[levelDef.log].apply(null, args);
 		}
 		else{
 			console.log.apply(null, args);
+		}
+		if(doTrace && console.trace){
+			console.trace();
 		}
 	}
 }
@@ -201,20 +214,24 @@ Logger.prototype.getLevels = function(){
 }
 
 Logger.prototype.debug = function(){
-	arguments[arguments.length] = logObj.DEBUG;
-	this.log.apply(this, arguments);
+	var args = toArray(arguments);
+	args.push(logObj.DEBUG);
+	this.log.apply(this, args);
 }
 Logger.prototype.info = function(){
-	arguments[arguments.length] = logObj.INFO;
-	this.log.apply(this, arguments);
+	var args = toArray(arguments);
+	args.push(logObj.INFO);
+	this.log.apply(this, args);
 }
 Logger.prototype.warn = function(){
-	arguments[arguments.length] = logObj.WARN;
-	this.log.apply(this, arguments);
+	var args = toArray(arguments);
+	args.push(logObj.WARN);
+	this.log.apply(this, args);
 }
 Logger.prototype.error = function(){
-	arguments[arguments.length] = logObj.ERROR;
-	this.log.apply(this, arguments);
+	var args = toArray(arguments);
+	args.push(logObj.ERROR);
+	this.log.apply(this, args);
 }
 
 var logObj = {

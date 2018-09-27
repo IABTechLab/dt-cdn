@@ -7,8 +7,9 @@ var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 
+var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
-var log = logObj.createLogger('Digitrust', {level: 'DEBUG'});
+var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
 
 var DigiTrust = {};
 var noop = function(){}
@@ -33,13 +34,29 @@ DigiTrust._isMemberIdValid = function (memberId) {
 */
 DigiTrust._setDigiTrustOptions = function (options) {
 	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
-	window.DigiTrust.initializeOptions = Object.assign({}, configInitializeOptions, options);
+	var opts = Object.assign({}, configInitializeOptions, options);
+	window.DigiTrust.initializeOptions = opts;
+	
+	if(opts.logging != null){
+		if(opts.logging.enable == false){
+			// disable logging
+			log = logObj.createLogger(LOGID, {level: 'ERROR'});
+			log.enabled = false;
+		}
+		else{
+			if(opts.logging.level == null){
+				opts.logging.level = "INFO";
+			}
+			log = logObj.createLogger(LOGID, opts.logging);
+		}			
+	}
+	
     return window.DigiTrust.initializeOptions;
 };
 
 
 var initInternal = function(options, initializeCallback) {
-	log.debug('log internal');
+	log.debug('init Internal');
     try {
         if (initializeCallback === undefined) {
             initializeCallback = noop;
@@ -47,6 +64,8 @@ var initInternal = function(options, initializeCallback) {
         var identityResponseObject = {success: false};
 
         options = DigiTrust._setDigiTrustOptions(options);
+		log.debug('init options completed');
+
 
         // allow for a circuit break to disable the world
         if (Math.random() > options.sample) {

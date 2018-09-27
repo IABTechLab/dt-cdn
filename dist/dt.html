@@ -8,7 +8,6 @@
         var userJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
 
         function messageHandler(evt) {
-		debugger;
             switch (evt.data.type) {
                 case 'DigiTrust.identity.request':
                     var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);

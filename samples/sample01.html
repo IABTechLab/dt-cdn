@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8" />
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	
 	<title>Digitrust Sample top level page</title>
     <script src="../dist/digitrust.js"></script>
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
@@ -9,6 +14,16 @@
         DigiTrust.initialize({
             member: 'example_member_id',
             site: 'example_site_id',
+			logging: { level: "DEBUG", enable: true },
+			environment: {
+				urls: {
+					"digitrustIframe": "http://local.digitru.st/dist/dt.html"
+				},
+				iframe: {
+					postMessageOrigin: "http://local.digitru.st",
+					timeoutDuration: (1000 * 60)
+				}
+			},
             adblocker: {
                 logoSrc: 'http://i.imgur.com/xfgM1wq.png',
                 logoText: 'The Seattle Times',
@@ -27,7 +42,7 @@
             }
         },
         function (digiTrustResult) {
-            console.log(digiTrustResult);
+            console.log("Digi sample callback", digiTrustResult);
             
             /*if (digiTrustResult.success && digiTrustResult.identity.id) {
                 DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
