@@ -18,12 +18,12 @@ describe('Fake test to init', function(){
 	it('Should init compare strings', function(){
 		expect('a').toBe('a');
 	});
+
 });
 
 // Commenting out failing tests to fix build and deploy temporarily.
 // I suspect there is a timing/retry issue in the code that must be fixed
 // as these tests fail sporatically
-/*
 describe('DigiTrust.getUser', function () {
 
     beforeAll(function (done) {
@@ -126,7 +126,7 @@ describe('DigiTrust.initialize() undefined callback', function () {
         done();
     });
 });
-*/
+
 
 describe('DigiTrust.initialize() redirects false', function () {
 

@@ -7,6 +7,9 @@ var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 
+var logObj = require('./logger');
+var log = logObj.createLogger('Digitrust', {level: 'DEBUG'});
+
 var DigiTrust = {};
 var noop = function(){}
 
@@ -36,6 +39,7 @@ DigiTrust._setDigiTrustOptions = function (options) {
 
 
 var initInternal = function(options, initializeCallback) {
+	log.debug('log internal');
     try {
         if (initializeCallback === undefined) {
             initializeCallback = noop;
