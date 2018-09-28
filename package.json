@@ -10,9 +10,9 @@
     "buildtest": "browserify index.js -o dist/app.js",
     "buildclient": "browserify src/client.js -do dist/digitrust.js",
     "buildserver": "browserify src/server.js -do dist/digitrust-server.js",
-	"uglifys": "uglifyjs dist/digitrust-server.js -o dist/digitrust-server.min.js",
-	"uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
-	"uglify": "./node_modules/.bin/run-s uglifys uglifyc",
+    "uglifys": "uglifyjs dist/digitrust-server.js -o dist/digitrust-server.min.js",
+    "uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
+    "uglify": "./node_modules/.bin/run-s uglifys uglifyc",
     "build": "./node_modules/.bin/run-s buildclient buildserver uglify copypages",
     "devclient": "watchify src/client.js -do dist/digitrust.js",
     "devserver": "watchify src/server.js -do dist/digitrust-server.js"
