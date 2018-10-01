@@ -41,9 +41,15 @@
                                 sendMessage(digiTrustUserJSON);
                             });
                         } catch (e) {
+							console.warn('Digitrust server: from encrypt', e);
+							console.trace();
                             sendMessage(configGeneral.cookie.digitrust.errorUser);
                         }
                     } else {
+						try{
+							console.warn('Digitrust server: empty user');
+						}
+						catch(ex){}
                         sendMessage(digiTrustUserJSON);
                     }
                     break;

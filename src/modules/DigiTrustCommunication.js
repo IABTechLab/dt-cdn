@@ -8,6 +8,7 @@ var helpers = require('./helpers');
 var LOGID = 'DigiTrustCommunication';
 var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+var logInitialized = false;
 
 var DigiTrustCommunication = {};
 
@@ -26,6 +27,7 @@ function getConfig(){
 	// go for specific items
 	var keys = ['urls', 'iframe']
 	
+	// function to set the specific override values
 	var setVals = function(target, source, key){
 		try{
 			var k;
@@ -60,6 +62,7 @@ function initOptions(){
 }
 
 function initLog(){
+	if(logInitialized){ return; }
 	var opts = window.DigiTrust.initializeOptions;
 	if(opts.logging != null){
 		if(opts.logging.enable == false){
@@ -74,6 +77,7 @@ function initLog(){
 			log = logObj.createLogger(LOGID, opts.logging);
 		}			
 	}
+	logInitialized = true;
 }
 
 

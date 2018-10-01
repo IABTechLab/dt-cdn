@@ -272,7 +272,7 @@
 			"digitrustHostPath": "//localhost/dist/",
 			"digitrustRedirect": "//localhost/dist/redirect.html",
 			"digitrustIframe": "//localhost/dist/dt.html",
-			"digitrustIdService": "//localhost:8080/p/id/v1",
+			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
 			"optoutInfo": "//localhost/dist/info.html",
 			"adblockCheck": "//stats.aws.rubiconproject.com/"
 		},
@@ -406,7 +406,7 @@
 			"digitrustHostPath": "//http://local.digitru.st/dist/",
 			"digitrustRedirect": "//http://local.digitru.st/dist/redirect.html",
 			"digitrustIframe": "//http://local.digitru.st/dist/dt.html",
-			"digitrustIdService": "//localhost:8080/p/id/v1",
+			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1", /* "digitrustIdService": "//localhost:8080/p/id/v1", */
 			"optoutInfo": "//http://local.digitru.st/dist/info.html",
 			"adblockCheck": "//stats.aws.rubiconproject.com/"
 		},

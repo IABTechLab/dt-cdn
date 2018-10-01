@@ -11,6 +11,8 @@
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <!--<script src="//cdn.digitru.st/prod/v1/digitrust.js"></script>-->
     <script>
+	// "digitrustIframe": "http://local.digitru.st/dist/dt.html"
+	// "digitrustIframe": "http://cdn-staging.digitru.st/dist/dt.html"
         DigiTrust.initialize({
             member: 'example_member_id',
             site: 'example_site_id',
@@ -43,12 +45,22 @@
         },
         function (digiTrustResult) {
             console.log("Digi sample callback", digiTrustResult);
+			console.log('Digi value: ' + digiTrustResult.success);
             
-            /*if (digiTrustResult.success && digiTrustResult.identity.id) {
-                DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
-                    console.log(decryptedId);
-                })
-            }*/
+            if (digiTrustResult.success){
+				if(digiTrustResult.identity.id != null) {
+					DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
+						console.log(decryptedId);
+					});
+				}
+				else{
+					console.error('Digitrust gave success, but no identity returned');
+				}
+            }
+			else{
+				console.log('Digitrust init failed');
+			}
+			
         });
         // var json = DigiTrust.getUser({member: ''});
         // console.log(json);

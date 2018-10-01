@@ -2,7 +2,7 @@
   "name": "digitrust",
   "version": "1.5.11",
   "description": "Package for a universal ID for registered ad servers",
-  "main": "index.js",
+  "main": "dist/digitrust.min.js",
   "scripts": {
     "test": "karma start karma.conf.js --single-run",
     "unit": "karma start karma.conf.js",
