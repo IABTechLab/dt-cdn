@@ -246,8 +246,11 @@ var msieDecrypt = function (valueToDecrypt, keyType, privateKey, callback) {
 	}
 }
 
-var msieEncrypt = function (valueToEncrypt, keyType, publicKey, callback) {
-	
+/**
+* @function
+* Encryption path for MSIE 11 browsers that don't support current Crypto object standard.
+*/
+var msieEncrypt = function (valueToEncrypt, keyType, publicKey, callback) {	
 	
     var keyOp = crypto_browser.subtle.importKey(
         keyType,

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src='./digitrust-server.js'></script>
+    <script src='./digitrust-server.min.js'></script>
     <script>
 
         var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
@@ -41,15 +41,9 @@
                                 sendMessage(digiTrustUserJSON);
                             });
                         } catch (e) {
-							console.warn('Digitrust server: from encrypt', e);
-							console.trace();
                             sendMessage(configGeneral.cookie.digitrust.errorUser);
                         }
                     } else {
-						try{
-							console.warn('Digitrust server: empty user');
-						}
-						catch(ex){}
                         sendMessage(digiTrustUserJSON);
                     }
                     break;
