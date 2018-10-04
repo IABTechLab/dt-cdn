@@ -39,20 +39,29 @@ function initLog(){
 function isMsCrypto(cryptoObj){
 	var msg;
 	if(!cryptoObj || !cryptoObj.subtle){
-		msg = 'Invalid browser crypt objeject';
+		cryptoObj = window.crypto;
+	}
+	if(!cryptoObj || !cryptoObj.subtle){
+		msg = 'Invalid browser crypt object';
 		log.error(msg);
-		throw msg;
+		//throw msg;
+		return false;
 	}
 	
-	var genOp = cryptoObj.subtle.generateKey( 
-        { name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]) }, 
-        false, 
-        ["encrypt", "decrypt"]);
-		
-	if(typeof(genOp.oncomplete) !== 'undefined'){
-		return true;
+	try{
+		var genOp = cryptoObj.subtle.generateKey( 
+			{ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]) }, 
+			false, 
+			["encrypt", "decrypt"]);
+			
+		if(typeof(genOp.oncomplete) !== 'undefined'){
+			return true;
+		}
+		return false; 
 	}
-	return false; 
+	catch(ex){
+		return false;
+	}
 }
 
 var DigiTrustCrypto = {};
@@ -67,6 +76,9 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     var publicKey;
 	initLog();
 	
+	if(crypto_browser == null){
+		crypto_browser = helpers.getBrowserCrypto();
+	}
 	
     if (helpers.isSafari()) {
         keyType = 'jwk';
@@ -135,6 +147,10 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
 	
 	log.debug('attempt to decrypt value: ', valueToDecrypt);
 	
+	if(crypto_browser == null){
+		crypto_browser = helpers.getBrowserCrypto();
+	}
+	
     if (helpers.isSafari()) {
         keyType = 'jwk';
         publicKey = DTPublicKeyObject.jwk;
@@ -148,7 +164,8 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
 		return;
 	}
 
-    crypto_browser.subtle.importKey(
+	log.debug('ready to create key');
+	var cryptKey = crypto_browser.subtle.importKey(
         keyType,
         privateKey,
         {
@@ -159,8 +176,9 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
         },
         false,
         ['decrypt']
-    )
-    .then(function (cryptokey) {
+    );
+	
+	cryptKey.then(function (cryptokey) {
 		log.debug('enter decrypt with key', cryptokey);
 		
         crypto_browser.subtle.decrypt(
@@ -226,29 +244,6 @@ var msieDecrypt = function (valueToDecrypt, keyType, privateKey, callback) {
 			
 		}
 	}
-		
-		/*
-    .then(function (cryptokey) {
-		log.debug('enter decrypt with key', cryptokey);
-		
-        crypto_browser.subtle.decrypt(
-            {
-                name: DTPublicKeyObject.type,
-                hash: {
-                    name: DTPublicKeyObject.hash.name
-                }
-            },
-            cryptokey,
-            // Encrypted User ID (b64) into array buffer
-            helpers.base64StringToArrayBuffer(valueToDecrypt)
-        )
-        .then(function (decryptedValueArrayBuffer) {
-            var decryptedValueString = helpers.ab2str(decryptedValueArrayBuffer);
-            log.debug('just decrypted', keyType, decryptedValueString);
-            return callback(decryptedValueString);
-        });
-    });
-	*/
 }
 
 var msieEncrypt = function (valueToEncrypt, keyType, publicKey, callback) {
