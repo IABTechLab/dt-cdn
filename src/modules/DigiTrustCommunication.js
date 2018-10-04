@@ -140,6 +140,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
     DigiTrustCommunication.iframe.src = getConfig().urls.digitrustIframe;
+    DigiTrustCommunication.iframe.name = getConfig().iframe.locatorFrameName;
     DigiTrustCommunication.iframeStatus = 1;
     document.body.appendChild(DigiTrustCommunication.iframe);
 	log.debug('communication frame added');
