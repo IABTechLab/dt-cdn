@@ -107,17 +107,11 @@ DigiTrustCommunication._messageHandler = function (evt) {
             case 'Digitrust.shareIdToIframe.request':
                 if(DigiTrust){
                     DigiTrust.getUser({}, function(resp){
-                        //todo: need to handle success: false case with retry once again
-                        //console.log("Sending post message back.");
                         resp.type = "Digitrust.shareIdToIframe.response";
                         evt.source.postMessage(resp, evt.origin);
                     }); 
                 }else{
-                    console.log("DigiTrust not found");
-                    //todo: need to retry once again
-                    // setTimeout(function(){
-                    //     sendDigitrustIdinPostMessage(event);
-                    // }, 500)
+                    console.log("DigiTrust not found");                    
                 }
                 break;    
         }
