@@ -6,3 +6,5 @@ npm-debug.log
 doc
 deployment.json
 src/config/env.json
+*.class
+/TestIntegration/target/**

@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:7.10
+      - image: circleci/node:8-browsers
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -26,23 +26,6 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run:
-          name: Install grunt
-          command: |
-            sudo npm install -g grunt-cli
-            npm install grunt --save-dev
-
-      - run:
-          name: Install PhantomJS Dependencies
-          command: |
-            [ -f /usr/local/bin/phantomjs ] || sudo apt-get update
-            [ -f /usr/local/bin/phantomjs ] || sudo apt-get install -y fontconfig wget
-
-      - run:
-          name: Install PhantomJS
-          command: |
-            npm install phantomjs-prebuilt
-
       - run: yarn install
 
       - save_cache:
@@ -51,10 +34,16 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: grunt
+      - run: sleep 5
+      - run: yarn test
 
       - deploy:
           command: |
-            grunt --env prod
+            yarn run build
             sudo apt-get -y -qq install awscli
-            aws s3 sync build/ s3://cmp-origin.digitru.st/builds/master/ --delete
+            echo "Here I am. Current dir and contents below"
+            pwd
+            ls -l
+            echo "Ready aws client"
+            echo "."
+            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/1/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers

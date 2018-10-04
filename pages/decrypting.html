@@ -1,6 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Decrypting: DigiTrust ID</title>
+	
+	<style>
+	.terminal{
+		background: #000000;
+		color: #77f442;
+		overflow: auto;
+		border:solid gray;
+		border-width:.1em .1em .1em .8em;
+		padding:.4em .6em;
+		line-height: 1.3em;
+		
+	}
+	</style>
+	
+	</head>
+	
+	<body>
 <h1>How to decrypt the DigiTrust ID</h1>
 <h2>OpenSSL</h2>
-<!-- HTML generated using hilite.me --><div style="background: #f8f8f8; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">base64 -D -i encrypted_id_from_iframe.txt -o encrypted_id_binary.txt
+<div class="terminal" >
+	<pre >
+base64 -D -i encrypted_id_from_iframe.txt -o encrypted_id_binary.txt
 /usr/local/bin/openssl pkeyutl -decrypt -inkey pkcs8.pem -pkeyopt rsa_padding_mode:oaep -in encrypted_id_binary.txt
 </pre></div>
 
@@ -134,3 +157,5 @@ subtle.importKey(
 });
 </pre></div>
 
+</body>
+</html>
