@@ -38,7 +38,8 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "https://cdn.digitru.st"
+			"postMessageOrigin": "https://cdn.digitru.st",
+			"locatorFrameName": "__dtLocator"
 		},
 		"crypto": {
 			"serverCryptoRate": 0.4
@@ -172,7 +173,8 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
+			"postMessageOrigin": "http://digitrust.s3.amazonaws.com",
+			"locatorFrameName": "__dtLocator"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
@@ -306,7 +308,8 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost"
+			"postMessageOrigin": "http://localhost",
+			"locatorFrameName": "__dtLocator"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
@@ -440,7 +443,8 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost"
+			"postMessageOrigin": "http://localhost",
+			"locatorFrameName": "__dtLocator"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0

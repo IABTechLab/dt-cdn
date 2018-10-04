@@ -104,6 +104,16 @@ DigiTrustCommunication._messageHandler = function (evt) {
             case 'DigiTrust.setAppsPreferences.response':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.app.setAppsPreferences.response', [evt.data.value]);
                 break;
+            case 'Digitrust.shareIdToIframe.request':
+                if(DigiTrust){
+                    DigiTrust.getUser({}, function(resp){
+                        resp.type = "Digitrust.shareIdToIframe.response";
+                        evt.source.postMessage(resp, evt.origin);
+                    }); 
+                }else{
+                    console.log("DigiTrust not found");                    
+                }
+                break;    
         }
     }
 };
@@ -140,6 +150,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
     DigiTrustCommunication.iframe.src = getConfig().urls.digitrustIframe;
+    DigiTrustCommunication.iframe.name = getConfig().iframe.locatorFrameName;
     DigiTrustCommunication.iframeStatus = 1;
     document.body.appendChild(DigiTrustCommunication.iframe);
 	log.debug('communication frame added');
