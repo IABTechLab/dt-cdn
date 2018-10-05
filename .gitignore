@@ -8,3 +8,7 @@ deployment.json
 src/config/env.json
 *.class
 /TestIntegration/target/**
+yarn.lock
+test.log
+yarn-error.log
+web.config

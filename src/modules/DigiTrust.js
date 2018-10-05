@@ -10,8 +10,11 @@ var DigiTrustCommunication = require('./DigiTrustCommunication');
 var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+var VERSION = require('../_version.js');
 
-var DigiTrust = {};
+var DigiTrust = {
+	version: VERSION
+};
 var noop = function(){}
 
 DigiTrust.isClient = false; // Is client or server?

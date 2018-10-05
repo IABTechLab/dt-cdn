@@ -7,13 +7,14 @@
     "test": "karma start karma.conf.js --single-run",
     "unit": "karma start karma.conf.js",
     "copypages": "copyfiles -f ./pages/*.* ./dist",
+	"versionUpdate": "genversion src/_version.js",
     "buildtest": "browserify index.js -o dist/app.js",
     "buildclient": "browserify src/client.js -do dist/digitrust.js",
     "buildserver": "browserify src/server.js -do dist/digitrust-server.js",
     "uglifys": "uglifyjs dist/digitrust-server.js -o dist/digitrust-server.min.js",
     "uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
     "uglify": "./node_modules/.bin/run-s uglifys uglifyc",
-    "build": "./node_modules/.bin/run-s buildclient buildserver uglify copypages",
+    "build": "./node_modules/.bin/run-s versionUpdate buildclient buildserver uglify copypages",
     "devclient": "watchify src/client.js -do dist/digitrust.js",
     "devserver": "watchify src/server.js -do dist/digitrust-server.js"
   },
@@ -30,6 +31,7 @@
   "devDependencies": {
     "browserify": "^16.2.2",
     "copyfiles": "^2.1.0",
+    "genversion": "^2.1.0",
     "jasmine-core": "^3.2.1",
     "karma": "^3.0.0",
     "karma-browserify": "^5.3.0",

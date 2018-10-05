@@ -30,13 +30,13 @@ Available environments: local, dev, prod
 
 Before committing, you can run the following to validate your code
 
-    npm run test
-    npm run validate
+    yarn test
 
-They will be automatically run on push to ensure that only clean code makes it into the repository.
+They will be automatically run on push. The Circle CI build will fail if the unit tests fail
+
 
 ### Production Releases
 
-1. Update `digitrustVersion` in `Gruntfile.js`
+1. Update `digitrustVersion` in `package.json`
 2. Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
 3. `grunt --env prod && grunt --env prod deploy`
