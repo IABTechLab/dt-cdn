@@ -49,8 +49,8 @@ jobs:
             sed -n 's/module.exports = \(.*\)/\1/gp' src/_version.js > versionmin.txt
             digi_version=`cat versionmin.txt`
             digi_version=`echo "${digi_version:1:${#digi_version}-2}"`
-            echo "version: \n$digi_version"
+            echo "DigiTrust Version: $digi_version"
             echo "Ready aws client"
-            echo "."
+            echo ""
             aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/$digi_version/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
             aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/latest/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
