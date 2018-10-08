@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Accessing Digitrust Id from Iframe</title>
+</head>
+<body>
+	This is a second iframe with domain name: 
+	<br/><br/>Trying to access Digitrust library
+
+	<pre id="user_id"></pre>
+
+	<br/>
+
+	<script type="text/javascript">
+
+		// in iframe you need to copy this function in your code
+		function callDigitrustWhileInIframe(moduleCallback) {
+
+			function findDigitrustFrame(){
+		        var f = window;
+		        var dtFrame = window;
+		        while (!dtFrame) {
+		            try {
+		                if (f.frames['__dtLocator']){
+		                	dtFrame = f;	
+		                } 
+		            } catch (e) {}
+		            if (f === window.top) break;
+		            f = f.parent;
+		        }
+		        return dtFrame;
+			}
+
+	        function readPostMessageResponse(event) {
+				if(event.data.type === "Digitrust.shareIdToIframe.response"){
+					delete event.data.type;
+					window.removeEventListener('message', readPostMessageResponse, false);
+					moduleCallback(event.data);
+				}
+	        }
+
+			var dtFrame = findDigitrustFrame();
+			var message = { type: "Digitrust.shareIdToIframe.request" };
+	        window.addEventListener('message', readPostMessageResponse, false);
+	        dtFrame.postMessage(message, '*');	       	        
+	    }
+
+	    // using callDigitrustWhileInIframe function here
+		callDigitrustWhileInIframe(function(response){
+			console.log("Got digitrust response in iframe", response);
+			document.getElementById("user_id").innerHTML = JSON.stringify(response);
+		})
+
+	</script>
+
+
+</body>
+</html>

@@ -7,7 +7,16 @@ var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 
-var DigiTrust = {};
+var LOGID = 'Digitrust'; // const, but older browser support
+var logObj = require('./logger');
+var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+var VERSION = require('../_version.js');
+
+var DigiTrust = {
+	version: VERSION
+};
+var noop = function(){}
+
 DigiTrust.isClient = false; // Is client or server?
 DigiTrust.initializeOptions = {};
 
@@ -19,23 +28,47 @@ DigiTrust._isMemberIdValid = function (memberId) {
     }
 };
 
+/**
+* @function
+* Set options on the global DigiTrust object by merging base options
+* with consumer supplied options.
+* @param {object} Consumer-supplied initialization options
+* @return {object} The combined options object that was assigned to DigiTrust.initializeOptions
+*/
 DigiTrust._setDigiTrustOptions = function (options) {
-    options = (!options) ?
-            configInitializeOptions :
-            helpers.extend(configInitializeOptions, options);
-    // Set DigiTrust options on global object
-    window.DigiTrust.initializeOptions = options;
-    return options;
+	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
+	var opts = Object.assign({}, configInitializeOptions, options);
+	window.DigiTrust.initializeOptions = opts;
+	
+	if(opts.logging != null){
+		if(opts.logging.enable == false){
+			// disable logging
+			log = logObj.createLogger(LOGID, {level: 'ERROR'});
+			log.enabled = false;
+		}
+		else{
+			if(opts.logging.level == null){
+				opts.logging.level = "INFO";
+			}
+			log = logObj.createLogger(LOGID, opts.logging);
+		}			
+	}
+	
+    return window.DigiTrust.initializeOptions;
 };
 
-DigiTrust.initialize = function (options, initializeCallback) {
+
+var initInternal = function(options, initializeCallback) {
+	log.debug('init Internal');
     try {
         if (initializeCallback === undefined) {
-            initializeCallback = function (x) { };
+            initializeCallback = noop;
         }
         var identityResponseObject = {success: false};
 
         options = DigiTrust._setDigiTrustOptions(options);
+		log.debug('init options completed');
+
 
         // allow for a circuit break to disable the world
         if (Math.random() > options.sample) {
@@ -61,9 +94,24 @@ DigiTrust.initialize = function (options, initializeCallback) {
             }
         });
     } catch (e) {
-
+		log.error('Error in DigiTrust initializer', e);
         return initializeCallback({success: false});
     }
+	
+}
+
+DigiTrust.initialize = function (options, initializeCallback) {
+	var document = window.document;
+	var ready = document.readyState;
+	
+	if(!ready || ready == 'loading') { 
+		document.addEventListener("DOMContentLoaded", function(event) {
+			DigiTrust.initialize(options, initializeCallback);
+		});
+	}
+	else{
+		initInternal(options, initializeCallback);
+	}	
 };
 
 DigiTrust.getUser = function (options, callback) {
