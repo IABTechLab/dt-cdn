@@ -52,5 +52,5 @@ jobs:
             echo "DigiTrust Version: $digi_version"
             echo "Ready aws client"
             echo ""
-            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/$digi_version/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/latest/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/prod/$digi_version/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/prod/latest/ --delete --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
