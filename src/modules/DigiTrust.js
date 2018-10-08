@@ -94,7 +94,7 @@ var initInternal = function(options, initializeCallback) {
             }
         });
     } catch (e) {
-		console.error('Error in DigiTrust initializer', e);
+		log.error('Error in DigiTrust initializer', e);
         return initializeCallback({success: false});
     }
 	

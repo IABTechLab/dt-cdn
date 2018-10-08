@@ -48,6 +48,10 @@ function isMsCrypto(cryptoObj){
 		return false;
 	}
 	
+	if(!window.msCrypto){
+		return false;
+	}
+	
 	try{
 		var genOp = cryptoObj.subtle.generateKey( 
 			{ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]) }, 
