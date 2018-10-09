@@ -42,6 +42,7 @@ jobs:
 
       - deploy:
           command: |
+            echo -n '{"current":"prod"}' > src/config/env.json
             yarn run build
             sudo apt-get -y -qq install awscli
             echo "Here I am. Current dir and contents below"
