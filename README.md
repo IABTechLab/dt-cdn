@@ -37,6 +37,13 @@ They will be automatically run on push. The Circle CI build will fail if the uni
 
 ### Production Releases
 
+In general we are using "[three-flow](http://www.nomachetejuggling.com/2017/04/09/a-different-branching-strategy/)" to manage mostly automated releases. Releases are branched off of master into `candidate` and then into a `release` branch.
+
 1. Update `digitrustVersion` in `package.json`
 2. Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
-3. `grunt --env prod && grunt --env prod deploy`
+3. git checkout candidate
+4. git pull
+5. git merge --no-ff master
+6. git tag candidate-1.5.13
+7. git push --follow-tags
+8. git push --force origin candidate-1.5.13:release
