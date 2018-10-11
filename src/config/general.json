@@ -44,6 +44,10 @@
 		"crypto": {
 			"serverCryptoRate": 0.4
 		},
+		"logging": {
+			"enable": false,
+			"level": "ERROR"
+		},
 		"app": {
 			"cookie": {
 				"reminderMaxAgeMiliseconds": 172800000,
@@ -178,6 +182,9 @@
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
+		},
+		"logging": {
+			"level": "DEBUG"
 		},
 		"app": {
 			"cookie": {
@@ -314,6 +321,9 @@
 		"crypto": {
 			"serverCryptoRate": 1.0
 		},
+		"logging": {
+			"level": "DEBUG"
+		},
 		"app": {
 			"cookie": {
 				"reminderMaxAgeMiliseconds": 172800000,
@@ -448,6 +458,9 @@
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
+		},
+		"logging": {
+			"level": "DEBUG"
 		},
 		"app": {
 			"cookie": {

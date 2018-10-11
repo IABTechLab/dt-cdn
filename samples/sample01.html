@@ -16,7 +16,7 @@
         DigiTrust.initialize({
             member: 'example_member_id',
             site: 'example_site_id',
-			logging: { level: "DEBUG", enable: true },
+			//logging: { level: "DEBUG", enable: true },
 			environment: {
 				urls: {
 					"digitrustIframe": "http://local.digitru.st/dist/dt.html"
@@ -44,8 +44,8 @@
             }
         },
         function (digiTrustResult) {
-            console.log("Digi sample callback", digiTrustResult);
-			console.log('Digi value: ' + digiTrustResult.success);
+            //console.log("Digi sample callback", digiTrustResult);
+			//console.log('Digi value: ' + digiTrustResult.success);
             
             if (digiTrustResult.success){
 				console.log('Success in Digitrust init');
@@ -61,7 +61,7 @@
 				*/
             }
 			else{
-				console.log('Digitrust init failed');
+				console.error('Digitrust init failed');
 			}
 			
         });
