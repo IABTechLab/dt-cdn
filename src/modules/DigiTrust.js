@@ -1,5 +1,7 @@
 'use strict';
 
+var env = require('../config/env.json').current;
+var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
@@ -39,6 +41,10 @@ DigiTrust._setDigiTrustOptions = function (options) {
 	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
 	var opts = Object.assign({}, configInitializeOptions, options);
 	window.DigiTrust.initializeOptions = opts;
+	
+	if(opts.logging == null){
+		opts.logging = configGeneral.logging
+	}
 	
 	if(opts.logging != null){
 		if(opts.logging.enable == false){

@@ -19,9 +19,6 @@
         "popupFontColor": "#ffffff",
         "popupBackgroundColor": "#000000"
     },
-	"logging": {
-		"level": "DEBUG"
-	},
     "apps": {
         "manifest": null
     }
