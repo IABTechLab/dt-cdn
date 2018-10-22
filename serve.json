@@ -1,0 +1,24 @@
+{
+  "headers": [
+{
+        "key" : "P3P"
+        "value" : 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"'
+      },
+	  {
+        "key" : "Access-Control-Allow-Origin",
+        "value" : "*"
+	  },
+	  {
+        "key" : "Foo",
+        "value" : "Chris"
+	  }
+	  ],
+	  {
+      "source" : "404.html",
+      "headers" : [{
+        "key" : "Cache-Control",
+        "value" : "max-age=300"
+      }]
+    }
+  ]
+}
