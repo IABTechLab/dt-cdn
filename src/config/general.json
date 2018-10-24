@@ -42,7 +42,7 @@
 			"locatorFrameName": "__dtLocator"
 		},
 		"crypto": {
-			"serverCryptoRate": 0.4
+			"serverCryptoRate": 0.8
 		},
 		"logging": {
 			"enable": false,
