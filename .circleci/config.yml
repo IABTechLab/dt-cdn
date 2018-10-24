@@ -54,4 +54,4 @@ jobs:
             echo "Ready aws client"
             echo ""
             aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/prod/$digi_version/ --delete --cache-control max-age=86400 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-            aws s3 sync dist/ s3://js-origin-$CIRCLE_BRANCH.digitru.st/prod/latest/ --delete --cache-control max-age=86400 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+            aws s3 cp dist/digitrust.min.js s3://js-origin-$CIRCLE_BRANCH.digitru.st/prod/1/digitrust.min.js --cache-control max-age=86400 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
