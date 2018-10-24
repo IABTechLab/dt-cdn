@@ -41,7 +41,6 @@ function initLog(){
 */
 function isMsCrypto(cryptoObj){
 	var msg;
-	initLog();
 	if(!cryptoObj || !cryptoObj.subtle){
 		cryptoObj = window.crypto;
 	}
