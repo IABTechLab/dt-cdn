@@ -46,7 +46,7 @@ function isMsCrypto(cryptoObj){
 	}
 	if(!cryptoObj || !cryptoObj.subtle){
 		msg = 'Invalid browser crypt object';
-		log.error(msg);
+		log.debug(msg);
 		//throw msg;
 		return false;
 	}
