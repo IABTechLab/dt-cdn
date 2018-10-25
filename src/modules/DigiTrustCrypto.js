@@ -16,6 +16,9 @@ var crypto_browser = helpers.getBrowserCrypto();
 function initLog(){
 	if(logInitialized){ return; }
 	var opts = window.DigiTrust.initializeOptions;
+	if(opts.logging == null){
+		opts.logging = configGeneral.logging
+	}
 	if(opts.logging != null){
 		if(opts.logging.enable == false){
 			// disable logging
@@ -43,7 +46,7 @@ function isMsCrypto(cryptoObj){
 	}
 	if(!cryptoObj || !cryptoObj.subtle){
 		msg = 'Invalid browser crypt object';
-		log.error(msg);
+		log.debug(msg);
 		//throw msg;
 		return false;
 	}
