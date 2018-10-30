@@ -18,7 +18,7 @@
 
 			function findDigitrustFrame(){
 		        var f = window;
-		        var dtFrame = window;
+		        var dtFrame = null;
 		        while (!dtFrame) {
 		            try {
 		                if (f.frames['__dtLocator']){
@@ -39,10 +39,12 @@
 				}
 	        }
 
-			var dtFrame = findDigitrustFrame();
-			var message = { type: "Digitrust.shareIdToIframe.request" };
-	        window.addEventListener('message', readPostMessageResponse, false);
-	        dtFrame.postMessage(message, '*');	       	        
+	        var dtFrame = findDigitrustFrame();
+			if(dtFrame){
+				var message = { type: "Digitrust.shareIdToIframe.request" };
+				window.addEventListener('message', readPostMessageResponse, false);		    
+				dtFrame.postMessage(message, '*');
+			}
 	    }
 
 	    // using callDigitrustWhileInIframe function here
