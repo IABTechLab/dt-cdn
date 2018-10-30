@@ -86,7 +86,21 @@ DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: read
 
 DigiTrustCommunication._messageHandler = function (evt) {
     if (evt.origin !== getConfig().iframe.postMessageOrigin) {
-		log.warn('message origin error. allowed: ' + getConfig().iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
+
+        switch (evt.data.type) {
+            case 'Digitrust.shareIdToIframe.request':
+                if(DigiTrust){
+                    DigiTrust.getUser({member: window.DigiTrust.initializeOptions.member}, function(resp){
+                        resp.type = "Digitrust.shareIdToIframe.response";
+                        evt.source.postMessage(resp, evt.origin);
+                    });
+                }else{
+                    console.log("DigiTrust not found");
+                }
+                break;
+            default:
+                log.warn('message origin error. allowed: ' + getConfig().iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
+        }
     } else {
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
@@ -103,16 +117,6 @@ DigiTrustCommunication._messageHandler = function (evt) {
                 break;
             case 'DigiTrust.setAppsPreferences.response':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.app.setAppsPreferences.response', [evt.data.value]);
-                break;
-            case 'Digitrust.shareIdToIframe.request':
-                if(DigiTrust){
-                    DigiTrust.getUser({}, function(resp){
-                        resp.type = "Digitrust.shareIdToIframe.response";
-                        evt.source.postMessage(resp, evt.origin);
-                    }); 
-                }else{
-                    console.log("DigiTrust not found");                    
-                }
                 break;    
         }
     }
