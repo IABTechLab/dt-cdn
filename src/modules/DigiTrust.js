@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * @module
+ * Main entry point object for Digitrust ID
+ * 
+ * */
+
+
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
@@ -11,7 +18,7 @@ var DigiTrustCommunication = require('./DigiTrustCommunication');
 
 var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
-var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+var log = logObj.createLogger(LOGID, {level: 'ERROR', enabled: false}); // this will later be re-initialized if the init pass requires
 var VERSION = require('../_version.js');
 
 var DigiTrust = {
