@@ -26,7 +26,7 @@ DigiTrust._isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
         return true;
     } else {
-        throw new Error(configErrors.en.memberId);
+        throw configErrors.en.memberId;
     }
 };
 
@@ -34,7 +34,7 @@ DigiTrust._isMemberIdValid = function (memberId) {
 * @function
 * Set options on the global DigiTrust object by merging base options
 * with consumer supplied options.
-* @param {object} Consumer-supplied initialization options
+* @param {object} -supplied initialization options
 * @return {object} The combined options object that was assigned to DigiTrust.initializeOptions
 */
 DigiTrust._setDigiTrustOptions = function (options) {
