@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <script src='./digitrust-server.min.js'></script>
     <script>
 
@@ -15,7 +16,7 @@
                         DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
                     var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
                     digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
-                        
+
                     var sendMessage = function (messageValue) {
                         var messageType = evt.data.syncOnly ?
                             'DigiTrust.identity.response.syncOnly' :
@@ -74,4 +75,5 @@
 
     </script>
 </head>
+<body></body>
 </html>
