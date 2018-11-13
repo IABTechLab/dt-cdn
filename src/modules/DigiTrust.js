@@ -1,8 +1,8 @@
 'use strict';
 
 /**
+ * Digitrust
  * @module
- * Main entry point object for Digitrust ID
  * 
  * */
 
@@ -22,14 +22,25 @@ var log = logObj.createLogger(LOGID, {level: 'ERROR', enabled: false}); // this 
 var VERSION = require('../_version.js');
 
 var DigiTrust = {
-	version: VERSION
+    version: VERSION,
+    isClient: false,
+    _config: {
+        configGeneral: configGeneral,
+        errors: configErrors,
+        initOptions: configInitializeOptions
+    },
+    cookie: DigiTrustCookie,
+    util: helpers
 };
 var noop = function(){}
 
-DigiTrust.isClient = false; // Is client or server?
 DigiTrust.initializeOptions = {};
 
-DigiTrust._isMemberIdValid = function (memberId) {
+/**
+ * Tests to see if a member ID is valid
+ * @param {any} memberId
+ */
+var isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
         return true;
     } else {
@@ -89,7 +100,7 @@ var initInternal = function(options, initializeCallback) {
         }
 
         // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(options.member)) {
+        if (!isMemberIdValid(options.member)) {
             return initializeCallback(identityResponseObject);
         }
 
@@ -115,7 +126,8 @@ var initInternal = function(options, initializeCallback) {
 
 DigiTrust.initialize = function (options, initializeCallback) {
 	var document = window.document;
-	var ready = document.readyState;
+    var ready = document.readyState;
+    DigiTrust.isClient = true; // init only called on clients
 	
 	if(!ready || ready == 'loading') { 
 		document.addEventListener("DOMContentLoaded", function(event) {
@@ -137,7 +149,7 @@ DigiTrust.getUser = function (options, callback) {
 
     try {
         // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(options.member)) {
+        if (!isMemberIdValid(options.member)) {
             return (async === false) ? identityResponseObject : callback(identityResponseObject);
         }
 
@@ -176,10 +188,13 @@ DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
 
+module.exports = DigiTrust
+/*
 module.exports = {
     initialize: DigiTrust.initialize,
     initializeOptions: DigiTrust.initializeOptions,
     getUser: DigiTrust.getUser,
     sendReset: DigiTrust.sendReset,
-    isClient: DigiTrust.isClient
+    isClient: DigiTrust.isClient,
 };
+*/

@@ -9,8 +9,10 @@ var helpers = require('./modules/helpers');
 
 if (window !== undefined) {
     window.DigiTrust = DigiTrust;
-    window.DigiTrustCookie = DigiTrustCookie;
-    window.DigiTrustCrypto = DigiTrustCrypto;
-    window.configGeneral = configGeneral;
-    window.helpers = helpers;
+//    window.DigiTrustCookie = DigiTrustCookie;
+//    window.DigiTrustCrypto = DigiTrustCrypto;
+//    window.configGeneral = configGeneral;
+//    window.helpers = helpers;
 }
+
+// THIS FILE IS DEPRECATED

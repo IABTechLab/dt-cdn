@@ -1,8 +1,7 @@
 var DigiTrust = require('./modules/DigiTrust');
 var DigiTrustCrypto = require('./modules/DigiTrustCrypto');
-DigiTrust.isClient = true;
 
-if (window !== undefined) {
+if (window !== undefined && window.DigiTrust == null) {
     window.DigiTrust = DigiTrust;
-    window.DigiTrustCrypto = DigiTrustCrypto;
+//    window.DigiTrustCrypto = DigiTrustCrypto;
 }
