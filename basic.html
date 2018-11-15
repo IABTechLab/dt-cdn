@@ -10,7 +10,8 @@
       site: "ztnV3gXrYQ",
       redirects: true
     });
-	DigiTrust.getUser({},
+	// async version:
+	DigiTrust.getUser({"member":"IzXoEURCkm"},
       function (digiTrustResult) {
         console.log(digiTrustResult);
         if (digiTrustResult && digiTrustResult.success) {
@@ -18,6 +19,9 @@
         }
       }
     );
+	// sync version:
+	var dtresult = DigiTrust.getUser({"member":"IzXoEURCkm"});
+    console.log(dtresult);
   </script>
 
   <p>Content here.</p>
