@@ -12,3 +12,7 @@ yarn.lock
 test.log
 yarn-error.log
 web.config
+src/_version.js
+out
+.vs
+package-lock.json

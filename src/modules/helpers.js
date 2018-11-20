@@ -17,6 +17,51 @@ helpers.extend = function (target, source) {
     return target;
 };
 
+/**
+ * Tests to see if the passed object is a function
+ * 
+ * @param {any} fn
+ */
+var isFunc = function (fn) {
+    if (fn != null && typeof (fn) === 'function') {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * @function
+ * Safely get the browser crypto library to account for IE 11
+ * 
+ * */
+var getBrowserCrypto = function () {
+    // WebKit crypto subtle
+    var cryptoObj = window.crypto || window.msCrypto;
+
+    // This is outdated and probably should be removed
+    if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
+        window.crypto.subtle = window.crypto.webkitSubtle;
+    }
+
+    return cryptoObj;
+};
+
+/**
+ * Wrapper to attach event listeneners
+ * @param {any} elem       DOM Element
+ * @param {string} eventName  Name of event to attach
+ * @param {function} handler  An event handler function or null
+ */
+var addEvt = function (elem, eventName, handler) {
+    elem.addEventListener(eventName, function (evt) {
+        if (isFunc(handler)) {
+            handler.call(null, evt);
+        }
+    })
+}
+
+
 /*
 *   https://github.com/toddmotto/atomic
 *   MIT
@@ -180,11 +225,16 @@ helpers.inIframe = function () {
     }
 };
 
+/**
+ * @function
+ * Builds a consent click handler
+ * */
 helpers.createConsentClickListener = function () {
     if (helpers.inIframe()) {
         return;
     }
-    window.onclick = function (e) {
+
+    var consentClickHandler = function (e) {
         e = e || window.event;
         var t = e.target || e.srcElement;
 
@@ -200,10 +250,13 @@ helpers.createConsentClickListener = function () {
             return false;
         }
     };
+
+    addEvt(window, 'click', consentClickHandler)
+
 };
 
 helpers.createPageViewClickListener = function () {
-    window.onclick = function (e) {
+    addEvt(window, 'click', function (e) {
         e = e || window.event;
         var t = e.target || e.srcElement;
 
@@ -211,24 +264,18 @@ helpers.createPageViewClickListener = function () {
         if (possibleHref) {
             helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.pageView', []);
         }
-    };
+    });
 };
 
+/**
+ * @function
+ * Generate a pseudo random ID for the user
+ * 
+ * */
 helpers.generateUserId = function () {
     var buffer = new Uint8Array(8);
-    var _getCryptoLib = function () {
-        var cryptoLib;
-        if (typeof crypto !== 'undefined') {
-            cryptoLib = crypto;
-        } else if (typeof msCrypto !== 'undefined') {
-            cryptoLib = msCrypto;
-        } else {
-            throw new Error('[DigiTrust] Browser missing Web Cryptography library');
-        }
-        return cryptoLib;
-    };
-
-    _getCryptoLib().getRandomValues(buffer);
+    
+    getBrowserCrypto().getRandomValues(buffer);
     return helpers.arrayBufferToBase64String(buffer);
 };
 
@@ -364,17 +411,7 @@ helpers.asciiToUint8Array = function (str) {
 * Wrapper to get the web crypto object
 *
 */
-helpers.getBrowserCrypto = function () {
-    // WebKit crypto subtle
-    var cryptoObj = window.crypto || window.msCrypto;
-
-    // This is outdated and probably should be removed
-    if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
-        window.crypto.subtle = window.crypto.webkitSubtle;
-    }
-	
-    return cryptoObj;
-};
+helpers.getBrowserCrypto = getBrowserCrypto;
 
 
 // Polyfill setup

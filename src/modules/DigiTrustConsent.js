@@ -2,12 +2,13 @@
 
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
+var gdprInfo = require('../config/gdpr-lang.json');
 
 var DigiTrustConsent = {};
 
 DigiTrustConsent.browserLanguageIsEU = function (languages) {
     for (var i = 0; i < languages.length; i++) {
-        if (configGeneral.gdprLanguages.indexOf(languages[i].toLowerCase()) >= 0) {
+        if (gdprInfo.gdprLanguages.indexOf(languages[i].toLowerCase()) >= 0) {
             return true;
         }
     }

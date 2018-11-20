@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * Digitrust
+ * @module
+ * 
+ * */
+
+
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
@@ -11,22 +18,33 @@ var DigiTrustCommunication = require('./DigiTrustCommunication');
 
 var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
-var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+var log = logObj.createLogger(LOGID, {level: 'ERROR', enabled: false}); // this will later be re-initialized if the init pass requires
 var VERSION = require('../_version.js');
 
 var DigiTrust = {
-	version: VERSION
+    version: VERSION,
+    isClient: false,
+    _config: {
+        configGeneral: configGeneral,
+        errors: configErrors,
+        initOptions: configInitializeOptions
+    },
+    cookie: DigiTrustCookie,
+    util: helpers
 };
 var noop = function(){}
 
-DigiTrust.isClient = false; // Is client or server?
 DigiTrust.initializeOptions = {};
 
-DigiTrust._isMemberIdValid = function (memberId) {
+/**
+ * Tests to see if a member ID is valid
+ * @param {any} memberId
+ */
+var isMemberIdValid = function (memberId) {
     if (memberId && memberId.length > 0) {
         return true;
     } else {
-        throw new Error(configErrors.en.memberId);
+        throw configErrors.en.memberId;
     }
 };
 
@@ -34,7 +52,7 @@ DigiTrust._isMemberIdValid = function (memberId) {
 * @function
 * Set options on the global DigiTrust object by merging base options
 * with consumer supplied options.
-* @param {object} Consumer-supplied initialization options
+* @param {object} -supplied initialization options
 * @return {object} The combined options object that was assigned to DigiTrust.initializeOptions
 */
 DigiTrust._setDigiTrustOptions = function (options) {
@@ -82,7 +100,7 @@ var initInternal = function(options, initializeCallback) {
         }
 
         // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(options.member)) {
+        if (!isMemberIdValid(options.member)) {
             return initializeCallback(identityResponseObject);
         }
 
@@ -108,7 +126,8 @@ var initInternal = function(options, initializeCallback) {
 
 DigiTrust.initialize = function (options, initializeCallback) {
 	var document = window.document;
-	var ready = document.readyState;
+    var ready = document.readyState;
+    DigiTrust.isClient = true; // init only called on clients
 	
 	if(!ready || ready == 'loading') { 
 		document.addEventListener("DOMContentLoaded", function(event) {
@@ -130,7 +149,7 @@ DigiTrust.getUser = function (options, callback) {
 
     try {
         // Verify Publisher's Member ID
-        if (!DigiTrust._isMemberIdValid(options.member)) {
+        if (!isMemberIdValid(options.member)) {
             return (async === false) ? identityResponseObject : callback(identityResponseObject);
         }
 
@@ -169,10 +188,13 @@ DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
 
+module.exports = DigiTrust
+/*
 module.exports = {
     initialize: DigiTrust.initialize,
     initializeOptions: DigiTrust.initializeOptions,
     getUser: DigiTrust.getUser,
     sendReset: DigiTrust.sendReset,
-    isClient: DigiTrust.isClient
+    isClient: DigiTrust.isClient,
 };
+*/

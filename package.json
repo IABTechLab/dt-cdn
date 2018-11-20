@@ -1,22 +1,19 @@
 {
   "name": "digitrust",
-  "version": "1.5.16",
+  "version": "1.5.17",
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
   "scripts": {
     "test": "karma start karma.conf.js --single-run",
     "unit": "karma start karma.conf.js",
     "copypages": "copyfiles -f ./pages/*.* ./dist",
-	"versionUpdate": "genversion src/_version.js",
-    "buildtest": "browserify index.js -o dist/app.js",
-    "buildclient": "browserify src/client.js -do dist/digitrust.js",
-    "buildserver": "browserify src/server.js -do dist/digitrust-server.js",
-    "uglifys": "uglifyjs dist/digitrust-server.js -o dist/digitrust-server.min.js",
+    "versionUpdate": "genversion src/_version.js",
+    "buildclient": "browserify src/digitrust_client.js -do dist/digitrust.js",
     "uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
-    "uglify": "./node_modules/.bin/run-s uglifys uglifyc",
-    "build": "./node_modules/.bin/run-s versionUpdate buildclient buildserver uglify copypages",
-    "devclient": "watchify src/client.js -do dist/digitrust.js",
-    "devserver": "watchify src/server.js -do dist/digitrust-server.js"
+    "uglify": "./node_modules/.bin/run-s uglifyc",
+    "build": "./node_modules/.bin/run-s versionUpdate buildclient uglify copypages",
+    "devwatch": "watchify src/client.js -do dist/digitrust.js",
+    "document": "jsdoc ./dist/digitrust.js -P package.json"
   },
   "repository": {
     "type": "git",
@@ -33,6 +30,7 @@
     "copyfiles": "^2.1.0",
     "genversion": "^2.1.0",
     "jasmine-core": "^3.2.1",
+    "jsdoc": "^3.5.5",
     "karma": "^3.0.0",
     "karma-browserify": "^5.3.0",
     "karma-chrome-launcher": "^2.2.0",
