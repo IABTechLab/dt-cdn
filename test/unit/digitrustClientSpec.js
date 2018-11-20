@@ -69,6 +69,7 @@ describe('DigiTrust.initialize() sample rate 0', function () {
     });
 });
 
+/*
 describe('DigiTrust.initialize() consent window default', function () {
 
     it('DigiTrust.initialize() defaults to no consent window', function (done) {
@@ -82,7 +83,6 @@ describe('DigiTrust.initialize() consent window default', function () {
         });
     });
 });
-/*
 
 describe('DigiTrust.initialize() consent window none', function () {
 
