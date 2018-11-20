@@ -7,7 +7,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	
 	<title>Digitrust Sample top level page</title>
-    <script src="../dist/digitrust.js"></script>
+    <script src="//local.digitru.st/dist/digitrust.js"></script>
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <!--<script src="//cdn.digitru.st/prod/v1/digitrust.js"></script>-->
     <script>
@@ -19,7 +19,8 @@
 			//logging: { level: "DEBUG", enable: true },
 			environment: {
 				urls: {
-					"digitrustIframe": "http://local.digitru.st/dist/dt.html"
+                    "digitrustIframe": "http://local.digitru.st/dist/dt_debug.html",
+                    "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json"
 				},
 				iframe: {
 					postMessageOrigin: "http://local.digitru.st",
@@ -38,9 +39,6 @@
                 //popupFontColor: 'white', // @todo add to GitHub spec
                 //popupBackgroundColor: 'orange', // @todo add to GitHub spec
                 //userMessage: "test message"
-            },
-            apps: {
-                manifest: 'http://local.digitru.st/misc/manifest.json'
             }
         },
         function (digiTrustResult) {

@@ -255,6 +255,7 @@ helpers.createConsentClickListener = function () {
 
 };
 
+// This is probably deprecated with DIS-26 removal of apps
 helpers.createPageViewClickListener = function () {
     addEvt(window, 'click', function (e) {
         e = e || window.event;
