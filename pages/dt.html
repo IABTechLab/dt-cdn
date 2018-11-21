@@ -13,6 +13,7 @@
             var helpers = dt.util;
             var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
             var userJSON = dt.cookie.getIdentityCookieJSON(cookieKey);
+            var DigiTrustCrypto = dt._config.crypto;
 
             function messageHandler(evt) {
                 switch (evt.data.type) {
