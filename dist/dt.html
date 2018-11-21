@@ -7,6 +7,38 @@
     // Place initializer inside a closure
 
         (function () {
+
+            // ATTACH GLOBAL ERROR HANDLER
+            try {
+                var errGlobal = function(msg, url, line, col, error) {
+                    var errMsg = "Digitrust frame error: " + msg;
+                    try {
+                        if (console && console.error) {
+                            console.error(errMsg);
+                        }
+                        else {
+                            console.log(errMsg);
+                        }
+
+                        var eobj = {
+                            version: 1,
+                            type: 'DigiTrust.iframe.error',
+                            value: {}
+                        }
+                        window.parent.postMessage(eobj, document.referrer);
+                    }
+                    catch (myex)
+                    {
+                        console.log(myex);
+                    }
+                }
+                window.addEventListener('error')
+            }
+            catch (ex) {
+                // swallow this particular error
+            }
+
+
             var dt = window.DigiTrust;
             var configGeneral = dt._config.configGeneral;
             var DigiTrustCookie = dt.cookie;

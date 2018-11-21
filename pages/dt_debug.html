@@ -1,13 +1,52 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+
+    <!--
+        add this for debug
+        configGeneral.urls.digitrustIdService = "../misc/faked_id_service_v1.json" //http://local.digitru.st/misc/faked_id_service_v1.json
+        <script src='./digitrust.js'></script>
+    -->
+
     <title>DigiTrust Debug Server IFrame</title>
     <meta charset="utf-8">
     <script src='./digitrust.js'></script>
     <script>
-    // Place initializer inside a closure
+        // Place initializer inside a closure
 
         (function () {
+            'use strict'
+            // ATTACH GLOBAL ERROR HANDLER
+            try {
+                var errGlobal = function (err) {
+                    var m = err && err.message || '';
+                    var errMsg = "Digitrust frame error: " + m;
+                    try {
+                        if (console && console.error) {
+                            console.error(errMsg);
+                        }
+                        else {
+                            console.log(errMsg);
+                        }
+
+                        var eobj = {
+                            version: 1,
+                            type: 'DigiTrust.iframe.error',
+                            value: {}
+                        }
+                        window.parent.postMessage(eobj, document.referrer);
+                    }
+                    catch (myex) {
+                        console.log(myex);
+                    }
+                }
+                window.addEventListener('error', errGlobal)
+            }
+            catch (ex) {
+                // swallow this particular error
+            }
+
+
             var dt = window.DigiTrust;
             var configGeneral = dt._config.configGeneral;
             configGeneral.urls.digitrustIdService = "../misc/faked_id_service_v1.json" //http://local.digitru.st/misc/faked_id_service_v1.json
@@ -15,9 +54,11 @@
             var helpers = dt.util;
             var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
             var userJSON = dt.cookie.getIdentityCookieJSON(cookieKey);
+            // var DigiTrustCrypto = dt._config.crypto;
+
+            var m = DigiTrustCrypto.getKeyVersion();
 
             function messageHandler(evt) {
-                console.log("DT Server event from: " + evt.origin, evt.data, "Message: " + evt.data.type + "\n" + JSON.stringify(evt.data));
                 switch (evt.data.type) {
                     case 'DigiTrust.identity.request':
                         var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
@@ -85,5 +126,6 @@
 
     </script>
 </head>
-<body></body>
+<body>
+</body>
 </html>
