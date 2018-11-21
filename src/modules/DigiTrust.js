@@ -15,6 +15,7 @@ var helpers = require('./helpers');
 var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
+var DigiTrustCrypto = require('./DigiTrustCrypto');
 
 var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
@@ -27,9 +28,10 @@ var DigiTrust = {
     _config: {
         configGeneral: configGeneral,
         errors: configErrors,
-        initOptions: configInitializeOptions
+        initOptions: configInitializeOptions,
+        crypto: DigiTrustCrypto
     },
-    cookie: DigiTrustCookie,
+    cookie: DigiTrustCookie,    
     util: helpers
 };
 var noop = function(){}
