@@ -51,6 +51,7 @@
             var configGeneral = dt._config.configGeneral;
             configGeneral.urls.digitrustIdService = "../misc/faked_id_service_v1.json" //http://local.digitru.st/misc/faked_id_service_v1.json
             var DigiTrustCookie = dt.cookie;
+            var DigiTrustCrypto = dt._config.crypto;
             var helpers = dt.util;
             var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
             var userJSON = dt.cookie.getIdentityCookieJSON(cookieKey);
