@@ -8,6 +8,8 @@ var DigiTrustCrypto = require('../../src/modules/DigiTrustCrypto');
 var helpers = require('../../src/modules/helpers');
 var env = require('../../src/config/env.json').current;
 var configGeneral = require('../../src/config/general.json')[env];
+var consts = require('../../src/config/constants.json');
+
 
 
 describe('Fake test to init', function(){
@@ -62,7 +64,7 @@ describe('DigiTrust.initialize() sample rate 0', function () {
         },
         function (identityResponse) {
             expect(identityResponse.success).toBe(false);
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+            expect(document.getElementById(consts.consentLinkId))
                 .toBe(null);
             done();
         });
@@ -77,7 +79,7 @@ describe('DigiTrust.initialize() consent window default', function () {
             member: 'foo',
         },
         function (identityResponse) {
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+            expect(document.getElementById(consts.consentLinkId))
                 .toBe(null);
             done();
         });
@@ -94,7 +96,7 @@ describe('DigiTrust.initialize() consent window none', function () {
             }
         },
         function (identityResponse) {
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+            expect(document.getElementById(consts.consentLinkId))
                 .toBe(null);
             done();
         });
@@ -111,7 +113,7 @@ describe('DigiTrust.initialize() consent window implicit', function () {
             }
         },
         function (identityResponse) {
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+            expect(document.getElementById(consts.consentLinkId))
                 .toBe(null);
             done();
         });
@@ -141,7 +143,7 @@ describe('DigiTrust.initialize() redirects false', function () {
         },
         function (identityResponse) {
             expect(window.onclick).toBe(null);
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+            expect(document.getElementById(consts.consentLinkId))
                 .toBe(null);
             done();
         });
@@ -158,7 +160,7 @@ describe('DigiTrust.initialize() redirects true', function () {
         function (identityResponse) {
             expect(window.onclick).not.toBe(null);
             expect(identityResponse.success).toBe(false);
-            expect(document.getElementById(configGeneral.htmlIDs.consentLinkId))
+            expect(document.getElementById(consts.consentLinkId))
                 .toBe(null);
             done();
         });
