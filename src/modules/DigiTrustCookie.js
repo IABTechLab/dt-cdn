@@ -4,6 +4,11 @@ var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 var helpers = require('./helpers');
+// TODO: Change to root instance property
+var pubsub = require('./MinPubSub').createPubSub({
+    host: location.host
+});
+
 
 var _maxAgeToDate = function (milliseconds) {
     var date = new Date();
@@ -112,7 +117,7 @@ DigiTrustCookie.getUser = function (options, callback) {
     var localUserCookieJSON = {};
     var _createSyncOnlySubscription = function () {
         // LISTENER: Only update publisher cookie, do not return anywhere
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
+        pubsub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
             if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);
@@ -134,7 +139,7 @@ DigiTrustCookie.getUser = function (options, callback) {
 
             LISTENER: listen for message from digitrust iframe
         */
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
+        pubsub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
             if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);

@@ -38,8 +38,7 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "https://cdn.digitru.st",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "https://cdn.digitru.st"
 		},
 		"crypto": {
 			"serverCryptoRate": 0.8
@@ -48,12 +47,6 @@
 			"enable": false,
 			"level": "ERROR"
 		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"publisherPicture": "dt-pub-pic"
-		},		
 		"gvlVendorId": 64
 	},
 	"dev": {
@@ -95,20 +88,13 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://digitrust.s3.amazonaws.com",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
 		},
 		"logging": {
 			"level": "DEBUG"
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"publisherPicture": "dt-pub-pic"
 		},
 		"gvlVendorId": 64
 	},
@@ -151,20 +137,13 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "http://localhost"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
 		},
 		"logging": {
 			"level": "DEBUG"
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"publisherPicture": "dt-pub-pic"
 		},		
 		"gvlVendorId": 64
 	},
@@ -207,20 +186,13 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "http://localhost"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
 		},
 		"logging": {
 			"level": "DEBUG"
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"publisherPicture": "dt-pub-pic"
 		},
 		"gvlVendorId": 64
 	}

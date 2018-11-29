@@ -2,6 +2,8 @@
 
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
+var consts = require('../config/constants.json');
+
 
 var helpers = {};
 
@@ -160,43 +162,6 @@ xhr.promise = function (method, url, data) {
 
 helpers.xhr = xhr;
 
-/*
-    https://github.com/daniellmb/MinPubSub
-*/
-var cache = window.c_ || {}; // check for 'c_' cache for unit testing
-var MinPubSub = {};
-MinPubSub.publish = function (topic, args) {
-    var subs = cache[topic];
-    var len = subs ? subs.length : 0;
-
-    while (len--) {
-        subs[len].apply(window, args || []);
-    }
-};
-
-MinPubSub.subscribe = function (topic, callback) {
-    if (!cache[topic]) {
-        cache[topic] = [];
-    }
-    cache[topic].push(callback);
-    return [topic, callback];
-};
-
-MinPubSub.unsubscribe = function (handle, callback) {
-
-    var subs = cache[callback ? handle : handle[0]];
-    callback = callback || handle[1];
-    var len = subs ? subs.length : 0;
-
-    while (len--) {
-        if (subs[len] === callback) {
-            subs.splice(len, 1);
-        }
-    }
-};
-
-helpers.MinPubSub = MinPubSub;
-
 var _getElementHref = function (current) {
     if (current) {
         if (current.nodeName.toLowerCase() === 'a') {
@@ -239,7 +204,7 @@ helpers.createConsentClickListener = function () {
         var t = e.target || e.srcElement;
 
         // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
-        if (t.id === configGeneral.htmlIDs.consentLinkId) {
+        if (t.id === consts.consentLinkId) {
             return true;
         }
 

@@ -4,11 +4,15 @@ var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 var helpers = require('./helpers');
+var consts = require('../config/constants.json');
 
 var LOGID = 'DigiTrustCommunication';
 var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
 var logInitialized = false;
+var pubsub = require('./MinPubSub').createPubSub({
+    host: location.host
+});
 
 var DigiTrustCommunication = {};
 
@@ -104,16 +108,16 @@ DigiTrustCommunication._messageHandler = function (evt) {
     } else {
         switch (evt.data.type) {
             case 'DigiTrust.iframe.ready':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.ready', [true]);
+                pubsub.publish('DigiTrust.pubsub.iframe.ready', [true]);
                 break;
             case 'DigiTrust.identity.response':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response', [evt.data.value]);
+                pubsub.publish('DigiTrust.pubsub.identity.response', [evt.data.value]);
                 break;
             case 'DigiTrust.identity.response.syncOnly':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
+                pubsub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
                 break;
             case 'DigiTrust.iframe.error':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.error', [evt.data.value]);
+                pubsub.publish('DigiTrust.pubsub.iframe.error', [evt.data.value]);
                 break;
                 
         }
@@ -136,7 +140,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
         DigiTrustCommunication.iframeStatus = 0;
     }, getConfig().iframe.timeoutDuration);
 
-    helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+    pubsub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
         clearTimeout(iframeLoadErrorTimeout);
         DigiTrustCommunication.iframeStatus = 2;
         loadSuccess(true);
@@ -154,7 +158,7 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
     DigiTrustCommunication.iframe.src = conf.urls.digitrustIframe;
-    DigiTrustCommunication.iframe.name = conf.iframe.locatorFrameName || '__dtLocator';
+    DigiTrustCommunication.iframe.name = consts.locatorFrameName || '__dtLocator';
     DigiTrustCommunication.iframeStatus = 1;
     document.body.appendChild(DigiTrustCommunication.iframe);
 	log.debug('communication frame added');
@@ -166,7 +170,7 @@ DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {
         sendRequestFunction(options);
     } else if (DigiTrustCommunication.iframeStatus === 1) {
         // This mimics a "delay", until the iframe is ready
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+        pubsub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
             sendRequestFunction(options);
         });
     } else if (DigiTrustCommunication.iframeStatus === 0) {
