@@ -4,7 +4,7 @@
 	<title>Accessing Digitrust Id from Iframe</title>
 </head>
 <body>
-	This is a second iframe with domain name: 
+	This is a second iframe with domain name: <span style="font-weight:bold;" id="domainNameTxt"></span>
 	<br/><br/>Trying to access Digitrust library
 
 	<pre id="user_id"></pre>
@@ -25,7 +25,7 @@
 		                	dtFrame = f;	
 		                } 
 		            } catch (e) {}
-		            if (f === window.top) break;
+                    if (f.self === window.top) break;
 		            f = f.parent;
 		        }
 		        return dtFrame;
@@ -47,11 +47,36 @@
 			}
 	    }
 
-	    // using callDigitrustWhileInIframe function here
-		callDigitrustWhileInIframe(function(response){
-			console.log("Got digitrust response in iframe", response);
-			document.getElementById("user_id").innerHTML = JSON.stringify(response);
-		})
+
+
+        (function () {
+            var ge = function (id) {
+                return document.getElementById(id);
+            }
+
+            function updatePageInfo() {
+                var sp = ge('domainNameTxt');
+                sp.innerHTML = location.host;
+            }
+
+            window.addEventListener('load', function () {
+                updatePageInfo();
+
+                // using callDigitrustWhileInIframe function here
+                setTimeout(function () {
+                    callDigitrustWhileInIframe(function (response) {
+                        console.log("Got digitrust response in iframe", response);
+                        document.getElementById("user_id").innerHTML = JSON.stringify(response);
+                    });
+                }, 250);
+
+
+
+            });
+
+
+        })();
+
 
 	</script>
 
