@@ -145,10 +145,12 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
         window.attachEvent('onmessage', DigiTrustCommunication._messageHandler);
     }
 
+    var conf = getConfig();
+
     DigiTrustCommunication.iframe = document.createElement('iframe');
     DigiTrustCommunication.iframe.style.display = 'none';
-    DigiTrustCommunication.iframe.src = getConfig().urls.digitrustIframe;
-    DigiTrustCommunication.iframe.name = getConfig().iframe.locatorFrameName;
+    DigiTrustCommunication.iframe.src = conf.urls.digitrustIframe;
+    DigiTrustCommunication.iframe.name = conf.iframe.locatorFrameName || '__dtLocator';
     DigiTrustCommunication.iframeStatus = 1;
     document.body.appendChild(DigiTrustCommunication.iframe);
 	log.debug('communication frame added');
