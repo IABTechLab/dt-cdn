@@ -112,6 +112,10 @@ DigiTrustCommunication._messageHandler = function (evt) {
             case 'DigiTrust.identity.response.syncOnly':
                 helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
                 break;
+            case 'DigiTrust.iframe.error':
+                helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.error', [evt.data.value]);
+                break;
+                
         }
     }
 };
