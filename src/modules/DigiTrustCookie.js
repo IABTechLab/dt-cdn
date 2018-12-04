@@ -93,8 +93,8 @@ DigiTrustCookie.setResetCookie = function () {
 };
 
 DigiTrustCookie.expireCookie = function (cookieKey) {
-    var cookieKV = cookieKey + '=;';
-    var expiresKV = 'expires=' + _maxAgeToDate(-10000000000000) + ';';
+    var cookieKV = cookieKey + '=; ';
+    var expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;'; 
     var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
     var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
 

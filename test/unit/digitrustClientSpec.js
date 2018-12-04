@@ -187,17 +187,6 @@ describe('DigiTrustCookie', function () {
         done();
     });
 
-    it('DigiTrustCookie.cookies', function () {
-        var cookieKey = 'testcookie';
-        var cookieValue = 'foobar';
-        document.cookie = cookieKey + '=' + cookieValue + '; expires=Thu, 01 Jan 2037 00:00:00 UTC; path=/;';
-        document.cookie = 'SomeOtherCookie=SomeOtherCookieValue; expires=Thu, 01 Jan 2037 00:00:00 UTC; path=/;';
-        expect(DigiTrustCookie.getCookieByName(cookieKey)).toBe(cookieValue);
-        DigiTrustCookie.expireCookie(cookieKey);
-        if (env !== 'prod') {
-            expect(DigiTrustCookie.getCookieByName(cookieKey)).toBeUndefined();
-        }
-    });
     it('DigiTrustCookie.createUserCookiesOnDigitrustDomain()', function () {
         var identity = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
         expect(identity.id).not.toBe(null);
@@ -205,45 +194,7 @@ describe('DigiTrustCookie', function () {
         expect(identity.producer).toBe(configGeneral.cookie.producer);
         expect(identity.privacy.optout).toBe(false);
     });
-    it('DigiTrustCookie.obfuscateCookieValue()', function () {
-        var identity = {
-            id: null,
-            keyv: 0,
-            privacy: {
-                optout: true
-            }
-        };
-        var encodedUserIdentity = DigiTrustCookie.obfuscateCookieValue(identity);
-        var identity2 = DigiTrustCookie.unobfuscateCookieValue(encodedUserIdentity);
-        expect(identity2.keyv).toBe(0);
-        expect(identity2.privacy.optout).toBe(true);
-    });
-    it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
-        // set a bad identity cookie
-        var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
-        var cookieExpires = new Date();
-        cookieExpires.setTime(cookieExpires.getTime() + 60000);
-        document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
-        var user = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
-        // we should have generated a new value
-        expect(user.id).not.toBe(null);
-        expect(user.version).toBe(2);
-        expect(user.producer).toBe(configGeneral.cookie.producer);
-        expect(user.privacy.optout).toBe(false);
-    });
-    it('DigiTrustCookie.optoutCookieValue()', function () {
-        var identity = DigiTrustCookie.unobfuscateCookieValue
-            ('eyJpZCI6bnVsbCwia2V5diI6MCwicHJpdmFjeSI6eyJvcHRvdXQiOnRydWV9fQ%3D%3D');
-        expect(identity).toEqual({id: null, keyv: 0, privacy: {optout: true}});
-    });
-    it('DigiTrustCookie.verifyPublisherDomainCookie()', function () {
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({})).toBe(false);
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({id: 'abc'})).toBe(false);
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({id: 'abc', version: 2,
-            privacy: {optout: false}})).toBe(false);
-        expect(DigiTrustCookie.verifyPublisherDomainCookie({id: 'abc', version: 2,
-            keyv: 4, privacy: {optout: false}})).toBe(true);
-    });
+
     /*it('getUser without member id', function () {
         var getUserResult = DigiTrust.getUser({
             synchronous: true
