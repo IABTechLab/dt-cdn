@@ -220,19 +220,6 @@ helpers.createConsentClickListener = function () {
 
 };
 
-// This is probably deprecated with DIS-26 removal of apps
-helpers.createPageViewClickListener = function () {
-    addEvt(window, 'click', function (e) {
-        e = e || window.event;
-        var t = e.target || e.srcElement;
-
-        var possibleHref = _getElementHref(t);
-        if (possibleHref) {
-            helpers.MinPubSub.publish('DigiTrust.pubsub.app.event.pageView', []);
-        }
-    });
-};
-
 /**
  * @function
  * Generate a pseudo random ID for the user

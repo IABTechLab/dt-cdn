@@ -15,7 +15,21 @@ var pubsub = require('./MinPubSub').createPubSub({
 
 var DC = {};
 
-var newConfig = null;
+var Dt = 'DigiTrust',
+  kID = Dt + '.identity',
+  kIframe = Dt + '.iframe';
+
+// Pubsub sync keys
+var MKEY = {
+  ready: kIframe + '.ready',
+  ifrErr: kIframe + '.error',
+  idSync: kID + '.response.sync',
+  idResp: kID + '.response',
+  idReset: kID + '.reset',
+  idGet: kID + '.request'
+};
+
+var newConfig = null; // instance of the cloned and merged configuration
 /**
 * @function
 * Wrapper method that merges any initialized options into the general configuration.
@@ -70,6 +84,10 @@ function initOptions(){
 	initLog();
 }
 
+function isFunc(fn) {
+  return typeof (fn) === 'function';
+}
+
 function initLog(){
 	if(logInitialized){ return; }
 	var opts = window.DigiTrust.initializeOptions;
@@ -100,10 +118,12 @@ DC.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
  * @param {any} evt
  */
 function _messageHandler(evt) {
-    var conf = getConfig();
+  var conf = getConfig();
+  var msgKey = evt.data.type;
+
     if (evt.origin !== conf.iframe.postMessageOrigin) {
 
-        switch (evt.data.type) {
+      switch (msgKey) {
             case 'Digitrust.shareIdToIframe.request':
                 if(DigiTrust){
                     DigiTrust.getUser({member: window.DigiTrust.initializeOptions.member}, function(resp){
@@ -117,22 +137,16 @@ function _messageHandler(evt) {
             default:
                 log.warn('message origin error. allowed: ' + conf.iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
         }
-    } else {
-        switch (evt.data.type) {
-            case 'DigiTrust.iframe.ready':
-                pubsub.publish('DigiTrust.pubsub.iframe.ready', [true]);
-                break;
-            case 'DigiTrust.identity.response':
-                pubsub.publish('DigiTrust.pubsub.identity.response', [evt.data.value]);
-                break;
-            case 'DigiTrust.identity.response.syncOnly':
-                pubsub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
-                break;
-            case 'DigiTrust.iframe.error':
-                pubsub.publish('DigiTrust.pubsub.iframe.error', [evt.data.value]);
-                break;
-                
-        }
+    }
+    else {      
+      switch (msgKey) {
+        case MKEY.ready:
+          pubsub.publish(msgKey, [true]);
+          break;
+        default:
+          pubsub.publish(msgKey, [evt.data.value]);
+          break;
+       }
     }
 };
 
@@ -153,11 +167,17 @@ DC.startConnection = function (loadSuccess) {
         DC.iframeStatus = 0;
     }, conf.iframe.timeoutDuration);
 
-    pubsub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+  pubsub.subscribe(MKEY.ready, function (iframeReady) {
         clearTimeout(iframeLoadErrorTimeout);
         DC.iframeStatus = 2;
         loadSuccess(true);
     });
+
+  pubsub.subscribe(MKEY.ready, function (iframeReady) {
+    clearTimeout(iframeLoadErrorTimeout);
+    DC.iframeStatus = 2;
+    loadSuccess(true);
+  });
 
     // Add postMessage listeners
     window.addEventListener('message', _messageHandler, false);
@@ -182,7 +202,7 @@ DC.sendRequest = function (sendRequestFunction, options) {
         sendRequestFunction(options);
     } else if (DC.iframeStatus === 1) {
         // This mimics a "delay", until the iframe is ready
-        pubsub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+      pubsub.subscribe(MKEY.ready, function (iframeReady) {
             sendRequestFunction(options);
         });
     } else if (DC.iframeStatus === 0) {
@@ -205,11 +225,11 @@ DC.getIdentity = function (options) {
     options = options ? options : {};
     var _sendIdentityRequest = function (options) {
         var identityRequest = {
-            version: 1,
-            type: 'DigiTrust.identity.request',
-            syncOnly: options.syncOnly ? options.syncOnly : false,
-            redirects: options.redirects ? options.redirects : false,
-            value: {}
+          version: 1,
+          type: MKEY.idGet,
+          syncOnly: options.syncOnly ? options.syncOnly : false,
+          redirects: options.redirects ? options.redirects : false,
+          value: {}
         };
         DC.iframe.contentWindow.postMessage(identityRequest, DC.iframe.src);
     };
@@ -222,8 +242,8 @@ DC.sendReset = function (options) {
     DigiTrustCookie.setResetCookie();
     var _request = function (options) {
         var requestPayload = {
-            version: 1,
-            type: 'DigiTrust.identity.reset'
+          version: 1,
+          type: MKEY.idReset
         };
         DC.iframe.contentWindow.postMessage(requestPayload, DC.iframe.src);
     };
@@ -231,10 +251,24 @@ DC.sendReset = function (options) {
     DC.sendRequest(_request, options);
 };
 
+/**
+ * Subscribe to given message topic in the global pubsub object.
+ * @param {any} message topic in pubsub
+ * @param {any} handler
+ */
+function listen(message, handler) {
+  if (!isFunc(handler)) {
+    return;
+  }
+  pubsub.subscribe(message, handler);
+}
+
 // var DigiTrustCommunication = DC;
 
 module.exports = {
-    getIdentity: DC.getIdentity,
-    startConnection: DC.startConnection,
-    sendReset: DC.sendReset
+  getIdentity: DC.getIdentity,
+  startConnection: DC.startConnection,
+  sendReset: DC.sendReset,
+  MsgKey: MKEY,
+  listen: listen
 };
