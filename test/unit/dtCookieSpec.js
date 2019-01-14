@@ -33,24 +33,7 @@ describe('Cookie transform tests', function () {
         var back = dtCookie.unobfuscateCookieValue(obs);
         expect(back == testval).toBeTruthy();
     });
-
-    it('Should write and expire a cookie', function () {
-        var ck = 'mycookie';
-        var before = dtCookie.getCookieByName(ck);
-
-        expect(before == null).toBeTruthy();
-        var c = ck + '=' + 'some_value';
-        document.cookie = c;
-
-        var after = dtCookie.getCookieByName(ck);
-        expect(after == 'some_value').toBeTruthy();
-
-        dtCookie.expireCookie(ck);
-        var atend = dtCookie.getCookieByName(ck);
-
-        expect(atend == undefined).toBeTruthy();
-    });
-
+  
     it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
         // set a bad identity cookie
         var cookieKey = configGeneral.cookie.digitrust.userObjectKey;

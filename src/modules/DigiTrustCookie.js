@@ -90,11 +90,23 @@ DigiTrustCookie.setResetCookie = function () {
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
+/**
+ * Expires a cookie such that any subsequent page loads the cookie will not be present.
+ * The original cookie exists until the page is reloaded.
+ * @param {any} cookieKey
+ */
 DigiTrustCookie.expireCookie = function (cookieKey) {
-    var cookieKV = cookieKey + '=; ';
-    var expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;'; 
-    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+  var cookieKV = cookieKey + '=; ',
+    expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
+    domainKV = '',
+    pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+
+  try {
+    if (location.host.indexOf(configGeneral.cookie.digitrust.domainKeyValue) > -1) {
+      domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    }
+  }
+  catch (ex) {  }
 
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
