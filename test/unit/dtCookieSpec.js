@@ -6,6 +6,7 @@
  * Exercise the cookie methods of digitrust.
  * */
 
+var DigiTrustCookie = require('../../src/modules/DigiTrustCookie');
 var dtCookie = require('../../src/modules/DigiTrustCookie');
 var consts = require('../../src/config/constants.json');
 var env = require('../../src/config/env.json').current;
@@ -80,7 +81,35 @@ describe('Cookie transform tests', function () {
             keyv: 4, privacy: { optout: false }
         })).toBe(true);
     });
-
-
 });
 
+describe('DigiTrustCookie', function () {
+
+  beforeAll(function (done) {
+    document.cookie = configGeneral.cookie.publisher.userObjectKey
+      + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = configGeneral.cookie.digitrust.userObjectKey
+      + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    DigiTrust.initialize(
+      {
+        member: 'foo',
+        consent: {
+          requires: 'none'
+        }
+      },
+      function (identityResponse) {
+        done();
+      }
+    )
+  });
+
+
+  it('DigiTrustCookie.createUserCookiesOnDigitrustDomain()', function () {
+    var identity = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+    expect(identity.id).not.toBe(null);
+    expect(identity.version).toBe(2);
+    expect(identity.producer).toBe(configGeneral.cookie.producer);
+    expect(identity.privacy.optout).toBe(false);
+  });
+});
