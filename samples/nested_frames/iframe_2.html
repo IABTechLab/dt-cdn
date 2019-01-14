@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	This is a second iframe with domain name: 
+	<br/><br/>Trying to access Digitrust library
+
+	<pre id="user_id"></pre>
+
+	<br/>
+
+	<script type="text/javascript">
+
+		// this function users will need to copy and use to get Digitrust id in iframes
+		function callDigitrustWhileInIframe(moduleCallback) {
+
+			var dtFrame = findDigitrustFrame();
+			var message = { type: "share_digitrust_id_to_iframe_request" };
+	        window.addEventListener('message', readPostMessageResponse, false);
+	        dtFrame.postMessage(message, '*');
+	       
+	        function findDigitrustFrame(){
+		        var f = window;
+		        var dtFrame;
+		        while (!dtFrame) {
+		            try {
+		                if (f.frames['__dtLocator']){
+		                	//console.log("found dtLocator frame.")
+		                	dtFrame = f;	
+		                } 
+		            } catch (e) {}
+		            if (f === window.top) break;
+		            f = f.parent;
+		        }
+		        return dtFrame;
+			}
+
+	        function readPostMessageResponse(event) {
+	        	//console.log("In message listener in Iframe", event.origin, event.data.type, event.data);
+				if(event.data.type === "share_digitrust_id_to_iframe_response"){
+					delete event.data.type;
+					window.removeEventListener('message', readPostMessageResponse, false);
+					moduleCallback(event.data);
+				}
+	        }
+	    }
+
+	    // example usage of above function
+		callDigitrustWhileInIframe(function(response){
+			console.log("Got digitrust response in iframe", response);
+			document.getElementById("user_id").innerHTML = JSON.stringify(response);
+		})
+
+	</script>
+
+
+</body>
+</html>

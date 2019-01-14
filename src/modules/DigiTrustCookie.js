@@ -2,8 +2,11 @@
 
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
-var DigiTrustCommunication = require('./DigiTrustCommunication');
+var Dcom = require('./DigiTrustCommunication');
 var helpers = require('./helpers');
+
+var DigiTrust = window.DigiTrust || {};
+
 
 var _maxAgeToDate = function (milliseconds) {
     var date = new Date();
@@ -87,20 +90,23 @@ DigiTrustCookie.setResetCookie = function () {
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
+/**
+ * Expires a cookie such that any subsequent page loads the cookie will not be present.
+ * The original cookie exists until the page is reloaded.
+ * @param {any} cookieKey
+ */
 DigiTrustCookie.expireCookie = function (cookieKey) {
-    var cookieKV = cookieKey + '=;';
-    var expiresKV = 'expires=' + _maxAgeToDate(-10000000000000) + ';';
-    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+  var cookieKV = cookieKey + '=; ',
+    expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
+    domainKV = '',
+    pathKV = configGeneral.cookie.digitrust.pathKeyValue;
 
-    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
-};
-
-DigiTrustCookie.setAppReminderCookie = function () {
-    var cookieKV = configGeneral.app.cookie.reminderObjectKey + '=1;';
-    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.app.cookie.reminderMaxAgeMiliseconds) + ';';
-    var domainKV = configGeneral.cookie.publisher.domainKeyValue;
-    var pathKV = configGeneral.cookie.publisher.pathKeyValue;
+  try {
+    if (location.host.indexOf(configGeneral.cookie.digitrust.domainKeyValue) > -1) {
+      domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    }
+  }
+  catch (ex) {  }
 
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
@@ -121,7 +127,7 @@ DigiTrustCookie.getUser = function (options, callback) {
     var localUserCookieJSON = {};
     var _createSyncOnlySubscription = function () {
         // LISTENER: Only update publisher cookie, do not return anywhere
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response.syncOnly', function (userJSON) {
+      Dcom.listen(Dcom.MsgKey.idSync, function (userJSON) { // 'DigiTrust.pubsub.identity.response.syncOnly'
             if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);
@@ -133,7 +139,7 @@ DigiTrustCookie.getUser = function (options, callback) {
         localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
         // Do a sync with digitrust official domain
         _createSyncOnlySubscription();
-        DigiTrustCommunication.getIdentity({syncOnly:true});
+        Dcom.getIdentity({syncOnly:true});
         return (!helpers.isEmpty(localUserCookieJSON)) ? localUserCookieJSON : {};
     } else {
         /*
@@ -143,7 +149,7 @@ DigiTrustCookie.getUser = function (options, callback) {
 
             LISTENER: listen for message from digitrust iframe
         */
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.identity.response', function (userJSON) {
+      Dcom.listen(Dcom.MsgKey.idResp, function (userJSON) { // 'DigiTrust.pubsub.identity.response'
             if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
                 var cookieStringEncoded = DigiTrustCookie.obfuscateCookieValue(userJSON);
                 _setIdentityCookie(cookieStringEncoded);
@@ -160,7 +166,7 @@ DigiTrustCookie.getUser = function (options, callback) {
         });
 
         if (options.ignoreLocalCookies === true) {
-            DigiTrustCommunication.getIdentity();
+            Dcom.getIdentity();
         } else {
             localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(
                 configGeneral.cookie.publisher.userObjectKey
@@ -169,11 +175,11 @@ DigiTrustCookie.getUser = function (options, callback) {
                 // OK to proceed & show content
                 // Grab remote cookie & update local
                 _createSyncOnlySubscription();
-                DigiTrustCommunication.getIdentity({syncOnly:true});
+                Dcom.getIdentity({syncOnly:true});
                 return callback(false, localUserCookieJSON);
             } else {
                 // Connect to iframe to check remote cookies
-                DigiTrustCommunication.getIdentity({syncOnly:false, redirects:options.redirects});
+                Dcom.getIdentity({syncOnly:false, redirects:options.redirects});
             }
         }
     }

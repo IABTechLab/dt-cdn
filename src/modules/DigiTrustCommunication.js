@@ -3,23 +3,44 @@
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
-var helpers = require('./helpers');
+var consts = require('../config/constants.json');
 
 var LOGID = 'DigiTrustCommunication';
 var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
 var logInitialized = false;
+var pubsub = require('./MinPubSub').createPubSub({
+    host: location.host
+});
 
-var DigiTrustCommunication = {};
+var DC = {};
 
+var Dt = 'DigiTrust',
+  kID = Dt + '.identity',
+  kIframe = Dt + '.iframe';
 
+// Pubsub sync keys
+var MKEY = {
+  ready: kIframe + '.ready',
+  ifrErr: kIframe + '.error',
+  idSync: kID + '.response.sync',
+  idResp: kID + '.response',
+  idReset: kID + '.reset',
+  idGet: kID + '.request'
+};
+
+var newConfig = null; // instance of the cloned and merged configuration
 /**
 * @function
 * Wrapper method that merges any initialized options into the general configuration.
 */
 function getConfig(){
 	var opts = window.DigiTrust.initializeOptions;
-	var env = opts && opts.environment;
+    var env = opts && opts.environment;
+
+    if (newConfig != null) {
+        return newConfig;
+    }
 	
 	var i;
 	var config = Object.assign({}, configGeneral);
@@ -49,9 +70,11 @@ function getConfig(){
 	
 	for(i=0;i<keys.length;i++){
 		setVals(config, env, keys[i]);
-	}
+    }
+
+    newConfig = config;
 	
-	return config;
+    return newConfig;
 }
 
 /**
@@ -59,6 +82,10 @@ function getConfig(){
 */
 function initOptions(){
 	initLog();
+}
+
+function isFunc(fn) {
+  return typeof (fn) === 'function';
 }
 
 function initLog(){
@@ -81,13 +108,22 @@ function initLog(){
 }
 
 
-DigiTrustCommunication.iframe = null;
-DigiTrustCommunication.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
+DC.iframe = null;
+DC.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
 
-DigiTrustCommunication._messageHandler = function (evt) {
-    if (evt.origin !== getConfig().iframe.postMessageOrigin) {
+/**
+ * Post Message handler
+ * @function 
+ * 
+ * @param {any} evt
+ */
+function _messageHandler(evt) {
+  var conf = getConfig();
+  var msgKey = evt.data.type;
 
-        switch (evt.data.type) {
+    if (evt.origin !== conf.iframe.postMessageOrigin) {
+
+      switch (msgKey) {
             case 'Digitrust.shareIdToIframe.request':
                 if(DigiTrust){
                     DigiTrust.getUser({member: window.DigiTrust.initializeOptions.member}, function(resp){
@@ -99,31 +135,24 @@ DigiTrustCommunication._messageHandler = function (evt) {
                 }
                 break;
             default:
-                log.warn('message origin error. allowed: ' + getConfig().iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
+                log.warn('message origin error. allowed: ' + conf.iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
         }
-    } else {
-        switch (evt.data.type) {
-            case 'DigiTrust.iframe.ready':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.iframe.ready', [true]);
-                break;
-            case 'DigiTrust.identity.response':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response', [evt.data.value]);
-                break;
-            case 'DigiTrust.identity.response.syncOnly':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.identity.response.syncOnly', [evt.data.value]);
-                break;
-            case 'DigiTrust.getAppsPreferences.response':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.app.getAppsPreferences.response', [evt.data.value]);
-                break;
-            case 'DigiTrust.setAppsPreferences.response':
-                helpers.MinPubSub.publish('DigiTrust.pubsub.app.setAppsPreferences.response', [evt.data.value]);
-                break;    
-        }
+    }
+    else {      
+      switch (msgKey) {
+        case MKEY.ready:
+          pubsub.publish(msgKey, [true]);
+          break;
+        default:
+          pubsub.publish(msgKey, [evt.data.value]);
+          break;
+       }
     }
 };
 
-DigiTrustCommunication.startConnection = function (loadSuccess) {
+DC.startConnection = function (loadSuccess) {
 	initOptions(); // initialization point
+    var conf = getConfig();
 	
     /*
         If there is a connection problem, or if adblocker blocks the request,
@@ -135,43 +164,51 @@ DigiTrustCommunication.startConnection = function (loadSuccess) {
     */
     var iframeLoadErrorTimeout = setTimeout(function () {
         loadSuccess(false);
-        DigiTrustCommunication.iframeStatus = 0;
-    }, getConfig().iframe.timeoutDuration);
+        DC.iframeStatus = 0;
+    }, conf.iframe.timeoutDuration);
 
-    helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+  pubsub.subscribe(MKEY.ready, function (iframeReady) {
         clearTimeout(iframeLoadErrorTimeout);
-        DigiTrustCommunication.iframeStatus = 2;
+        DC.iframeStatus = 2;
         loadSuccess(true);
     });
 
-    // Add postMessage listeners
-    if (window.addEventListener) {
-        window.addEventListener('message', DigiTrustCommunication._messageHandler, false);
-    } else {
-        window.attachEvent('onmessage', DigiTrustCommunication._messageHandler);
-    }
+  pubsub.subscribe(MKEY.ready, function (iframeReady) {
+    clearTimeout(iframeLoadErrorTimeout);
+    DC.iframeStatus = 2;
+    loadSuccess(true);
+  });
 
-    DigiTrustCommunication.iframe = document.createElement('iframe');
-    DigiTrustCommunication.iframe.style.display = 'none';
-    DigiTrustCommunication.iframe.src = getConfig().urls.digitrustIframe;
-    DigiTrustCommunication.iframe.name = getConfig().iframe.locatorFrameName;
-    DigiTrustCommunication.iframeStatus = 1;
-    document.body.appendChild(DigiTrustCommunication.iframe);
+    // Add postMessage listeners
+    window.addEventListener('message', _messageHandler, false);
+
+  console.log('DIGI IFRAME:' + conf.urls.digitrustIframe);
+
+    DC.iframe = document.createElement('iframe');
+    DC.iframe.style.display = 'none';
+    DC.iframe.src = conf.urls.digitrustIframe;
+    DC.iframe.name = consts.locatorFrameName || '__dtLocator';
+    DC.iframeStatus = 1;
+    document.body.appendChild(DC.iframe);
 	log.debug('communication frame added');
 };
 
-DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {
-
-    if (DigiTrustCommunication.iframeStatus === 2) {
+/**
+ * Publishes a request to the communication pipe.
+ * @param {any} sendRequestFunction
+ * @param {any} options
+ */
+DC.sendRequest = function (sendRequestFunction, options) {
+    if (DC.iframeStatus === 2) {
         sendRequestFunction(options);
-    } else if (DigiTrustCommunication.iframeStatus === 1) {
+    } else if (DC.iframeStatus === 1) {
         // This mimics a "delay", until the iframe is ready
-        helpers.MinPubSub.subscribe('DigiTrust.pubsub.iframe.ready', function (iframeReady) {
+      pubsub.subscribe(MKEY.ready, function (iframeReady) {
             sendRequestFunction(options);
         });
-    } else if (DigiTrustCommunication.iframeStatus === 0) {
+    } else if (DC.iframeStatus === 0) {
         // Create communication gateway with digitru.st iframe
-        DigiTrustCommunication.startConnection(function (loadSuccess) {
+        DC.startConnection(function (loadSuccess) {
             if (loadSuccess) {
                 sendRequestFunction(options);
             } else {
@@ -181,77 +218,58 @@ DigiTrustCommunication.sendRequest = function (sendRequestFunction, options) {
     }
 };
 
-DigiTrustCommunication.getIdentity = function (options) {
+/**
+ * Request the identity cookie from the DigiTrust iframe domain.
+ * @param {any} options
+ */
+DC.getIdentity = function (options) {
     options = options ? options : {};
     var _sendIdentityRequest = function (options) {
         var identityRequest = {
-            version: 1,
-            type: 'DigiTrust.identity.request',
-            syncOnly: options.syncOnly ? options.syncOnly : false,
-            redirects: options.redirects ? options.redirects : false,
-            value: {}
+          version: 1,
+          type: MKEY.idGet,
+          syncOnly: options.syncOnly ? options.syncOnly : false,
+          redirects: options.redirects ? options.redirects : false,
+          value: {}
         };
-        DigiTrustCommunication.iframe.contentWindow.postMessage(identityRequest, DigiTrustCommunication.iframe.src);
+        DC.iframe.contentWindow.postMessage(identityRequest, DC.iframe.src);
     };
 
-    DigiTrustCommunication.sendRequest(_sendIdentityRequest, options);
+    DC.sendRequest(_sendIdentityRequest, options);
 };
 
-DigiTrustCommunication.getAppsPreferences = function (options) {
-    if (!options.member) { throw new Error(configErrors.en.iframeMissingMember); }
-
-    var _request = function (options) {
-        var requestPayload = {
-            version: 1,
-            type: 'DigiTrust.getAppsPreferences.request',
-            value: {
-                member: options.member
-            }
-        };
-        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
-    };
-
-    DigiTrustCommunication.sendRequest(_request, options);
-};
-
-DigiTrustCommunication.setAppsPreferences = function (options) {
-
-    if (!options.member) { throw new Error(configErrors.en.iframeMissingMember); }
-    if (!options.app || !options.app.name) { throw new Error(configErrors.en.iframeMissingAppName); }
-
-    var _request = function (options) {
-        var requestPayload = {
-            version: 1,
-            type: 'DigiTrust.setAppsPreferences.request',
-            value: {
-                member: options.member,
-                app: options.app
-            }
-        };
-        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
-    };
-
-    DigiTrustCommunication.sendRequest(_request, options);
-};
-
-DigiTrustCommunication.sendReset = function (options) {
+DC.sendReset = function (options) {
     var DigiTrustCookie = require('./DigiTrustCookie');
     DigiTrustCookie.setResetCookie();
     var _request = function (options) {
         var requestPayload = {
-            version: 1,
-            type: 'DigiTrust.identity.reset'
+          version: 1,
+          type: MKEY.idReset
         };
-        DigiTrustCommunication.iframe.contentWindow.postMessage(requestPayload, DigiTrustCommunication.iframe.src);
+        DC.iframe.contentWindow.postMessage(requestPayload, DC.iframe.src);
     };
 
-    DigiTrustCommunication.sendRequest(_request, options);
+    DC.sendRequest(_request, options);
 };
 
+/**
+ * Subscribe to given message topic in the global pubsub object.
+ * @param {any} message topic in pubsub
+ * @param {any} handler
+ */
+function listen(message, handler) {
+  if (!isFunc(handler)) {
+    return;
+  }
+  pubsub.subscribe(message, handler);
+}
+
+// var DigiTrustCommunication = DC;
+
 module.exports = {
-    getIdentity: DigiTrustCommunication.getIdentity,
-    startConnection: DigiTrustCommunication.startConnection,
-    getAppsPreferences: DigiTrustCommunication.getAppsPreferences,
-    setAppsPreferences: DigiTrustCommunication.setAppsPreferences,
-    sendReset: DigiTrustCommunication.sendReset
+  getIdentity: DC.getIdentity,
+  startConnection: DC.startConnection,
+  sendReset: DC.sendReset,
+  MsgKey: MKEY,
+  listen: listen
 };

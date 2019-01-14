@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	Here we will load Digitrust library...
+
+	<br/>
+	
+	<script src="https://cdn.digitru.st/prod/1/digitrust.min.js"></script>
+	<script type="text/javascript">
+		DigiTrust.initialize({
+			member: "nQjyizbdyF",
+			site: "FL6whbX1IW",
+			redirects: true
+		});
+	</script>
+
+	<br/>
+	And some extra code to support iframes
+	
+	<script type="text/javascript">
+		
+		// This code will go in Digitrust library
+
+		// Add locator frame
+		function addLocatorFrame() {
+			if (!window.frames['__dtLocator']) {
+				if (document.body) {
+					const frame = document.createElement('iframe');
+					frame.style.display = 'none';
+					frame.name = '__dtLocator';
+					document.body.appendChild(frame);
+				}
+				else {
+					setTimeout(addLocatorFrame, 5);
+				}
+			}
+		}
+
+		function sendDigitrustIdinPostMessage(event){
+			if(DigiTrust){
+				DigiTrust.getUser({}, function(resp){
+					//todo: need to handle success: false case with retry once again
+					//console.log("Sending post message back.");
+					resp.type = "share_digitrust_id_to_iframe_response";
+					event.source.postMessage(resp, event.origin)
+				});	
+			}else{
+				console.log("DigiTrust not found");
+				//todo: need to retry once again
+				setTimeout(function(){
+					sendDigitrustIdinPostMessage(event);
+				}, 500)
+			}
+		}
+
+		addLocatorFrame();
+		
+		// adding an event listener to pass Digitrust ID over iframes
+		var listen = window.attachEvent || window.addEventListener;
+		listen('message', function(event){
+			//console.log("In message listener in top frame", event.origin, event.data.type, event.data, event);
+			if(event.data.type === "share_digitrust_id_to_iframe_request"){
+				sendDigitrustIdinPostMessage(event);
+			}
+		}, true);
+	</script>
+
+	<br/>
+
+	<!-- Now loading an iframe which will try to access the Digitrust response -->
+	<br/>
+	<iframe src="http://neon.com/Digitrust-IframeSupport/iframe_1.html" width=800 height=300></iframe>
+
+</body>
+</html>

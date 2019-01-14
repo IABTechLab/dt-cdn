@@ -1,9 +1,9 @@
 {
 	"prod": {
 		"urls": {
-			"digitrustHostPath": "https://cdn.digitru.st/prod/1.5.19/",
-			"digitrustRedirect": "https://cdn.digitru.st/prod/1.5.19/redirect.html",
-			"digitrustIframe": "https://cdn.digitru.st/prod/1.5.19/dt.html",
+			"digitrustHostPath": "https://cdn.digitru.st/prod/1.5.20/",
+			"digitrustRedirect": "https://cdn.digitru.st/prod/1.5.20/redirect.html",
+			"digitrustIframe": "https://cdn.digitru.st/prod/1.5.20/dt.html",
 			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
 			"optoutInfo": "http://www.digitru.st/about-this-notice/",
 			"adblockCheck": "http://stats.aws.rubiconproject.com/"
@@ -38,8 +38,7 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "https://cdn.digitru.st",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "https://cdn.digitru.st"
 		},
 		"crypto": {
 			"serverCryptoRate": 0.8
@@ -48,21 +47,6 @@
 			"enable": false,
 			"level": "ERROR"
 		},
-		"app": {
-			"cookie": {
-				"reminderMaxAgeMiliseconds": 172800000,
-				"reminderObjectKey": "DigiTrust.v1.ar"
-			}
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"dtAdbApps": "digitrust-adb-apps",
-			"dtAdbAppClass": "dt-app",
-			"dtAdbAppSelected": "dt-app-selected",
-			"publisherPicture": "dt-pub-pic"
-		},		
 		"gvlVendorId": 64
 	},
 	"dev": {
@@ -104,8 +88,7 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://digitrust.s3.amazonaws.com",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
@@ -113,32 +96,17 @@
 		"logging": {
 			"level": "DEBUG"
 		},
-		"app": {
-			"cookie": {
-				"reminderMaxAgeMiliseconds": 172800000,
-				"reminderObjectKey": "DigiTrust.v1.ar"
-			}
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"dtAdbApps": "digitrust-adb-apps",
-			"dtAdbAppClass": "dt-app",
-			"dtAdbAppSelected": "dt-app-selected",
-			"publisherPicture": "dt-pub-pic"
-		},
 		"gvlVendorId": 64
 	},
 	"local": {
-		"urls": {
-			"digitrustHostPath": "//localhost/dist/",
-			"digitrustRedirect": "//localhost/dist/redirect.html",
-			"digitrustIframe": "//localhost/dist/dt.html",
-			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
-			"optoutInfo": "//localhost/dist/info.html",
-			"adblockCheck": "//stats.aws.rubiconproject.com/"
-		},
+    "urls": {
+      "digitrustHostPath": "//localhost/dist/",
+      "digitrustRedirect": "//localhost/dist/redirect.html",
+      "digitrustIframe": "//local.digitru.st/dist/dt_debug.html",
+      "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json",
+      "optoutInfo": "//localhost/dist/info.html",
+      "adblockCheck": "//stats.aws.rubiconproject.com/"
+    },
 		"cookie": {
 			"version": 2,
 			"producer": "SIx8cS71Eo",
@@ -167,31 +135,15 @@
 				}
 			}
 		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost",
-			"locatorFrameName": "__dtLocator"
-		},
+    "iframe": {
+      "timeoutDuration": 10000,
+      "postMessageOrigin": "http://local.digitru.st"
+    },
 		"crypto": {
 			"serverCryptoRate": 1.0
 		},
 		"logging": {
 			"level": "DEBUG"
-		},
-		"app": {
-			"cookie": {
-				"reminderMaxAgeMiliseconds": 172800000,
-				"reminderObjectKey": "DigiTrustLOCAL.v1.ar"
-			}
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"dtAdbApps": "digitrust-adb-apps",
-			"dtAdbAppClass": "dt-app",
-			"dtAdbAppSelected": "dt-app-selected",
-			"publisherPicture": "dt-pub-pic"
 		},		
 		"gvlVendorId": 64
 	},
@@ -234,29 +186,13 @@
 		},
 		"iframe": {
 			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost",
-			"locatorFrameName": "__dtLocator"
+			"postMessageOrigin": "http://localhost"
 		},
 		"crypto": {
 			"serverCryptoRate": 1.0
 		},
 		"logging": {
 			"level": "DEBUG"
-		},
-		"app": {
-			"cookie": {
-				"reminderMaxAgeMiliseconds": 172800000,
-				"reminderObjectKey": "DigiTrustLOCAL.v1.ar"
-			}
-		},
-		"htmlIDs": {
-			"consentLinkId": "digitrust-optout",
-			"dtAdbContainer": "digitrust-adb-container",
-			"dtAdbMessage": "digitrust-adb-message",
-			"dtAdbApps": "digitrust-adb-apps",
-			"dtAdbAppClass": "dt-app",
-			"dtAdbAppSelected": "dt-app-selected",
-			"publisherPicture": "dt-pub-pic"
 		},
 		"gvlVendorId": 64
 	}

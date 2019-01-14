@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	
-	<title>Digitrust Sample top level page</title>
+	<title>Digitrust Multi IFrame Sample</title>
     <script src="//local.digitru.st/dist/digitrust.js"></script>
     <!--<script src="http://digitrust.s3.amazonaws.com/dev/v1/digitrust.min.js"></script>-->
     <!--<script src="//cdn.digitru.st/prod/v1/digitrust.js"></script>-->
@@ -47,98 +47,35 @@
             
             if (digiTrustResult.success){
 				console.log('Success in Digitrust init');
-				/*
-				if(digiTrustResult.identity.id != null) {
-					DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
-						console.log(decryptedId);
-					});
-				}
-				else{
-					console.error('Digitrust gave success, but no identity returned');
-				}
-				*/
             }
 			else{
 				console.error('Digitrust init failed');
 			}
 			
         });
-        // var json = DigiTrust.getUser({member: ''});
-        // console.log(json);
-        /*var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
-            console.log('3rd party getUser result', digiTrustResult);
-            if (digiTrustResult.identity.id) {
-                DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
-                    console.log(decryptedId);
-                })
-            }
-        });*/
     </script>
+
+    <style type="text/css">
+        body{
+            font: Arial;
+            background: rgb(204, 192, 162);
+            min-height: 450px;
+        }
+        iframe{
+            background: white;
+            border: 1px solid #c0c0c0;
+        }
+    </style>
+
 </head>
-<body>
-	<h1>Digitrust Publisher Sample</h1>
+<body >
+	<h1>Digitrust IFrame Publisher Sample</h1>
 	
 	<p>
-		This page demonstrates how to integrate the Digitrust framework into a publisher site.
+		This page demonstrates usage across multiple IFrames
 	</p>
+    <iframe src="fromIframe.html" style="width:400px;height:300px;" ></iframe>
+
 	
-    plain text.
-    <h1>Great news</h1>
-    <h2>This is something you are reading.</h2>
-    <a href="http://www.seattletimes.com/life/food-drink/5-ways-caliburger-is-better-than-in-n-out/">
-        Link external
-    </a>
-    <br/><br/><br/>
-    <a href="javascript:void(0)" onclick="window.DigiTrust.sendReset()"> clear cookie</a>
-    <br/><br/><br/>
-    <a href="page2.html"> Link internal: page.html</a>
-    <br/><br/><br/>
-    <a href="./page2.html"> Link internal: ./page.html</a>
-    <br/><br/><br/>
-    <a href="/misc/page2.html"> Link internal: /misc/page.html</a>
-    <br/><br/><br/>
-    <a href="#foobar"> Link internal: #foobar</a>
-    <br/><br/><br/>
-    This is just.
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
 </body>
 </html>
