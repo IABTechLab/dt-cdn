@@ -1,104 +1,154 @@
 {
-	"prod": {
-		"urls": {
-			"digitrustHostPath": "https://cdn.digitru.st/prod/1.5.20/",
-			"digitrustRedirect": "https://cdn.digitru.st/prod/1.5.20/redirect.html",
-			"digitrustIframe": "https://cdn.digitru.st/prod/1.5.20/dt.html",
-			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
-			"optoutInfo": "http://www.digitru.st/about-this-notice/",
-			"adblockCheck": "http://stats.aws.rubiconproject.com/"
-		},
-		"cookie": {
-			"version": 2,
-			"producer": "1CrsdUNAo6",
-			"publisher": {
-				"domainKeyValue": "",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrust.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain=.digitru.st;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-				"userObjectKey": "DigiTrust.v1.identity",
-				"resetKey": "DeleteEverything",
-				"challenge": "DTChal",
-				"optout": "optout",
-				"optoutUser": {
-					"id": "",
-					"privacy": {
-						"optout": true
-					}
-				},
-				"errorUser": {
-					"error": true
-				}
-			}
-		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "https://cdn.digitru.st"
-		},
-		"crypto": {
-			"serverCryptoRate": 0.8
-		},
-		"logging": {
-			"enable": false,
-			"level": "ERROR"
-		},
-		"gvlVendorId": 64
-	},
-	"dev": {
-		"urls": {
-			"digitrustHostPath": "//digitrust.s3.amazonaws.com/dev/v1/",
-			"digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
-			"digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
-			"digitrustIdService": "//lambda-dev.digitru.st/id/v1",
-			"optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
-			"adblockCheck": "//stats.aws.rubiconproject.com/"
-		},
-		"cookie": {
-			"version": 2,
-			"producer": "SIx8cS71Eo",
-			"publisher": {
-				"domainKeyValue": "",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrust.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-				"userObjectKey": "DigiTrust.v1.identity",
-				"resetKey": "DeleteEverything",
-				"challenge": "DTChal",
-				"optout": "optout",
-				"optoutUser": {
-					"id": "",
-					"privacy": {
-						"optout": true
-					}
-				},
-				"errorUser": {
-					"error": true
-				}
-			}
-		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://digitrust.s3.amazonaws.com"
-		},
-		"crypto": {
-			"serverCryptoRate": 1.0
-		},
-		"logging": {
-			"level": "DEBUG"
-		},
-		"gvlVendorId": 64
-	},
-	"local": {
+  "prod": {
+    "urls": {
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.20/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.20/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.20/dt.html",
+      "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
+      "optoutInfo": "http://www.digitru.st/about-this-notice/",
+      "adblockCheck": "http://stats.aws.rubiconproject.com/"
+    },
+    "cookie": {
+      "version": 2,
+      "producer": "1CrsdUNAo6",
+      "publisher": {
+        "domainKeyValue": "",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 604800000,
+        "userObjectKey": "DigiTrust.v1.identity"
+      },
+      "digitrust": {
+        "domainKeyValue": "domain=.digitru.st;",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 157680000000,
+        "userObjectKey": "DigiTrust.v1.identity",
+        "resetKey": "DeleteEverything",
+        "challenge": "DTChal",
+        "optout": "optout",
+        "optoutUser": {
+          "id": "",
+          "privacy": {
+            "optout": true
+          }
+        },
+        "errorUser": {
+          "error": true
+        }
+      }
+    },
+    "iframe": {
+      "timeoutDuration": 10000,
+      "postMessageOrigin": "https://cdn.digitru.st"
+    },
+    "crypto": {
+      "serverCryptoRate": 0.8
+    },
+    "logging": {
+      "enable": false,
+      "level": "ERROR"
+    },
+    "gvlVendorId": 64
+  },
+  "build": {
+    "urls": {
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.20/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.20/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.20/dt.html",
+      "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
+      "optoutInfo": "http://www.digitru.st/about-this-notice/",
+      "adblockCheck": "http://stats.aws.rubiconproject.com/"
+    },
+    "cookie": {
+      "version": 2,
+      "producer": "1CrsdUNAo6",
+      "publisher": {
+        "domainKeyValue": "",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 604800000,
+        "userObjectKey": "DigiTrust.v1.identity"
+      },
+      "digitrust": {
+        "domainKeyValue": "domain=.digitru.st;",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 157680000000,
+        "userObjectKey": "DigiTrust.v1.identity",
+        "resetKey": "DeleteEverything",
+        "challenge": "DTChal",
+        "optout": "optout",
+        "optoutUser": {
+          "id": "",
+          "privacy": {
+            "optout": true
+          }
+        },
+        "errorUser": {
+          "error": true
+        }
+      }
+    },
+    "iframe": {
+      "timeoutDuration": 10000,
+      "postMessageOrigin": "https://cdn.digitru.st"
+    },
+    "crypto": {
+      "serverCryptoRate": 0.8
+    },
+    "logging": {
+      "enable": false,
+      "level": "ERROR"
+    },
+    "gvlVendorId": 64
+  },
+  "dev": {
+    "urls": {
+      "digitrustHostPath": "//digitrust.s3.amazonaws.com/dev/v1/",
+      "digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
+      "digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
+      "digitrustIdService": "//lambda-dev.digitru.st/id/v1",
+      "optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
+      "adblockCheck": "//stats.aws.rubiconproject.com/"
+    },
+    "cookie": {
+      "version": 2,
+      "producer": "SIx8cS71Eo",
+      "publisher": {
+        "domainKeyValue": "",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 604800000,
+        "userObjectKey": "DigiTrust.v1.identity"
+      },
+      "digitrust": {
+        "domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 157680000000,
+        "userObjectKey": "DigiTrust.v1.identity",
+        "resetKey": "DeleteEverything",
+        "challenge": "DTChal",
+        "optout": "optout",
+        "optoutUser": {
+          "id": "",
+          "privacy": {
+            "optout": true
+          }
+        },
+        "errorUser": {
+          "error": true
+        }
+      }
+    },
+    "iframe": {
+      "timeoutDuration": 10000,
+      "postMessageOrigin": "http://digitrust.s3.amazonaws.com"
+    },
+    "crypto": {
+      "serverCryptoRate": 1.0
+    },
+    "logging": {
+      "level": "DEBUG"
+    },
+    "gvlVendorId": 64
+  },
+  "local": {
     "urls": {
       "digitrustHostPath": "//localhost/dist/",
       "digitrustRedirect": "//localhost/dist/redirect.html",
@@ -107,93 +157,44 @@
       "optoutInfo": "//localhost/dist/info.html",
       "adblockCheck": "//stats.aws.rubiconproject.com/"
     },
-		"cookie": {
-			"version": 2,
-			"producer": "SIx8cS71Eo",
-			"publisher": {
-				"domainKeyValue": "domain=;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrustLOCALPUB.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain=;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-				"userObjectKey": "DigiTrustLOCALDT.v1.identity",
-				"resetKey": "DeleteEverything",
-				"challenge": "DTChal",
-				"optout": "optout",
-				"optoutUser": {
-					"id": "",
-					"privacy": {
-						"optout": true
-					}
-				},
-				"errorUser": {
-					"error": true
-				}
-			}
-		},
+    "cookie": {
+      "version": 2,
+      "producer": "SIx8cS71Eo",
+      "publisher": {
+        "domainKeyValue": "domain=;",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 604800000,
+        "userObjectKey": "DigiTrustLOCALPUB.v1.identity"
+      },
+      "digitrust": {
+        "domainKeyValue": "domain=;",
+        "pathKeyValue": "path=/;",
+        "maxAgeMiliseconds": 157680000000,
+        "userObjectKey": "DigiTrustLOCALDT.v1.identity",
+        "resetKey": "DeleteEverything",
+        "challenge": "DTChal",
+        "optout": "optout",
+        "optoutUser": {
+          "id": "",
+          "privacy": {
+            "optout": true
+          }
+        },
+        "errorUser": {
+          "error": true
+        }
+      }
+    },
     "iframe": {
       "timeoutDuration": 10000,
       "postMessageOrigin": "http://local.digitru.st"
     },
-		"crypto": {
-			"serverCryptoRate": 1.0
-		},
-		"logging": {
-			"level": "DEBUG"
-		},		
-		"gvlVendorId": 64
-	},
-	"localdev": {
-		"urls": {
-			"digitrustHostPath": "//http://local.digitru.st/dist/",
-			"digitrustRedirect": "//http://local.digitru.st/dist/redirect.html",
-			"digitrustIframe": "//http://local.digitru.st/dist/dt.html",
-			"digitrustIdService": "https://cdn-cf.digitru.st/id/v1", /* "digitrustIdService": "//localhost:8080/p/id/v1", */
-			"optoutInfo": "//http://local.digitru.st/dist/info.html",
-			"adblockCheck": "//stats.aws.rubiconproject.com/"
-		},
-		"cookie": {
-			"version": 2,
-			"producer": "SIx8cS71Eo",
-			"publisher": {
-				"domainKeyValue": "domain=;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 604800000,
-				"userObjectKey": "DigiTrustLOCALPUB.v1.identity"
-			},
-			"digitrust": {
-				"domainKeyValue": "domain=;",
-				"pathKeyValue": "path=/;",
-				"maxAgeMiliseconds": 157680000000,
-				"userObjectKey": "DigiTrustLOCALDT.v1.identity",
-				"resetKey": "DeleteEverything",
-				"challenge": "DTChal",
-				"optout": "optout",
-				"optoutUser": {
-					"id": "",
-					"privacy": {
-						"optout": true
-					}
-				},
-				"errorUser": {
-					"error": true
-				}
-			}
-		},
-		"iframe": {
-			"timeoutDuration": 10000,
-			"postMessageOrigin": "http://localhost"
-		},
-		"crypto": {
-			"serverCryptoRate": 1.0
-		},
-		"logging": {
-			"level": "DEBUG"
-		},
-		"gvlVendorId": 64
-	}
+    "crypto": {
+      "serverCryptoRate": 1.0
+    },
+    "logging": {
+      "level": "DEBUG"
+    },
+    "gvlVendorId": 64
+  }
 }
