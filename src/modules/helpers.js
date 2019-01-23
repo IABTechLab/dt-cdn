@@ -7,6 +7,12 @@ var consts = require('../config/constants.json');
 
 var helpers = {};
 
+/**
+ * Extend an object. 
+ * TODO: Review if this is used and possibly remove
+ * @param {any} target
+ * @param {any} source
+ */
 helpers.extend = function (target, source) {
     target = target || {};
     for (var prop in source) {
@@ -67,6 +73,7 @@ var addEvt = function (elem, eventName, handler) {
 /*
 *   https://github.com/toddmotto/atomic
 *   MIT
+ *   TODO: REMOVE
 */
 var parseXHR = function (req) {
     var result = req.responseText;
@@ -78,6 +85,7 @@ var parseXHR = function (req) {
     return [result, req];
 };
 
+// TODO: Verify and remove
 var xhrPromise = function (method, url, data) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
@@ -103,6 +111,7 @@ var xhrPromise = function (method, url, data) {
     });
 };
 
+// TODO: Verify and remove
 var xhrRequest = function (type, url, data, async) {
     // if async not passed, default TRUE; if async is passed then check if truthy
     async = async ? (async ? true : false) : true;
@@ -138,6 +147,7 @@ var xhrRequest = function (type, url, data, async) {
     return callbacks;
 };
 
+// TODO: Verify and remove
 var xhr = {};
 
 xhr.get = function (url, data, async) {
