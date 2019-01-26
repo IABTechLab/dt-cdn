@@ -200,6 +200,13 @@ helpers.inIframe = function () {
     }
 };
 
+
+/**
+ * Tests to see if passed in parameter is a function
+ * @function
+ * */
+helpers.isFunc = isFunc;
+
 /**
  * @function
  * Builds a consent click handler

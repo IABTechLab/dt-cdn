@@ -61,6 +61,84 @@ describe('DigiTrust.getUser', function () {
   */
 });
 
+
+// Commenting out failing tests to fix build and deploy temporarily.
+// I suspect there is a timing/retry issue in the code that must be fixed
+// as these tests fail sporatically
+describe('DigiTrust initialize callback OK test', function () {
+
+  beforeAll(function (done) {
+    document.cookie = configGeneral.cookie.publisher.userObjectKey
+      + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = configGeneral.cookie.digitrust.userObjectKey
+      + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    done();
+    
+  });
+
+  it('DigiTrust initialize good is OK', function (done) {
+    DigiTrust.initialize(
+      {
+        member: 'foo',
+        consent: {
+          requires: 'none'
+        }
+      },
+      function (result) {
+        expect(result.success).toBe(true);
+        done();
+      }
+    )
+  });
+});
+
+
+
+// Commenting out failing tests to fix build and deploy temporarily.
+// I suspect there is a timing/retry issue in the code that must be fixed
+// as these tests fail sporatically
+describe('DigiTrust initialize callback exception test', function () {
+
+  beforeAll(function (done) {
+    document.cookie = configGeneral.cookie.publisher.userObjectKey
+      + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = configGeneral.cookie.digitrust.userObjectKey
+      + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    done();
+
+  });
+
+  var callCount = 0;
+
+  it('DigiTrust initialize exception callback does not fail', function (done) {
+    DigiTrust.initialize(
+      {
+        member: 'foo',
+        consent: {
+          requires: 'none'
+        }
+      },
+      function (result) {
+        expect(result.success).toBe(true);
+        if (callCount == 0) {
+          console.log('THROWING FROM INITIALIZER');
+          callCount++;
+          throw "bad callback";
+        }
+        done(); // this doesn't hit anymore
+      }
+    )
+
+    // finish the test
+    setTimeout(function () {
+      done();
+    }, 250);
+  });
+});
+
+
 describe('DigiTrust.initialize() sample rate 0', function () {
 
     it('DigiTrust.initialize() fails immediately with sample rate of 0', function (done) {

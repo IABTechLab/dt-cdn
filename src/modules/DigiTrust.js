@@ -21,6 +21,7 @@ var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR', enabled: false}); // this will later be re-initialized if the init pass requires
 var VERSION = require('../_version.js');
+var isFunc = helpers.isFunc;
 
 var DigiTrust = {
     version: VERSION,
@@ -83,14 +84,29 @@ DigiTrust._setDigiTrustOptions = function (options) {
     return window.DigiTrust.initializeOptions;
 };
 
+/*
+ * Internal initilizer method
+ * 
+ */ 
+var initInternal = function(options, initCb) {
+  log.debug('init Internal');
+  if (!isFunc(initCb)) {
+    initCb = noop;
+  }
 
-var initInternal = function(options, initializeCallback) {
-	log.debug('init Internal');
+  // Callback invoker to catch user exceptions
+  var doCb = function (idObj) {
     try {
-        if (initializeCallback === undefined) {
-            initializeCallback = noop;
-        }
-        var identityResponseObject = {success: false};
+      return initCb(idObj);
+    }
+    catch (ex) {
+      log.error('DigiTrust init callback exception in user code', ex);
+      return null;
+    }
+  }
+
+    try {
+        var idResp = {success: false};
 
         options = DigiTrust._setDigiTrustOptions(options);
 		log.debug('init options completed');
@@ -98,46 +114,46 @@ var initInternal = function(options, initializeCallback) {
 
         // allow for a circuit break to disable the world
         if (Math.random() > options.sample) {
-            return initializeCallback(identityResponseObject);
+          return doCb(idResp);
         }
 
         // Verify Publisher's Member ID
         if (!isMemberIdValid(options.member)) {
-            return initializeCallback(identityResponseObject);
+          return doCb(idResp);
         }
 
         DigiTrustConsent.hasConsent(null, function (consent) {
             if (consent) {
                 DigiTrustCookie.getUser(options, function (err, identityObject) {
                     if (!err) {
-                        identityResponseObject.success = true;
-                        identityResponseObject.identity = identityObject;
+                        idResp.success = true;
+                        idResp.identity = identityObject;
                     }
-                    return initializeCallback(identityResponseObject);
+                  return doCb(idResp);
                 });
             } else {
-                return initializeCallback(identityResponseObject);
+              return doCb(idResp);
             }
         });
     } catch (e) {
 		log.error('Error in DigiTrust initializer', e);
-        return initializeCallback({success: false});
+      return doCb({success: false});
     }
 	
 }
 
-DigiTrust.initialize = function (options, initializeCallback) {
+DigiTrust.initialize = function (options, initCb) {
 	var document = window.document;
     var ready = document.readyState;
     DigiTrust.isClient = true; // init only called on clients
 	
 	if(!ready || ready == 'loading') { 
 		document.addEventListener("DOMContentLoaded", function(event) {
-			DigiTrust.initialize(options, initializeCallback);
+			DigiTrust.initialize(options, initCb);
 		});
 	}
 	else{
-		initInternal(options, initializeCallback);
+		initInternal(options, initCb);
 	}	
 };
 
@@ -145,44 +161,44 @@ DigiTrust.getUser = function (options, callback) {
 
     options = DigiTrust._setDigiTrustOptions(options);
     var async = (typeof callback === 'function') ? true : false;
-    var identityResponseObject = {
+    var idResp = {
         success: false
     };
 
     try {
         // Verify Publisher's Member ID
         if (!isMemberIdValid(options.member)) {
-            return (async === false) ? identityResponseObject : callback(identityResponseObject);
+            return (async === false) ? idResp : callback(idResp);
         }
 
         if (async === false) {
             // Get publisher cookie
             var identityJSON = DigiTrustCookie.getUser();
             if (!helpers.isEmpty(identityJSON)) {
-                identityResponseObject.success = true;
-                identityResponseObject.identity = identityJSON;
+                idResp.success = true;
+                idResp.identity = identityJSON;
             }
-            return identityResponseObject;
+            return idResp;
         } else {
             DigiTrustConsent.hasConsent(null, function (consent) {
                 if (consent) {
                     options.ignoreLocalCookies = true;
                     DigiTrustCookie.getUser(options, function (err, identityObject) {
                         if (err) {
-                            return callback(identityResponseObject);
+                            return callback(idResp);
                         } else {
-                            identityResponseObject.success = true;
-                            identityResponseObject.identity = identityObject;
-                            return callback(identityResponseObject);
+                            idResp.success = true;
+                            idResp.identity = identityObject;
+                            return callback(idResp);
                         }
                     });
                 } else {
-                    return callback(identityResponseObject);
+                    return callback(idResp);
                 }
             });
         }
     } catch (e) {
-        return (async === false) ? identityResponseObject : callback(identityResponseObject);
+        return (async === false) ? idResp : callback(idResp);
     }
 };
 
@@ -191,12 +207,3 @@ DigiTrust.sendReset = function (options, callback) {
 };
 
 module.exports = DigiTrust
-/*
-module.exports = {
-    initialize: DigiTrust.initialize,
-    initializeOptions: DigiTrust.initializeOptions,
-    getUser: DigiTrust.getUser,
-    sendReset: DigiTrust.sendReset,
-    isClient: DigiTrust.isClient,
-};
-*/
