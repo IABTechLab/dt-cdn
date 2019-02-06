@@ -195,7 +195,8 @@ DigiTrustCookie.unobfuscateCookieValue = function (value) {
 DigiTrustCookie.getCookieByName = function (name) {
     var value = '; ' + document.cookie;
     var parts = value.split('; ' + name + '=');
-    if (parts.length === 2) {
+	// cases occur where two cookies exist. Take the first by the name.
+    if (parts.length >= 2) {
         return parts.pop().split(';').shift();
     }
 };
