@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * Digitrust
- * @module
+ * DigiTrust core module
+ * @module DigiTrust
  * 
  * */
 
@@ -55,8 +55,7 @@ var isMemberIdValid = function (memberId) {
 * @function
 * Set options on the global DigiTrust object by merging base options
 * with consumer supplied options.
-* @param {object} -supplied initialization options
-* @return {object} The combined options object that was assigned to DigiTrust.initializeOptions
+* @return {object} options The combined options object that was assigned to DigiTrust.initializeOptions
 */
 DigiTrust._setDigiTrustOptions = function (options) {
 	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
@@ -141,6 +140,13 @@ var initInternal = function(options, initCb) {
 	
 }
 
+/**
+* @function
+* @exports DigiTrust/initialize
+ * Initialize the DigiTrust framework.
+ * @param {any} options
+ * @param {function} initCb Callback from the initialization method.
+ */
 DigiTrust.initialize = function (options, initCb) {
 	var document = window.document;
     var ready = document.readyState;
@@ -156,8 +162,15 @@ DigiTrust.initialize = function (options, initCb) {
 	}	
 };
 
+/**
+* @function
+ * @exports DigiTrust/getUser
+ * Get the user object, if available, and return using callback.
+ * The ID in the user object will be encrypted.
+ * @param {any} options
+ * @param {function} callback Async callback method
+ */
 DigiTrust.getUser = function (options, callback) {
-
     options = DigiTrust._setDigiTrustOptions(options);
     var async = (typeof callback === 'function') ? true : false;
     var idResp = {
@@ -201,8 +214,15 @@ DigiTrust.getUser = function (options, callback) {
     }
 };
 
+/**
+* @function
+ * Send a reset message to the DigiTrust frame.
+ * @param {any} options
+ * @param {function} callback
+ */
 DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
 
 module.exports = DigiTrust
+0
