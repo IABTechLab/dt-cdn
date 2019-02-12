@@ -104,11 +104,10 @@ var initInternal = function(options, initCb) {
       return null;
     }
   }
+  try {
+    var idResp = {success: false};
 
-    try {
-        var idResp = {success: false};
-
-        options = DigiTrust._setDigiTrustOptions(options);
+    options = DigiTrust._setDigiTrustOptions(options);
 		log.debug('init options completed');
 
 
