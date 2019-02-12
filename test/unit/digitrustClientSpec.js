@@ -39,7 +39,6 @@ describe('DigiTrust.getUser', function () {
             member: 'foo'
         },
           function (result) {
-            console.log(result);
             expect(result.success).toBe(true);
             expect(result.identity).toBeDefined();
             expect(result.identity.id).toBeDefined();

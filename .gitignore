@@ -10,6 +10,7 @@ src/config/env.json
 /TestIntegration/target/**
 yarn.lock
 test.log
+test-coverage
 yarn-error.log
 web.config
 src/_version.js
