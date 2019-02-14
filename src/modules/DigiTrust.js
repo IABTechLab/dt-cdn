@@ -225,4 +225,3 @@ DigiTrust.sendReset = function (options, callback) {
 };
 
 module.exports = DigiTrust
-0
