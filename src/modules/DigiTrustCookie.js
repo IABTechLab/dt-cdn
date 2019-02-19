@@ -1,12 +1,10 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+var cookieConfig = require('../config/cookie.json');
 var Dcom = require('./DigiTrustCommunication');
 var helpers = require('./helpers');
 
-var DigiTrust = window.DigiTrust || {};
-
+// var DigiTrust = window.DigiTrust || {};
 
 var _maxAgeToDate = function (milliseconds) {
     var date = new Date();
@@ -20,14 +18,14 @@ var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
 
 var _setIdentityCookie = function (cookieV) {
 
-    var cookieConfig = window.DigiTrust.isClient ? configGeneral.cookie.publisher : configGeneral.cookie.digitrust;
+  var cookSettings = window.DigiTrust.isClient ? cookieConfig.publisher : cookieConfig.digitrust;
 
-    var cookieKV = cookieConfig.userObjectKey + '=' + cookieV + ';';
-    var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.maxAgeMiliseconds) + ';';
-    var domainKV = cookieConfig.domainKeyValue;
-    var pathKV = cookieConfig.pathKeyValue;
+  var cookieKV = cookSettings.userObjectKey + '=' + cookieV + ';';
+  var expiresKV = 'expires=' + _maxAgeToDate(cookSettings.maxAgeMiliseconds) + ';';
+  var domainKV = cookSettings.domainKeyValue;
+  var pathKV = cookSettings.pathKeyValue;
 
-    _setCookie(cookieKV, expiresKV, domainKV, pathKV);
+  _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
 var _verifyUserCookieStructure = function (userJSON) {
@@ -53,6 +51,21 @@ var _verifyUserCookieStructure = function (userJSON) {
 };
 
 var DigiTrustCookie = {};
+
+/**
+ * Obtain the DigiTrust user cookie, if present
+ * */
+DigiTrustCookie.getUserCookie = function () {
+  return DigiTrustCookie.getCookieByName(cookieConfig.digitrust.userObjectKey);
+}
+
+/**
+ * Obtain the DigiTrust opt-out cookie, if present
+ * */
+DigiTrustCookie.getOptOut = function () {
+  return DigiTrustCookie.getCookieByName(cookieConfig.digitrust.optout);
+}
+
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
@@ -63,8 +76,8 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
         } catch (e) {
             localUserCookieJSON = {
                 id: helpers.generateUserId(),
-                version: configGeneral.cookie.version,
-                producer: configGeneral.cookie.producer,
+                version: cookieConfig.version,
+                producer: cookieConfig.producer,
                 privacy: {
                     optout: false
                 }
@@ -82,10 +95,10 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
 };
 
 DigiTrustCookie.setResetCookie = function () {
-    var cookieKV = configGeneral.cookie.digitrust.resetKey + '=true;';
-    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
-    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+    var cookieKV = cookieConfig.digitrust.resetKey + '=true;';
+    var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.digitrust.maxAgeMiliseconds) + ';';
+    var domainKV = cookieConfig.digitrust.domainKeyValue;
+    var pathKV = cookieConfig.digitrust.pathKeyValue;
 
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
@@ -99,11 +112,11 @@ DigiTrustCookie.expireCookie = function (cookieKey) {
   var cookieKV = cookieKey + '=; ',
     expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
     domainKV = '',
-    pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+    pathKV = cookieConfig.digitrust.pathKeyValue;
 
   try {
-    if (location.host.indexOf(configGeneral.cookie.digitrust.domainKeyValue) > -1) {
-      domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    if (location.host.indexOf(cookieConfig.digitrust.domainKeyValue) > -1) {
+      domainKV = cookieConfig.digitrust.domainKeyValue;
     }
   }
   catch (ex) {  }
@@ -112,10 +125,10 @@ DigiTrustCookie.expireCookie = function (cookieKey) {
 };
 
 DigiTrustCookie.setDigitrustCookie = function (cookieV) {
-    var cookieKV = configGeneral.cookie.digitrust.userObjectKey + '=' + cookieV + ';';
-    var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
-    var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-    var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+    var cookieKV = cookieConfig.digitrust.userObjectKey + '=' + cookieV + ';';
+    var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.digitrust.maxAgeMiliseconds) + ';';
+    var domainKV = cookieConfig.digitrust.domainKeyValue;
+    var pathKV = cookieConfig.digitrust.pathKeyValue;
 
     _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
@@ -136,7 +149,7 @@ DigiTrustCookie.getUser = function (options, callback) {
     };
 
     if (useCallback === false) {
-        localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
+        localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(cookieConfig.publisher.userObjectKey);
         // Do a sync with digitrust official domain
         _createSyncOnlySubscription();
         Dcom.getIdentity({syncOnly:true});
@@ -169,7 +182,7 @@ DigiTrustCookie.getUser = function (options, callback) {
             Dcom.getIdentity();
         } else {
             localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(
-                configGeneral.cookie.publisher.userObjectKey
+                cookieConfig.publisher.userObjectKey
             );
             if (DigiTrustCookie.verifyPublisherDomainCookie(localUserCookieJSON)) {
                 // OK to proceed & show content
@@ -205,8 +218,8 @@ DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
     var userId = helpers.generateUserId();
     var userJSON = {
         id: userId,
-        version: configGeneral.cookie.version,
-        producer: configGeneral.cookie.producer,
+        version: cookieConfig.version,
+        producer: cookieConfig.producer,
         privacy: {
             optout: false
         }

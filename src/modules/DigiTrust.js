@@ -14,7 +14,7 @@ var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
 var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
-var DigiTrustCommunication = require('./DigiTrustCommunication');
+var Dcom = require('./DigiTrustCommunication');
 var DigiTrustCrypto = require('./DigiTrustCrypto');
 
 var LOGID = 'Digitrust'; // const, but older browser support
@@ -216,12 +216,13 @@ DigiTrust.getUser = function (options, callback) {
 
 /**
 * @function
- * Send a reset message to the DigiTrust frame.
+ * @exports DigiTrust/sendReset
+ * Send a reset message to the DigiTrust frame instructing it to expire and remove the DigiTrust identity cookie.
  * @param {any} options
  * @param {function} callback
  */
 DigiTrust.sendReset = function (options, callback) {
-    DigiTrustCommunication.sendReset();
+    Dcom.sendReset();
 };
 
 module.exports = DigiTrust

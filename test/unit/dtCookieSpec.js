@@ -7,18 +7,18 @@
  * */
 
 var DigiTrustCookie = require('../../src/modules/DigiTrustCookie');
+var cookieConfig = require('../../src/config/cookie.json');
 var dtCookie = require('../../src/modules/DigiTrustCookie');
 var consts = require('../../src/config/constants.json');
 var env = require('../../src/config/env.json').current;
-var configGeneral = require('../../src/config/general.json')[env];
 
 
 describe('Cookie transform tests', function () {
 
     beforeAll(function (done) {
-        document.cookie = configGeneral.cookie.publisher.userObjectKey
+        document.cookie = cookieConfig.publisher.userObjectKey
             + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = configGeneral.cookie.digitrust.userObjectKey
+        document.cookie = cookieConfig.digitrust.userObjectKey
             + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         done();
     });
@@ -36,7 +36,7 @@ describe('Cookie transform tests', function () {
   
     it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
         // set a bad identity cookie
-        var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
+        var cookieKey = cookieConfig.digitrust.userObjectKey;
         var cookieExpires = new Date();
         cookieExpires.setTime(cookieExpires.getTime() + 60000);
         document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
@@ -44,7 +44,7 @@ describe('Cookie transform tests', function () {
         // we should have generated a new value
         expect(user.id).not.toBe(null);
         expect(user.version).toBe(2);
-        expect(user.producer).toBe(configGeneral.cookie.producer);
+        expect(user.producer).toBe(cookieConfig.producer);
         expect(user.privacy.optout).toBe(false);
     });
     it('DigiTrustCookie.optoutCookieValue()', function () {
@@ -69,9 +69,9 @@ describe('Cookie transform tests', function () {
 describe('DigiTrustCookie', function () {
 
   beforeAll(function (done) {
-    document.cookie = configGeneral.cookie.publisher.userObjectKey
+    document.cookie = cookieConfig.publisher.userObjectKey
       + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    document.cookie = configGeneral.cookie.digitrust.userObjectKey
+    document.cookie = cookieConfig.digitrust.userObjectKey
       + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
     DigiTrust.initialize(
@@ -92,7 +92,7 @@ describe('DigiTrustCookie', function () {
     var identity = DigiTrustCookie.createUserCookiesOnDigitrustDomain();
     expect(identity.id).not.toBe(null);
     expect(identity.version).toBe(2);
-    expect(identity.producer).toBe(configGeneral.cookie.producer);
+    expect(identity.producer).toBe(cookieConfig.producer);
     expect(identity.privacy.optout).toBe(false);
   });
 });

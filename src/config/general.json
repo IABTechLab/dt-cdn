@@ -8,34 +8,6 @@
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
     },
-    "cookie": {
-      "version": 2,
-      "producer": "1CrsdUNAo6",
-      "publisher": {
-        "domainKeyValue": "",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrust.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=.digitru.st;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrust.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
-    },
     "iframe": {
       "timeoutDuration": 10000,
       "postMessageOrigin": "https://cdn.digitru.st"
@@ -57,34 +29,6 @@
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
-    },
-    "cookie": {
-      "version": 2,
-      "producer": "1CrsdUNAo6",
-      "publisher": {
-        "domainKeyValue": "",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrust.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=.digitru.st;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrust.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
     },
     "iframe": {
       "timeoutDuration": 10000,
@@ -108,32 +52,11 @@
       "optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
       "adblockCheck": "//stats.aws.rubiconproject.com/"
     },
+    /* this is a different producer key. Resolve merging settings */
     "cookie": {
-      "version": 2,
       "producer": "SIx8cS71Eo",
-      "publisher": {
-        "domainKeyValue": "",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrust.v1.identity"
-      },
       "digitrust": {
-        "domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrust.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
+        "domainKeyValue": "domain=digitrust.s3.amazonaws.com;"
       }
     },
     "iframe": {
@@ -156,34 +79,6 @@
       "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json",
       "optoutInfo": "//localhost/dist/info.html",
       "adblockCheck": "//stats.aws.rubiconproject.com/"
-    },
-    "cookie": {
-      "version": 2,
-      "producer": "SIx8cS71Eo",
-      "publisher": {
-        "domainKeyValue": "domain=;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrustLOCALPUB.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrustLOCALDT.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
     },
     "iframe": {
       "timeoutDuration": 10000,

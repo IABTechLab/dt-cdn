@@ -2,9 +2,7 @@
 
 var DigiTrust = require('../../src/modules/DigiTrust');
 window.DigiTrust = DigiTrust;
-var helpers = require('../../src/modules/helpers');
-var env = require('../../src/config/env.json').current;
-var configGeneral = require('../../src/config/general.json')[env];
+var cookieConfig = require('../../src/config/cookie.json');
 var consts = require('../../src/config/constants.json');
 
 
@@ -14,9 +12,9 @@ var consts = require('../../src/config/constants.json');
 describe('DigiTrust.getUser', function () {
 
     beforeAll(function (done) {
-        document.cookie = configGeneral.cookie.publisher.userObjectKey
+      document.cookie = cookieConfig.publisher.userObjectKey
             + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = configGeneral.cookie.digitrust.userObjectKey
+      document.cookie = cookieConfig.digitrust.userObjectKey
         + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
       DigiTrust.initialize(
@@ -67,9 +65,9 @@ describe('DigiTrust.getUser', function () {
 describe('DigiTrust initialize callback OK test', function () {
 
   beforeAll(function (done) {
-    document.cookie = configGeneral.cookie.publisher.userObjectKey
+    document.cookie = cookieConfig.publisher.userObjectKey
       + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    document.cookie = configGeneral.cookie.digitrust.userObjectKey
+    document.cookie = cookieConfig.digitrust.userObjectKey
       + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
     done();
@@ -100,9 +98,9 @@ describe('DigiTrust initialize callback OK test', function () {
 describe('DigiTrust initialize callback exception test', function () {
 
   beforeAll(function (done) {
-    document.cookie = configGeneral.cookie.publisher.userObjectKey
+    document.cookie = cookieConfig.publisher.userObjectKey
       + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    document.cookie = configGeneral.cookie.digitrust.userObjectKey
+    document.cookie = cookieConfig.digitrust.userObjectKey
       + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
     done();

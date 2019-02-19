@@ -51,10 +51,10 @@
             function messageHandler(evt) {
                 switch (evt.data.type) {
                     case 'DigiTrust.identity.request':
-                        var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
+                        var digiTrustUserCookie = DigiTrustCookie.getUserCookie();
                         var digiTrustUserJSON = digiTrustUserCookie ?
                             DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
-                        var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
+                        var isOptOut = DigiTrustCookie.getOptOut();
                         digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
 
                         var sendMessage = function (messageValue) {
