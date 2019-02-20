@@ -22,12 +22,14 @@
                     var m = err && err.message || '';
                     var errMsg = "Digitrust frame error: " + m;
                     try {
+                        
                         if (console && console.error) {
                             console.error(errMsg);
                         }
                         else {
                             console.log(errMsg);
                         }
+                        console.trace();
 
                         var eobj = {
                             version: 1,
@@ -53,8 +55,7 @@
             var DigiTrustCookie = dt.cookie;
             var DigiTrustCrypto = dt._config.crypto;
             var helpers = dt.util;
-            var cookieKey = configGeneral.cookie.digitrust.userObjectKey;
-            var userJSON = dt.cookie.getIdentityCookieJSON(cookieKey);
+            var cookieKey = "DigiTrust.v1.identity";
             // var DigiTrustCrypto = dt._config.crypto;
 
             var m = DigiTrustCrypto.getKeyVersion();
@@ -62,41 +63,39 @@
             function messageHandler(evt) {
                 switch (evt.data.type) {
                     case 'DigiTrust.identity.request':
-                        var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
-                        var digiTrustUserJSON = digiTrustUserCookie ?
-                            DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
-                        var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
-                        digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
+                        var userObj = DigiTrustCookie.getUserIdentity();
+                        var isOptOut = DigiTrustCookie.getOptOut();
 
-                        var sendMessage = function (messageValue) {
+
+                        var sendMessage = function (value) {
                             var messageType = evt.data.syncOnly ?
                                 'DigiTrust.identity.response.syncOnly' :
                                 'DigiTrust.identity.response';
                             var identity = {
                                 version: 1,
                                 type: messageType,
-                                value: messageValue
+                                value: value
                             };
                             window.parent.postMessage(identity, evt.origin);
                         }
 
-                        if ((!isOptOut) && (helpers.isEmpty(digiTrustUserJSON))) {
+                        if ((!isOptOut) && (helpers.isEmpty(userObj))) {
                             // see if we can write and read cookies from within the iframe
                             DigiTrustCookie.createUserCookiesOnDigitrustDomain();
-                            digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
+                            userObj = DigiTrustCookie.getUserIdentity(cookieKey);
                         }
-                        if (digiTrustUserJSON.hasOwnProperty('id')) {
+                        if (userObj.hasOwnProperty('id')) {
                             try {
-                                DigiTrustCrypto.encrypt(digiTrustUserJSON.id, function (encryptedUserId) {
-                                    digiTrustUserJSON.id = encryptedUserId;
-                                    digiTrustUserJSON.keyv = DigiTrustCrypto.getKeyVersion();
-                                    sendMessage(digiTrustUserJSON);
+                                DigiTrustCrypto.encrypt(userObj.id, function (encryptedUserId) {
+                                    userObj.id = encryptedUserId;
+                                    userObj.keyv = DigiTrustCrypto.getKeyVersion();
+                                    sendMessage(userObj);
                                 });
                             } catch (e) {
                                 sendMessage(configGeneral.cookie.digitrust.errorUser);
                             }
                         } else {
-                            sendMessage(digiTrustUserJSON);
+                            sendMessage(userObj);
                         }
                         break;
                     case 'DigiTrust.identity.reset':
@@ -109,6 +108,7 @@
                         break;
                 }
             }
+
 
             if (window.addEventListener) {
                 window.addEventListener('message', messageHandler, false);

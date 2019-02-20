@@ -40,7 +40,7 @@ describe('Cookie transform tests', function () {
         var cookieExpires = new Date();
         cookieExpires.setTime(cookieExpires.getTime() + 60000);
         document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
-        var user = dtCookie.getIdentityCookieJSON(cookieKey);
+      var user = dtCookie.getUserIdentity();
         // we should have generated a new value
         expect(user.id).not.toBe(null);
         expect(user.version).toBe(2);

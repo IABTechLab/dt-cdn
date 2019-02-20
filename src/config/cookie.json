@@ -15,16 +15,7 @@
     "userObjectKey": "DigiTrust.v1.identity",
     "resetKey": "DeleteEverything",
     "challenge": "DTChal",
-    "optout": "optout",
-    "optoutUser": {
-      "id": "",
-      "privacy": {
-        "optout": true
-      }
-    },
-    "errorUser": {
-      "error": true
-    }
+    "optout": "optout"
   }
 }
 
