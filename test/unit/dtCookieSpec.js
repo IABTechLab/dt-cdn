@@ -34,18 +34,27 @@ describe('Cookie transform tests', function () {
         expect(back == testval).toBeTruthy();
     });
   
-    it('DigiTrustCookie.unobfuscateCookieValue() on malformed data', function () {
+    it('DigiTrustCookie.unobfuscateCookieValue() on malformed data for server', function () {
         // set a bad identity cookie
         var cookieKey = cookieConfig.digitrust.userObjectKey;
-        var cookieExpires = new Date();
+      var cookieExpires = new Date();
+      try {
+        DigiTrust.isClient = false; // set this to force ID generation
         cookieExpires.setTime(cookieExpires.getTime() + 60000);
         document.cookie = cookieKey + '=foobared; expires=' + cookieExpires.toUTCString() + ';path=/;';
-      var user = dtCookie.getUserIdentity();
+        var user = dtCookie.getUserIdentity();
         // we should have generated a new value
-        expect(user.id).not.toBe(null);
+        // coerce into true/false
+        var isthere = !!user.id;
+        expect(isthere).toBeTruthy();
         expect(user.version).toBe(2);
         expect(user.producer).toBe(cookieConfig.producer);
         expect(user.privacy.optout).toBe(false);
+      }
+      finally {
+        DigiTrust.isClient = true; // reset this value
+
+      }
     });
     it('DigiTrustCookie.optoutCookieValue()', function () {
         var identity = dtCookie.unobfuscateCookieValue
