@@ -1,6 +1,6 @@
 {
   "name": "digitrust",
-  "version": "1.5.21",
+  "version": "1.5.22",
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
   "scripts": {
