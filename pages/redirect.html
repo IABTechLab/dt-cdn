@@ -3,7 +3,7 @@
 function createUserCookiesOnDigitrustDomain() {
     DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
 
-    var redirect = helpers.getUrlParameterByName('redirect');
+    var redirect = DigiTrust.util.getUrlParameterByName('redirect');
     if (!redirect) {
         redirect = document.referrer;
     }
