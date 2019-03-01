@@ -1,7 +1,7 @@
 <script src='./digitrust.min.js'></script>
 <script>
 function createUserCookiesOnDigitrustDomain() {
-    DigiTrustCookie.createUserCookiesOnDigitrustDomain();
+    DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
 
     var redirect = helpers.getUrlParameterByName('redirect');
     if (!redirect) {
