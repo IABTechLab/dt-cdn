@@ -92,7 +92,7 @@
                                     sendMessage(userObj);
                                 });
                             } catch (e) {
-                                sendMessage(configGeneral.cookie.digitrust.errorUser);
+                                sendMessage({ "error": true });
                             }
                         } else {
                             sendMessage(userObj);

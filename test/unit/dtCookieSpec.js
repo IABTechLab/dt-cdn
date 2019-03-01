@@ -24,17 +24,7 @@ describe('Cookie transform tests', function () {
     });
     
 
-    it('Should encode and decode a cookie value', function () {
-        var testval = "HELLO WORLddd";
-        // console.log(dtCookie);
-        var obs = dtCookie.obfuscateCookieValue(testval);
-        expect(obs == testval).toBeFalsy();
-
-        var back = dtCookie.unobfuscateCookieValue(obs);
-        expect(back == testval).toBeTruthy();
-    });
-  
-    it('DigiTrustCookie.unobfuscateCookieValue() on malformed data for server', function () {
+    it('DigiTrustCookie decode malformed data for server generates new ID', function () {
         // set a bad identity cookie
         var cookieKey = cookieConfig.digitrust.userObjectKey;
       var cookieExpires = new Date();
@@ -55,12 +45,17 @@ describe('Cookie transform tests', function () {
         DigiTrust.isClient = true; // reset this value
 
       }
-    });
+  });
+
+  /*
     it('DigiTrustCookie.optoutCookieValue()', function () {
-        var identity = dtCookie.unobfuscateCookieValue
+        var identity = dtCookie.un
+        scateCookieValue
             ('eyJpZCI6bnVsbCwia2V5diI6MCwicHJpdmFjeSI6eyJvcHRvdXQiOnRydWV9fQ%3D%3D');
         expect(identity).toEqual({ id: null, keyv: 0, privacy: { optout: true } });
-    });
+  });
+  */
+
     it('DigiTrustCookie.verifyPublisherDomainCookie()', function () {
         expect(dtCookie.verifyPublisherDomainCookie({})).toBe(false);
         expect(dtCookie.verifyPublisherDomainCookie({ id: 'abc' })).toBe(false);

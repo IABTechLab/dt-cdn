@@ -8,6 +8,7 @@
     "maxAgeMiliseconds": 604800000,
     "userObjectKey": "DigiTrust.v1.identity"
   },
+  // TODO: Move these to the DigiTrust domain
   "digitrust": {
     "domainKeyValue": "domain=.digitru.st;",
     "pathKeyValue": "path=/;",

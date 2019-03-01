@@ -17,6 +17,7 @@
     "packFrameScript": "uglifyjs dist/digitrust_iframe.js -o dist/digitrust_iframe.min.js",
     "embedFrameScript": "node ./src/tool_scripts/build_frame.js",
     "buildFrame": "npm-run-series buildFrameScript packFrameScript embedFrameScript",
+    "buildAll": "npm-run-series build buildFrame",
     "devwatch": "watchify src/digitrust_client.js -do dist/digitrust.js",
     "docCompiled": "jsdoc ./dist/digitrust.js -P package.json",
     "document": "jsdoc ./src/modules/DigiTrust.js -P package.json"

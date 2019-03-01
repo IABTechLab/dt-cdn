@@ -8,24 +8,6 @@ var consts = require('../config/constants.json');
 var helpers = {};
 
 /**
- * Extend an object. 
- * TODO: Review if this is used and possibly remove
- * @param {any} target
- * @param {any} source
- */
-helpers.extend = function (target, source) {
-    target = target || {};
-    for (var prop in source) {
-        if (typeof source[prop] === 'object') {
-            target[prop] = helpers.extend(target[prop], source[prop]);
-        } else {
-            target[prop] = source[prop];
-        }
-    }
-    return target;
-};
-
-/**
  * Tests to see if the passed object is a function
  * 
  * @param {any} fn
