@@ -55,7 +55,7 @@ describe('Cookie transform tests', function () {
         expect(identity).toEqual({ id: null, keyv: 0, privacy: { optout: true } });
   });
   */
-
+  /*
     it('DigiTrustCookie.verifyPublisherDomainCookie()', function () {
         expect(dtCookie.verifyPublisherDomainCookie({})).toBe(false);
         expect(dtCookie.verifyPublisherDomainCookie({ id: 'abc' })).toBe(false);
@@ -68,6 +68,7 @@ describe('Cookie transform tests', function () {
             keyv: 4, privacy: { optout: false }
         })).toBe(true);
     });
+    */
 });
 
 describe('DigiTrustCookie', function () {
