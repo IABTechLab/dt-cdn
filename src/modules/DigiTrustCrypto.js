@@ -1,5 +1,7 @@
 'use strict';
 
+// DEPRICATED. MOVED TO cryptoLib for frame-side use
+
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general')[env];
 var helpers = require('./helpers');

@@ -56,6 +56,10 @@
             var DigiTrustCrypto = dt._config.crypto;
             var helpers = dt.util;
             var cookieKey = "DigiTrust.v1.identity";
+            var cookieName = {
+                reset: 'DeleteEverything',
+                userObject: cookieKey
+            }
             // var DigiTrustCrypto = dt._config.crypto;
 
             var m = DigiTrustCrypto.getKeyVersion();
@@ -99,11 +103,10 @@
                         }
                         break;
                     case 'DigiTrust.identity.reset':
-                        var DE = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.resetKey);
+                        var DE = DigiTrustCookie.getCookieByName(cookieName.reset); // configGeneral.cookie.digitrust.resetKey
                         if (DE === 'true') {
-                            DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.resetKey);
-                            DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.userObjectKey);
-                            DigiTrustCookie.expireCookie(configGeneral.cookie.publisher.userObjectKey);
+                            DigiTrustCookie.expireCookie(cookieName.reset);
+                            DigiTrustCookie.expireCookie(cookieName.userObject);
                         }
                         break;
                 }

@@ -1,0 +1,9 @@
+{
+  "domainKeyValue": "domain=.digitru.st;",
+  "pathKeyValue": "path=/;",
+  "maxAgeMiliseconds": 157680000000,
+  "userObjectKey": "DigiTrust.v1.identity",
+  "resetKey": "DeleteEverything",
+  "challenge": "DTChal",
+  "optout": "optout"
+}
