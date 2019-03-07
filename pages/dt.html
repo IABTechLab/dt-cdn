@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>DigiTru.st Identity</title>
+    <!-- DT Frame Code -->
     <script src='./digitrust.min.js'></script>
+
     <script>
         // Place initializer inside a closure
 
@@ -41,6 +43,7 @@
 
             var dt = window.DigiTrust;
             var configGeneral = dt._config.configGeneral;
+            /* TOKEN ADDITIONAL SETTINGS */
             var DigiTrustCookie = dt.cookie;
             var helpers = dt.util;
             var DigiTrustCrypto = dt._config.crypto;
@@ -67,7 +70,7 @@
                         if ((!isOptOut) && (helpers.isEmpty(userObj))) {
                             // see if we can write and read cookies from within the iframe
                             DigiTrustCookie.createUserCookiesOnDigitrustDomain();
-                            userObj = DigiTrustCookie.getUserIdentity(cookieKey);
+                            userObj = DigiTrustCookie.getUserIdentity();
                         }
                         if (userObj.hasOwnProperty('id')) {
                             try {
@@ -112,10 +115,5 @@
     </script>
 </head>
 <body>
-    <script>
-
-                /* SCRIPT CONTENTS HERE */
-
-    </script>
 </body>
 </html>
