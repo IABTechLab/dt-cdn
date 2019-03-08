@@ -79,7 +79,6 @@ var util = {
 }
 
 if (window && !window['dtFrame']) {
-  debugger;
   window['dtFrame'] = {
     encrypt: DigiTrustCrypto.encrypt,
     cookie: DigiTrustCookie,

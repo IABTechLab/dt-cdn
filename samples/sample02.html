@@ -42,103 +42,27 @@
             }
         },
         function (digiTrustResult) {
-            //console.log("Digi sample callback", digiTrustResult);
-			//console.log('Digi value: ' + digiTrustResult.success);
-            
+            var el = document.getElementById('userIdDiv');
             if (digiTrustResult.success){
-				console.log('Success in Digitrust init');
-				/*
-				if(digiTrustResult.identity.id != null) {
-					DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
-						console.log(decryptedId);
-					});
-				}
-				else{
-					console.error('Digitrust gave success, but no identity returned');
-				}
-				*/
+                console.log('Success in Digitrust init');
+                el.innerHTML = "User Id (ecnrypted): <b>" + digiTrustResult.identity.id + "</b>"
             }
 			else{
 				console.error('Digitrust init failed');
+                el.innerHTML = "Error in DigiTrust Initialization"
 			}
 			
         });
-        // var json = DigiTrust.getUser({member: ''});
-        // console.log(json);
-        /*var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
-            console.log('3rd party getUser result', digiTrustResult);
-            if (digiTrustResult.identity.id) {
-                DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
-                    console.log(decryptedId);
-                })
-            }
-        });*/
     </script>
 </head>
 <body>
 	<h1>Digitrust Publisher Sample</h1>
-	
+	<div id="userIdDiv"></div>
 	<p>
 		This page demonstrates how to integrate the Digitrust framework into a publisher site.
 	</p>
 	
-    plain text.
-    <h1>Great news</h1>
-    <h2>This is something you are reading.</h2>
-    <a href="http://www.seattletimes.com/life/food-drink/5-ways-caliburger-is-better-than-in-n-out/">
-        Link external
-    </a>
-    <br/><br/><br/>
-    <a href="javascript:void(0)" onclick="window.DigiTrust.sendReset()"> clear cookie</a>
-    <br/><br/><br/>
-    <a href="page2.html"> Link internal: page.html</a>
-    <br/><br/><br/>
-    <a href="./page2.html"> Link internal: ./page.html</a>
-    <br/><br/><br/>
-    <a href="/misc/page2.html"> Link internal: /misc/page.html</a>
-    <br/><br/><br/>
-    <a href="#foobar"> Link internal: #foobar</a>
-    <br/><br/><br/>
-    This is just.
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div>A test.</div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+
+
 </body>
 </html>
