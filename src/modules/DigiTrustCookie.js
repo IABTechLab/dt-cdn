@@ -71,6 +71,7 @@ var getOrInitIdentity = function () {
       localUserCookieJSON = jscoder.unobfuscateCookieValue(localUserCookie);
     } catch (e) {
       if (makeId) {
+        // this is never valid on client
         localUserCookieJSON = {
           id: helpers.generateUserId(),
           version: cookieConfig.version,
