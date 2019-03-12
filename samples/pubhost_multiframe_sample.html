@@ -26,25 +26,9 @@
 					postMessageOrigin: "http://local.digitru.st",
 					timeoutDuration: (1000 * 60)
 				}
-			},
-            adblocker: {
-                logoSrc: 'http://i.imgur.com/xfgM1wq.png',
-                logoText: 'The Seattle Times',
-                pictureSrc: 'http://i.imgur.com/IP5RRah.png',
-                blockContent: true,
-                detection: true,
-                unstyled: true,
-                customCssPath: './custom-dt.css',
-                detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
-                //popupFontColor: 'white', // @todo add to GitHub spec
-                //popupBackgroundColor: 'orange', // @todo add to GitHub spec
-                //userMessage: "test message"
-            }
+			}
         },
         function (digiTrustResult) {
-            //console.log("Digi sample callback", digiTrustResult);
-			//console.log('Digi value: ' + digiTrustResult.success);
-            
             if (digiTrustResult.success){
 				console.log('Success in Digitrust init');
             }

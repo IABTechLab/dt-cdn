@@ -8,11 +8,6 @@
 {
   /* ID values used when building the DigiTrust framework DOM objects */
   "consentLinkId": "digitrust-optout",
-  /*
-  "dtAdbContainer": "digitrust-adb-container", // not used
-  "dtAdbMessage": "digitrust-adb-message", // not used
-  "publisherPicture": "dt-pub-pic", //not used?
-  */
   /* dt common frame name */
   "locatorFrameName": "__dtLocator"
 }

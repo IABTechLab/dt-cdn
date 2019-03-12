@@ -3,16 +3,6 @@
     "site": "",
     "sample": 1,
     "redirects": false,
-    "adblocker": { /* remove this section */
-        "detection": false,
-        "blockContent": false,
-        "userMessage": "Did you know advertising pays for this brilliant content? Please disable your ad blocker, then press the Reload button below ... and thank you for your visit!",
-        "popupFontColor": "#5F615D",
-        "popupBackgroundColor": "#FFFFFF",
-        "logoSrc": null,
-        "logoText": null,
-        "pictureSrc": null
-    },
     "consent": {
         "requires": "none",
         "userMessage": "This site uses cookies and is a member of DigiTrust, a non-profit consortium of companies working together to improve your Web experience.  By clicking on this page you agree to the use of cookies. This notice only appears once. <a href=\"http://www.digitru.st/about-this-notice/\">You can read more or opt out of DigiTrust here</a>.",
