@@ -182,8 +182,6 @@ DC.startConnection = function (loadSuccess) {
     // Add postMessage listeners
     window.addEventListener('message', _messageHandler, false);
 
-  console.log('DIGI IFRAME:' + conf.urls.digitrustIframe);
-
     DC.iframe = document.createElement('iframe');
     DC.iframe.style.display = 'none';
     DC.iframe.src = conf.urls.digitrustIframe;
