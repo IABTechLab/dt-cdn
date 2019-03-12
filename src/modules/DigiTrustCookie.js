@@ -54,6 +54,7 @@ var _verifyUserCookieStructure = function (userJSON) {
 
 var DigiTrustCookie = {};
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
+  var cookieKey = cookieKey || configGeneral.cookie.digitrust.userObjectKey
     var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
     if (localUserCookie) {

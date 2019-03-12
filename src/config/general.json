@@ -1,9 +1,9 @@
 {
   "prod": {
     "urls": {
-      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.24/",
-      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.24/redirect.html",
-      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.24/dt.html",
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.25/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.25/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.25/dt.html",
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
@@ -51,9 +51,9 @@
   },
   "build": {
     "urls": {
-      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.20/",
-      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.20/redirect.html",
-      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.20/dt.html",
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.24/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.24/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.24/dt.html",
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
