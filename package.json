@@ -35,6 +35,7 @@
   "homepage": "https://github.com/digi-trust/dt-cdn#readme",
   "devDependencies": {
     "browserify": "^16.2.3",
+    "c8": "^3.4.0",
     "copyfiles": "^2.1.0",
     "genversion": "^2.1.0",
     "jasmine-core": "^3.2.1",
@@ -48,7 +49,6 @@
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.2",
     "npm-run-series": "^1.0.1",
-    "nyc": "^13.2.0",
     "uglify-js": "^3.4.9",
     "watchify": "^3.11.0"
   }

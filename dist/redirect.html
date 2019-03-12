@@ -1,7 +1,7 @@
 <script src='./digitrust.min.js'></script>
 <script>
 function createUserCookiesOnDigitrustDomain() {
-    var id = DigiTrust.cookie.getIdentityCookieJSON();
+    var id = DigiTrust.cookie.getUser();
     if (DigiTrust.util.isEmpty(id)) {
         DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
     }

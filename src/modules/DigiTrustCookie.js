@@ -150,157 +150,154 @@ var _verifyUserCookieStructure = function (userJSON) {
 };
 
 var DigiTrustCookie = {};
-DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
-  var cookieKey = cookieKey || configGeneral.cookie.digitrust.userObjectKey
-  var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
-  /**
-   * Obtain the identity object from the cookie.
-   * If the user has opted out this will be an empty object.
-   * 
-   * */
-  DigiTrustCookie.getUserIdentity = function () {
-    return getOrInitIdentity();
+/**
+ * Obtain the identity object from the cookie.
+ * If the user has opted out this will be an empty object.
+ * 
+ * */
+DigiTrustCookie.getUserIdentity = function () {
+  return getOrInitIdentity();
 
-  }
+}
 
-  /**
-   * Obtain the DigiTrust user cookie, if present
-   * */
-  DigiTrustCookie.getUserCookie = function () {
-    return getCookieValue(cookieConfig.digitrust.userObjectKey);
-  }
+/**
+ * Obtain the DigiTrust user cookie, if present
+ * */
+DigiTrustCookie.getUserCookie = function () {
+  return getCookieValue(cookieConfig.digitrust.userObjectKey);
+}
 
-  /**
-   * Obtain the DigiTrust opt-out cookie, if present
-   * */
-  DigiTrustCookie.getOptOut = function () {
-    return getCookieValue(cookieConfig.digitrust.optout);
-  }
+/**
+ * Obtain the DigiTrust opt-out cookie, if present
+ * */
+DigiTrustCookie.getOptOut = function () {
+  return getCookieValue(cookieConfig.digitrust.optout);
+}
 
-  DigiTrustCookie.setResetCookie = function () {
-    var cookieKV = cookieConfig.digitrust.resetKey + '=true;';
-    var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.digitrust.maxAgeMiliseconds) + ';';
-    var domainKV = cookieConfig.digitrust.domainKeyValue;
-    var pathKV = cookieConfig.digitrust.pathKeyValue;
+DigiTrustCookie.setResetCookie = function () {
+  var cookieKV = cookieConfig.digitrust.resetKey + '=true;';
+  var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.digitrust.maxAgeMiliseconds) + ';';
+  var domainKV = cookieConfig.digitrust.domainKeyValue;
+  var pathKV = cookieConfig.digitrust.pathKeyValue;
 
-    setCookie(cookieKV, expiresKV, domainKV, pathKV);
-  };
+  setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
 
-  /**
-   * Expires a cookie such that any subsequent page loads the cookie will not be present.
-   * The original cookie exists until the page is reloaded.
-   * @param {any} cookieKey
-   */
-  DigiTrustCookie.expireCookie = function (cookieKey) {
-    var cookieKV = cookieKey + '=; ',
-      expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
-      domainKV = '',
-      pathKV = cookieConfig.digitrust.pathKeyValue;
+/**
+ * Expires a cookie such that any subsequent page loads the cookie will not be present.
+ * The original cookie exists until the page is reloaded.
+ * @param {any} cookieKey
+ */
+DigiTrustCookie.expireCookie = function (cookieKey) {
+  var cookieKV = cookieKey + '=; ',
+    expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
+    domainKV = '',
+    pathKV = cookieConfig.digitrust.pathKeyValue;
 
-    try {
-      if (location.host.indexOf(cookieConfig.digitrust.domainKeyValue) > -1) {
-        domainKV = cookieConfig.digitrust.domainKeyValue;
-      }
+  try {
+    if (location.host.indexOf(cookieConfig.digitrust.domainKeyValue) > -1) {
+      domainKV = cookieConfig.digitrust.domainKeyValue;
     }
-    catch (ex) { }
+  }
+  catch (ex) { }
 
-    setCookie(cookieKV, expiresKV, domainKV, pathKV);
+  setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
+DigiTrustCookie.setDigitrustCookie = function (cookieV) {
+  var cookieKV = cookieConfig.digitrust.userObjectKey + '=' + cookieV + ';';
+  var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.digitrust.maxAgeMiliseconds) + ';';
+  var domainKV = cookieConfig.digitrust.domainKeyValue;
+  var pathKV = cookieConfig.digitrust.pathKeyValue;
+
+  setCookie(cookieKV, expiresKV, domainKV, pathKV);
+};
+
+/**
+ * Get the User Identity from the DigiTrust frame
+ * @param {any} options
+ * @param {any} callback
+ */
+DigiTrustCookie.getUser = function (options, callback) {
+
+  options = options || {};
+  var useCallback = (typeof callback === 'function') ? true : false;
+  var localUserCookieJSON = {};
+  var _createSyncOnlySubscription = function () {
+    // LISTENER: Only update publisher cookie, do not return anywhere
+    Dcom.listen(Dcom.MsgKey.idSync, function (userJSON) { // 'DigiTrust.pubsub.identity.response.syncOnly'
+      if (verifyPublisherDomainCookie(userJSON)) {
+        var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
+        setIdentityCookie(cookieStringEncoded);
+      }
+    });
   };
 
-  DigiTrustCookie.setDigitrustCookie = function (cookieV) {
-    var cookieKV = cookieConfig.digitrust.userObjectKey + '=' + cookieV + ';';
-    var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.digitrust.maxAgeMiliseconds) + ';';
-    var domainKV = cookieConfig.digitrust.domainKeyValue;
-    var pathKV = cookieConfig.digitrust.pathKeyValue;
+  if (useCallback === false) {
+    localUserCookieJSON = getOrInitIdentity();
+    // Do a sync with digitrust official domain
+    _createSyncOnlySubscription();
+    Dcom.getIdentity({ syncOnly: true });
+    return (!helpers.isEmpty(localUserCookieJSON)) ? localUserCookieJSON : {};
+  } else {
+    /*
+        postMessage doesn't have a callback, so we listen for an event emitted by the
+        DigiTrustCommunication module telling us that a message arrived from http://digitru.st
+        and now we can complete the callback
 
-    setCookie(cookieKV, expiresKV, domainKV, pathKV);
-  };
-
-  /**
-   * Get the User Identity from the DigiTrust frame
-   * @param {any} options
-   * @param {any} callback
-   */
-  DigiTrustCookie.getUser = function (options, callback) {
-
-    options = options || {};
-    var useCallback = (typeof callback === 'function') ? true : false;
-    var localUserCookieJSON = {};
-    var _createSyncOnlySubscription = function () {
-      // LISTENER: Only update publisher cookie, do not return anywhere
-      Dcom.listen(Dcom.MsgKey.idSync, function (userJSON) { // 'DigiTrust.pubsub.identity.response.syncOnly'
-        if (verifyPublisherDomainCookie(userJSON)) {
-          var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
-          setIdentityCookie(cookieStringEncoded);
-        }
-      });
-    };
-
-    if (useCallback === false) {
-      localUserCookieJSON = getOrInitIdentity();
-      // Do a sync with digitrust official domain
-      _createSyncOnlySubscription();
-      Dcom.getIdentity({ syncOnly: true });
-      return (!helpers.isEmpty(localUserCookieJSON)) ? localUserCookieJSON : {};
-    } else {
-      /*
-          postMessage doesn't have a callback, so we listen for an event emitted by the
-          DigiTrustCommunication module telling us that a message arrived from http://digitru.st
-          and now we can complete the callback
-
-          LISTENER: listen for message from digitrust iframe
-      */
-      Dcom.listen(Dcom.MsgKey.idResp, function (userJSON) { // 'DigiTrust.pubsub.identity.response'
-        if (verifyPublisherDomainCookie(userJSON)) {
-          var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
-          setIdentityCookie(cookieStringEncoded);
-          return callback(false, userJSON);
-        } else {
-          // No DigiTrust cookie exists on digitru.st domain
-          if (helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
-            if (options.redirects) {
-              helpers.createConsentClickListener();
-            }
-          }
-          return callback(true);
-        }
-      });
-
-      if (options.ignoreLocalCookies === true) {
-        Dcom.getIdentity();
+        LISTENER: listen for message from digitrust iframe
+    */
+    Dcom.listen(Dcom.MsgKey.idResp, function (userJSON) { // 'DigiTrust.pubsub.identity.response'
+      if (verifyPublisherDomainCookie(userJSON)) {
+        var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
+        setIdentityCookie(cookieStringEncoded);
+        return callback(false, userJSON);
       } else {
-        localUserCookieJSON = getOrInitIdentity();
-        if (verifyPublisherDomainCookie(localUserCookieJSON)) {
-          // OK to proceed & show content
-          // Grab remote cookie & update local
-          _createSyncOnlySubscription();
-          Dcom.getIdentity({ syncOnly: true });
-          return callback(false, localUserCookieJSON);
-        } else {
-          // Connect to iframe to check remote cookies
-          Dcom.getIdentity({ syncOnly: false, redirects: options.redirects });
+        // No DigiTrust cookie exists on digitru.st domain
+        if (helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
+          if (options.redirects) {
+            helpers.createConsentClickListener();
+          }
         }
+        return callback(true);
+      }
+    });
+
+    if (options.ignoreLocalCookies === true) {
+      Dcom.getIdentity();
+    } else {
+      localUserCookieJSON = getOrInitIdentity();
+      if (verifyPublisherDomainCookie(localUserCookieJSON)) {
+        // OK to proceed & show content
+        // Grab remote cookie & update local
+        _createSyncOnlySubscription();
+        Dcom.getIdentity({ syncOnly: true });
+        return callback(false, localUserCookieJSON);
+      } else {
+        // Connect to iframe to check remote cookies
+        Dcom.getIdentity({ syncOnly: false, redirects: options.redirects });
       }
     }
+  }
+};
+
+// Used only from iFrame
+DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
+  var userId = helpers.generateUserId();
+  var userJSON = {
+    id: userId,
+    version: cookieConfig.version,
+    producer: cookieConfig.producer,
+    privacy: {
+      optout: false
+    }
   };
+  var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
 
-  // Used only from iFrame
-  DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
-    var userId = helpers.generateUserId();
-    var userJSON = {
-      id: userId,
-      version: cookieConfig.version,
-      producer: cookieConfig.producer,
-      privacy: {
-        optout: false
-      }
-    };
-    var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
-
-    DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
-    return userJSON;
-  };
+  DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
+  return userJSON;
+};
 
 
-  module.exports = DigiTrustCookie;
+module.exports = DigiTrustCookie;
