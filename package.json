@@ -3,6 +3,10 @@
   "version": "1.5.27",
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
+  "engines": {
+    "node": ">=10.12.0",
+    "npm": ">=6.0.0"
+  },
   "scripts": {
     "test": "karma start karma.conf.js --single-run",
     "unit": "karma start karma.conf.js",
@@ -35,7 +39,6 @@
   "homepage": "https://github.com/digi-trust/dt-cdn#readme",
   "devDependencies": {
     "browserify": "^16.2.3",
-    "c8": "^3.4.0",
     "copyfiles": "^2.1.0",
     "genversion": "^2.1.0",
     "jasmine-core": "^3.2.1",
@@ -49,6 +52,7 @@
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.2",
     "npm-run-series": "^1.0.1",
+    "nyc": "^13.3.0",
     "uglify-js": "^3.4.9",
     "watchify": "^3.11.0"
   }
