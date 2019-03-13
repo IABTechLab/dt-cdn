@@ -3,10 +3,6 @@
   "version": "1.5.27",
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
-  "engines": {
-    "node": ">=10.12.0",
-    "npm": ">=6.0.0"
-  },
   "scripts": {
     "test": "karma start karma.conf.js --single-run",
     "unit": "karma start karma.conf.js",
