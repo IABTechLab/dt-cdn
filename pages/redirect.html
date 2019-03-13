@@ -1,15 +1,24 @@
-<script src='./digitrust.min.js'></script>
-<script>
-function createUserCookiesOnDigitrustDomain() {
-    var id = DigiTrust.cookie.getUser();
-    if (DigiTrust.util.isEmpty(id)) {
-        DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
-    }
-    var redirect = DigiTrust.util.getUrlParameterByName('redirect');
-    if (!!redirect) {
-        window.location = redirect;
-    }
-};
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>DigiTru.st Identity</title>
+    <script src='./digitrust.js'></script>
+    <script>
+        function createUserCookiesOnDigitrustDomain() {
+            var id = DigiTrust.cookie.getUser();
+            if (DigiTrust.util.isEmpty(id)) {
+                DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
+            }
+            var redirect = DigiTrust.util.getUrlParameterByName('redirect');
+            if (!!redirect) {
+                window.location = redirect;
+            }
+        };
 
-createUserCookiesOnDigitrustDomain();
-</script>
+        createUserCookiesOnDigitrustDomain();
+    </script>
+</head>
+<body>
+</body>
+</html>
