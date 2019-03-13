@@ -3,22 +3,27 @@
 <head>
     <meta charset="utf-8">
     <title>DigiTru.st Identity</title>
-    <script src='./digitrust.js'></script>
-    <script>
-        function createUserCookiesOnDigitrustDomain() {
-            var id = DigiTrust.cookie.getUser();
-            if (DigiTrust.util.isEmpty(id)) {
-                DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
-            }
-            var redirect = DigiTrust.util.getUrlParameterByName('redirect');
-            if (!!redirect) {
-                window.location = redirect;
-            }
-        };
-
-        createUserCookiesOnDigitrustDomain();
-    </script>
 </head>
 <body>
+
+    <script src='./digitrust.js'></script>
+    <script>
+        (function () {
+            function createUserCookiesOnDigitrustDomain() {
+                var id = DigiTrust.cookie.getUser();
+                if (DigiTrust.util.isEmpty(id)) {
+                    DigiTrust.cookie.createUserCookiesOnDigitrustDomain();
+                }
+                var redirect = DigiTrust.util.getUrlParameterByName('redirect');
+                if (!!redirect) {
+                    window.location = redirect;
+                }
+            };
+
+            window.addEventListener('load', function () {
+                createUserCookiesOnDigitrustDomain();
+            });
+        })()
+    </script>
 </body>
 </html>
