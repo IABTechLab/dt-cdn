@@ -1,10 +1,11 @@
 /**
  * Script to build the iframe with embedded code inside.
+ * Also generates debug versions of iframe and IPT redirect file
  * */
 
 var fs = require('fs');
 
-var markupBuffer = null,
+var redirectBuffer = null,
   iframeBuffer = null,
   scriptFullBuffer = null,
   scriptMinBuffer = null;
@@ -12,11 +13,15 @@ var markupBuffer = null,
 const DEBUG_IDAPI_SETTING = 'configGeneral.urls.digitrustIdService = "../misc/faked_id_service_v1.json" //http://local.digitru.st/misc/faked_id_service_v1.json'
 const DEBUG_SCRIPT_TAG = "<script src='./digitrust_iframe.js'></script>"
 const PROD_SCRIPT_TAG = "<script src='./digitrust_iframe.min.js'></script>"
+const PROD_REDIR_SCRIPT_TAG = "<script src='./digitrust.min.js'></script>"
+const DEBUG_REDIR_SCRIPT_TAG = "<script src='./digitrust.js'></script>"
 
 const outputFile = {
   EMBEDDED: 'dt-embed.html',
   REF: 'dt.html',
-  DEBUG: 'dt_debug.html'
+  DEBUG: 'dt_debug.html',
+  REDIR: 'redirect.html',
+  DEBUG_REDIR: 'redirect_debug.html'
 };
 
 const replaceTokens = {
@@ -36,6 +41,11 @@ fs.readFile('./dist/digitrust_iframe.js', 'utf8', function (err, contents) {
 fs.readFile('./pages/dt.html', 'utf8', function (err, contents) {
   iframeBuffer = contents;
   checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer);
+});
+
+fs.readFile('./pages/redirect.html', 'utf8', function (err, contents) {
+  redirectBuffer = contents;
+  writeRedirectFiles(redirectBuffer);
 });
 
 
@@ -77,6 +87,37 @@ function checkComplete(scriptMin, scriptFull, markup){
       }
     });
   }
+}
+
+function writeRedirectFiles(buffer) {
+  var fileRef;
+  var files = [
+    { file: './dist/' + outputFile.REDIR },
+    { file: './dist/' + outputFile.DEBUG_REDIR}
+  ];
+
+  for (let i = 0; i < files.length; i++) {
+    fileRef = files[i].file;
+    if (fs.existsSync(fileRef)) {
+      fs.unlinkSync(fileRef);
+    }
+  }
+
+  fs.writeFile('./dist/' + outputFile.REDIR, buffer, function (err, data) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+
+  var debugBuffer = buffer.replace(PROD_REDIR_SCRIPT_TAG, DEBUG_REDIR_SCRIPT_TAG);
+  fs.writeFile('./dist/' + outputFile.DEBUG_REDIR, debugBuffer, function (err, data) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+
 }
 
 
