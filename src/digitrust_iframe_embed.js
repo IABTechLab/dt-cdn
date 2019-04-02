@@ -59,7 +59,7 @@ var util = {
   isEmpty: function (obj) {
     var t = typeof (obj),
       k;
-    if (t !== 'undefined' || obj == null) {
+    if (t === 'undefined' || obj == null) {
       return true;
     }
     else if (t !== 'object') {

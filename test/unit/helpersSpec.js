@@ -8,6 +8,30 @@ var env = require('../../src/config/env.json').current;
 
 describe('helpers', function () {
 
+  it('isEmpty null is true', function () {
+    expect(helpers.isEmpty(null)).toBe(true);
+  });
+
+  it('isEmpty undefined is true', function () {
+    expect(helpers.isEmpty()).toBe(true);
+  });
+
+  it('isEmpty string is false', function () {
+    expect(helpers.isEmpty("foo")).toBe(false);
+  });
+  it('isEmpty empty object is true', function () {
+    expect(helpers.isEmpty(new Object())).toBe(true);
+  });
+  it('isEmpty empty object literal is true', function () {
+    expect(helpers.isEmpty({})).toBe(true);
+  });
+  it('isEmpty valid object is false', function () {
+    expect(helpers.isEmpty({ x: "foo" })).toBe(false);
+  });
+  it('isEmpty number is true', function () {
+    expect(helpers.isEmpty(9)).toBe(true);
+  });
+
     it('getAbsolutePath', function () {
 
         /*

@@ -5,9 +5,10 @@ var configGeneral = require('../config/general')[env];
 var helpers = require('../modules/helpers');
 var ServerCrypto = require('./serverCrypto');
 var DTPublicKeyObject = require('../config/key.json');
+var noop = function () { };
 
 var LOGID = 'DigiTrustCrypto';
-var log = {}; // this will later be re-initialized if the init pass requires
+var log = { debug: noop}; // this will later be re-initialized if the init pass requires
 
 var crypto_browser = helpers.getBrowserCrypto();
 
@@ -65,7 +66,6 @@ DigiTrustCrypto.getKeyVersion = function () {
 DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
   var keyType;
   var publicKey;
-  initLog();
 
   if (crypto_browser == null) {
     crypto_browser = helpers.getBrowserCrypto();
@@ -134,7 +134,6 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
   var keyType = 'jwk';
   var privateKey = DTPublicKeyObject.jwkPrivate;
   var publicKey;
-  initLog();
 
   log.debug('attempt to decrypt value: ', valueToDecrypt);
 

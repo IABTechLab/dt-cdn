@@ -151,13 +151,19 @@ DigiTrust.initialize = function (options, initCb) {
 	var document = window.document;
     var ready = document.readyState;
     DigiTrust.isClient = true; // init only called on clients
-	
-	if(!ready || ready == 'loading') { 
-		document.addEventListener("DOMContentLoaded", function(event) {
-			DigiTrust.initialize(options, initCb);
-		});
+
+  var initRecall = function (event) {
+    DigiTrust.initialize(options, initCb);
+  };
+
+	if (!ready || ready == 'loading') {
+    document.addEventListener("DOMContentLoaded", initRecall);
 	}
-	else{
+  else {
+    try {
+      document.removeEventListener("DOMContentLoaded", initRecall);
+    }
+    catch (ex) { }
 		initInternal(options, initCb);
 	}	
 };
