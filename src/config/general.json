@@ -38,8 +38,8 @@
       "serverCryptoRate": 0.8
     },
     "logging": {
-      "enable": false,
-      "level": "ERROR"
+      "enable": true,
+      "level": "INFO"
     },
     "gvlVendorId": 64
   },

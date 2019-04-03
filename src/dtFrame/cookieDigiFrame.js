@@ -2,7 +2,10 @@
 
 var cookieConfig = require('./cookie.dtsettings.json');
 var Dcom = require('../modules/DigiTrustCommunication');
+var cryptoLib = require('./cryptoLib');
+var util = require('./frameUtils');
 var helpers = require('../modules/helpers');
+
 
 // DigiTrust domain side cookie methods
 
@@ -47,36 +50,44 @@ var getCookieValue = function (name) {
   }
 };
 
+/**
+ * Returns a new object literal of the user JSON
+ * @param {string} userId The identifier, usually a base64 encoded string built by cryptoLib.generateUserId()
+ * */ 
+function newUserJson (userId) {
+  var userId = userId || cryptoLib.generateUserId();
+  return {
+    id: userId,
+    version: cookieConfig.version,
+    producer: cookieConfig.producer,
+    privacy: {
+      optout: false
+    }
+  };
+}
 
-var getOrInitIdentity = function () {
-  var localUserCookie = getCookieValue(cookieConfig.userObjectKey);
-  var makeId = true; // (window && window.DigiTrust && !window.DigiTrust.isClient) || false; // only generate on the DigiTrust side
+/*
+ * Internal function that obtains an existing identity or initializes an identity.
+ * */
+function getOrInitIdentity () {
+  var userCookie = getCookieValue(cookieConfig.userObjectKey);
+  var userJson = {};
 
-  if (localUserCookie) {
-    var localUserCookieJSON = {};
+  if (userCookie) {
     try {
-      localUserCookieJSON = jscoder.unobfuscateCookieValue(localUserCookie);
+      userJson = jscoder.unobfuscateCookieValue(userCookie);
     } catch (e) {
-      if (makeId) {
-        localUserCookieJSON = {
-          id: helpers.generateUserId(),
-          version: cookieConfig.version,
-          producer: cookieConfig.producer,
-          privacy: {
-            optout: false
-          }
-        };
-        setIdentityCookie(jscoder.obfuscateCookieValue(localUserCookieJSON));
-      }
-      else {
-        localUserCookieJSON = {};
-      }
+      userJson = newUserJson();
+      setIdentityCookie(jscoder.obfuscateCookieValue(userJson));
     }
-    if (_verifyUserCookieStructure(localUserCookieJSON)) {
-      return localUserCookieJSON;
-    } else {
-      return {};
-    }
+  }
+  else {
+    userJson = newUserJson();
+    setIdentityCookie(jscoder.obfuscateCookieValue(userJson));
+  }
+
+  if (_verifyUserCookieStructure(userJson)) {
+    return userJson;
   } else {
     return {};
   }
@@ -200,94 +211,10 @@ DigiTrustCookie.setDigitrustCookie = function (cookieV) {
   setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
-/**
- * Get the User Identity from the DigiTrust frame
- * @param {any} options
- * @param {any} callback
- */
-DigiTrustCookie.getUser = function (options, callback) {
-
-  options = options || {};
-  var useCallback = (typeof callback === 'function') ? true : false;
-  var localUserCookieJSON = {};
-  var _createSyncOnlySubscription = function () {
-    // LISTENER: Only update publisher cookie, do not return anywhere
-    Dcom.listen(Dcom.MsgKey.idSync, function (userJSON) { // 'DigiTrust.pubsub.identity.response.syncOnly'
-      if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
-        var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
-        setIdentityCookie(cookieStringEncoded);
-      }
-    });
-  };
-
-  if (useCallback === false) {
-    localUserCookieJSON = getOrInitIdentity();
-    // Do a sync with digitrust official domain
-    _createSyncOnlySubscription();
-    Dcom.getIdentity({ syncOnly: true });
-    return (!helpers.isEmpty(localUserCookieJSON)) ? localUserCookieJSON : {};
-  } else {
-    /*
-        postMessage doesn't have a callback, so we listen for an event emitted by the
-        DigiTrustCommunication module telling us that a message arrived from http://digitru.st
-        and now we can complete the callback
-
-        LISTENER: listen for message from digitrust iframe
-    */
-    Dcom.listen(Dcom.MsgKey.idResp, function (userJSON) { // 'DigiTrust.pubsub.identity.response'
-      if (DigiTrustCookie.verifyPublisherDomainCookie(userJSON)) {
-        var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
-        setIdentityCookie(cookieStringEncoded);
-        return callback(false, userJSON);
-      } else {
-        // No DigiTrust cookie exists on digitru.st domain
-        if (helpers.isEmpty(userJSON) && (!userJSON.hasOwnProperty('error'))) {
-          if (options.redirects) {
-            helpers.createConsentClickListener();
-          }
-        }
-        return callback(true);
-      }
-    });
-
-    if (options.ignoreLocalCookies === true) {
-      Dcom.getIdentity();
-    } else {
-      localUserCookieJSON = getOrInitIdentity();
-      if (DigiTrustCookie.verifyPublisherDomainCookie(localUserCookieJSON)) {
-        // OK to proceed & show content
-        // Grab remote cookie & update local
-        _createSyncOnlySubscription();
-        Dcom.getIdentity({ syncOnly: true });
-        return callback(false, localUserCookieJSON);
-      } else {
-        // Connect to iframe to check remote cookies
-        Dcom.getIdentity({ syncOnly: false, redirects: options.redirects });
-      }
-    }
-  }
-};
-
-// Used only from iFrame
-DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
-  var userId = helpers.generateUserId();
-  var userJSON = {
-    id: userId,
-    version: cookieConfig.version,
-    producer: cookieConfig.producer,
-    privacy: {
-      optout: false
-    }
-  };
-  var cookieStringEncoded = jscoder.obfuscateCookieValue(userJSON);
-
-  DigiTrustCookie.setDigitrustCookie(cookieStringEncoded);
-  return userJSON;
-};
-
 // only from publisher domain
+// TODO: REMOVE
 DigiTrustCookie.verifyPublisherDomainCookie = function (userJSON) {
-  if (helpers.isEmpty(userJSON) || !_verifyUserCookieStructure(userJSON)) { return false; }
+  if (util.isEmpty(userJSON) || !_verifyUserCookieStructure(userJSON)) { return false; }
   if (!userJSON.hasOwnProperty('keyv')) { return false; }
 
   return true;

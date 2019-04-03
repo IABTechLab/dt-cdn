@@ -191,7 +191,7 @@ helpers.isFunc = isFunc;
 
 /**
  * @function
- * Builds a consent click handler
+ * Builds a consent click handler and issues the IPT redirect
  * */
 helpers.createConsentClickListener = function () {
     if (helpers.inIframe()) {

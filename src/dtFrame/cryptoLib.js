@@ -12,7 +12,7 @@ var LOGID = 'DigiTrustCrypto';
 var log = {}; // this will later be re-initialized if the init pass requires
 log.debug = log.log = log.info = log.error = noop;
 
-var clientCrypto = null;
+var clientCrypto;
 
 
 
@@ -41,6 +41,7 @@ function getBrowserCrypto() {
   return cryptoObj;
 }
 
+clientCrypto = getBrowserCrypto();
 
 /**
 * @function
@@ -95,12 +96,6 @@ var DigiTrustCrypto = {
 DigiTrustCrypto.generateUserId = function () {
   var buffer = new Uint8Array(8);
 
-  throw "Hello World";
-  if (clientCrypto == null) {
-    clientCrypto = getBrowserCrypto();
-  }
-
-
   clientCrypto.getRandomValues(buffer);
   return util.encodeArrayBuffer(buffer);
 };
@@ -110,14 +105,13 @@ DigiTrustCrypto.getKeyVersion = function () {
   return DTPublicKeyObject.version;
 };
 
+var MAX_SUBTLE_RETRIES = 10;
+var retryCount = 0;
+
 // Returns base64 string
 DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
   var keyType;
   var publicKey;
-
-  if (clientCrypto == null) {
-    clientCrypto = getBrowserCrypto();
-  }
 
   if (helpers.isSafari()) {
     keyType = 'jwk';
@@ -134,6 +128,21 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     return;
   }
 
+  // set a break/retry for ServerCrypto race condition
+  if (!clientCrypto.subtle) {
+    log.warn('DigiTrust ServerCrypt init retry attempt');
+    console.warn('console DigiTrust ServerCrypt init retry attempt')
+    clientCrypto = getBrowserCrypto();
+    if (retryCount++ < MAX_SUBTLE_RETRIES) {
+      setTimeout(function () {
+        DigiTrustCrypto.encrypt(valueToEncrypt, callback);
+      }, 100);
+    }
+    else {
+      console.error("Maximum crypto.subtle retry attempts reached for ServerCrypto mock");
+    }
+    return;
+  }
 
   clientCrypto.subtle.importKey(
     keyType,
@@ -179,10 +188,6 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
   var publicKey;
 
   log.debug('attempt to decrypt value: ', valueToDecrypt);
-
-  if (clientCrypto == null) {
-    clientCrypto = getBrowserCrypto();
-  }
 
   if (helpers.isSafari()) {
     keyType = 'jwk';
