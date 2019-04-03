@@ -3,14 +3,43 @@
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general')[env];
 var helpers = require('../modules/helpers');
+var util = require('./frameUtils');
 var ServerCrypto = require('./serverCrypto');
 var DTPublicKeyObject = require('../config/key.json');
 var noop = function () { };
 
 var LOGID = 'DigiTrustCrypto';
-var log = { debug: noop}; // this will later be re-initialized if the init pass requires
+var log = {}; // this will later be re-initialized if the init pass requires
+log.debug = log.log = log.info = log.error = noop;
 
-var crypto_browser = helpers.getBrowserCrypto();
+var clientCrypto = null;
+
+
+
+/**
+  * @function
+  * Safely get the browser crypto library to account for IE 11
+  * and Chrome on non SSL connection
+  * 
+  * */
+function getBrowserCrypto() {
+  // WebKit crypto subtle
+  var cryptoObj = window.crypto || window.msCrypto;
+
+  // This is outdated and probably should be removed
+  if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
+    window.crypto.subtle = window.crypto.webkitSubtle;
+  }
+
+  // Chrome on non-SSL sites
+  if (cryptoObj && !cryptoObj.subtle && helpers.isChrome() &&
+    (Math.random() < configGeneral.crypto.serverCryptoRate)) {
+    // chrome 61 removes crypto.subtle on insecure origins
+    cryptoObj.subtle = ServerCrypto.mockCryptoSubtle();
+  }
+
+  return cryptoObj;
+}
 
 
 /**
@@ -58,6 +87,25 @@ var DigiTrustCrypto = {
   }
 };
 
+/**
+  * @function
+  * Generate a pseudo random ID for the user
+  * 
+  * */
+DigiTrustCrypto.generateUserId = function () {
+  var buffer = new Uint8Array(8);
+
+  throw "Hello World";
+  if (clientCrypto == null) {
+    clientCrypto = getBrowserCrypto();
+  }
+
+
+  clientCrypto.getRandomValues(buffer);
+  return util.encodeArrayBuffer(buffer);
+};
+
+
 DigiTrustCrypto.getKeyVersion = function () {
   return DTPublicKeyObject.version;
 };
@@ -67,8 +115,8 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
   var keyType;
   var publicKey;
 
-  if (crypto_browser == null) {
-    crypto_browser = helpers.getBrowserCrypto();
+  if (clientCrypto == null) {
+    clientCrypto = getBrowserCrypto();
   }
 
   if (helpers.isSafari()) {
@@ -78,21 +126,16 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     keyType = 'spki';
     publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
   }
-  if (window.crypto && !window.crypto.subtle && helpers.isChrome() &&
-    (Math.random() < configGeneral.crypto.serverCryptoRate)) {
-    // chrome 61 removes crypto.subtle on insecure origins
-    crypto_browser.subtle = ServerCrypto.mockCryptoSubtle();
-  }
 
   log.debug('encrypt value: ', valueToEncrypt);
 
-  if (isMsCrypto(crypto_browser)) {
+  if (isMsCrypto(clientCrypto)) {
     msieEncrypt(valueToEncrypt, keyType, publicKey, callback);
     return;
   }
 
 
-  crypto_browser.subtle.importKey(
+  clientCrypto.subtle.importKey(
     keyType,
     publicKey,
     {
@@ -105,7 +148,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
     ['encrypt']
   )
     .then(function (cryptokey) {
-      crypto_browser.subtle.encrypt(
+      clientCrypto.subtle.encrypt(
         {
           name: DTPublicKeyObject.type,
           hash: {
@@ -121,7 +164,7 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
           // ServerCrypto returns a string value; in-browser crypto returns ArrayBuffer
           var encryptedValueEncodedB64 = (typeof (encryptedValue) === 'string') ?
             encryptedValue :
-            helpers.arrayBufferToBase64String(encryptedValue);
+            util.encodeArrayBuffer(encryptedValue);
           // console.log('just encrypted', keyType, encryptedValueEncodedB64);
           return callback(encryptedValueEncodedB64);
         })
@@ -137,8 +180,8 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
 
   log.debug('attempt to decrypt value: ', valueToDecrypt);
 
-  if (crypto_browser == null) {
-    crypto_browser = helpers.getBrowserCrypto();
+  if (clientCrypto == null) {
+    clientCrypto = getBrowserCrypto();
   }
 
   if (helpers.isSafari()) {
@@ -149,13 +192,13 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
     publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
   }
 
-  if (isMsCrypto(crypto_browser)) {
+  if (isMsCrypto(clientCrypto)) {
     msieDecrypt(valueToDecrypt, keyType, publicKey, callback);
     return;
   }
 
   log.debug('ready to create key');
-  var cryptKey = crypto_browser.subtle.importKey(
+  var cryptKey = clientCrypto.subtle.importKey(
     keyType,
     privateKey,
     {
@@ -171,7 +214,7 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
   cryptKey.then(function (cryptokey) {
     log.debug('enter decrypt with key', cryptokey);
 
-    crypto_browser.subtle.decrypt(
+    clientCrypto.subtle.decrypt(
       {
         name: DTPublicKeyObject.type,
         hash: {
@@ -195,7 +238,7 @@ DigiTrustCrypto.decrypt = function (valueToDecrypt, callback) {
 */
 var msieDecrypt = function (valueToDecrypt, keyType, privateKey, callback) {
 
-  var keyOp = crypto_browser.subtle.importKey(
+  var keyOp = clientCrypto.subtle.importKey(
     keyType,
     privateKey,
     {
@@ -210,7 +253,7 @@ var msieDecrypt = function (valueToDecrypt, keyType, privateKey, callback) {
 
   keyOp.oncomplete = function (evt) {
     var cryptokey = evt.target.result;
-    var decryptOp = crypto_browser.subtle.decrypt(
+    var decryptOp = clientCrypto.subtle.decrypt(
       {
         name: DTPublicKeyObject.type,
         hash: {
@@ -242,7 +285,7 @@ var msieDecrypt = function (valueToDecrypt, keyType, privateKey, callback) {
 */
 var msieEncrypt = function (valueToEncrypt, keyType, publicKey, callback) {
 
-  var keyOp = crypto_browser.subtle.importKey(
+  var keyOp = clientCrypto.subtle.importKey(
     keyType,
     publicKey,
     {
@@ -259,7 +302,7 @@ var msieEncrypt = function (valueToEncrypt, keyType, publicKey, callback) {
     var cryptokey = evt.target.result;
 
     try {
-      var encryptOp = crypto_browser.subtle.encrypt(
+      var encryptOp = clientCrypto.subtle.encrypt(
         {
           name: DTPublicKeyObject.type,
           hash: {

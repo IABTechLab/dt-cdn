@@ -23,7 +23,7 @@ var isFunc = function (fn) {
 /**
  * @function
  * Safely get the browser crypto library to account for IE 11
- * 
+ * DEPRECATED: MOVED TO FRAME UTILS
  * */
 var getBrowserCrypto = function () {
     // WebKit crypto subtle
@@ -222,7 +222,7 @@ helpers.createConsentClickListener = function () {
 /**
  * @function
  * Generate a pseudo random ID for the user
- * 
+ * DEPRECATED: MOVED TO FRAME UTILS* 
  * */
 helpers.generateUserId = function () {
     var buffer = new Uint8Array(8);
@@ -332,6 +332,7 @@ helpers.str2ab = function (str) {
     return buf;
 };
 
+// * DEPRECATED: MOVED TO FRAME UTILS
 helpers.arrayBufferToBase64String = function (arrayBuffer) {
     var byteArray = new Uint8Array(arrayBuffer);
     var byteString = '';
@@ -341,6 +342,7 @@ helpers.arrayBufferToBase64String = function (arrayBuffer) {
     return btoa(byteString);
 };
 
+// * DEPRECATED: MOVED TO FRAME UTILS
 helpers.base64StringToArrayBuffer = function (base64) {
     var binary_string =  atob(base64);
     var len = binary_string.length;

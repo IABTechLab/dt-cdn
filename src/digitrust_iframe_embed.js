@@ -11,6 +11,8 @@
 
 var DigiTrustCrypto = require('./dtFrame/cryptoLib');
 var DigiTrustCookie = require('./dtFrame/cookieDigiFrame');
+var util = require('./dtFrame/frameUtils');
+
 var env = require('./config/env.json').current;
 var configGeneral = require('./config/general.json')[env];
 var configErrors = require('./config/errors.json');
@@ -47,36 +49,6 @@ initLog();
 
 
 
-
-/*
- * Utility object
- */ 
-var util = {
-  /**
-   * Check to see if an object is empty
-   * @param {any} obj
-   */
-  isEmpty: function (obj) {
-    var t = typeof (obj),
-      k;
-    if (t === 'undefined' || obj == null) {
-      return true;
-    }
-    else if (t !== 'object') {
-      return false;
-    }
-
-    if (obj.hasOwnProperty('length') && obj.length == 0){
-      return true;
-    }
-    for (k in obj) {
-      if (obj.hasOwnProperty(k)){
-        return false;
-      }
-    }
-    return true;
-  }
-}
 
 if (window && !window['dtFrame']) {
   window['dtFrame'] = {

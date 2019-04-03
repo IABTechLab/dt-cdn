@@ -10,34 +10,43 @@
         // Place initializer inside a closure
 
         (function () {
+            var c = window.console || { log: function () { } };
+            if (!c.error) c.error = c.log;
+            window.console = c;
+
+            // Global error handler
+            var errGlobal = function (msg) {
+                var errObj;
+                if (typeof (msg) === 'string') {
+                    errObj = new ErrorEvent(msg);
+                }
+                else {
+                    errObj = msg || {};
+                }
+
+                var errMsg = "Digitrust frame error: " + errObj.message;
+                try {
+                    var eobj = {
+                        version: 1,
+                        type: 'DigiTrust.iframe.error',
+                        message: errMsg,
+                        value: {}
+                    }
+                    window.parent.postMessage(eobj, document.referrer);
+                    console.error(errMsg);
+                }
+                catch (myex) {
+                    console.error(myex);
+                }
+            }
 
             // ATTACH GLOBAL ERROR HANDLER
             try {
-                var errGlobal = function (msg, url, line, col, error) {
-                    var errMsg = "Digitrust frame error: " + msg;
-                    try {
-                        if (console && console.error) {
-                            console.error(errMsg);
-                        }
-                        else {
-                            console.log(errMsg);
-                        }
-
-                        var eobj = {
-                            version: 1,
-                            type: 'DigiTrust.iframe.error',
-                            value: {}
-                        }
-                        window.parent.postMessage(eobj, document.referrer);
-                    }
-                    catch (myex) {
-                        console.log(myex);
-                    }
-                }
-                window.addEventListener('error')
+                window.addEventListener('error', errGlobal)
             }
             catch (ex) {
                 // swallow this particular error
+                console.log('failed to attach error handler');
             }
 
 
@@ -81,6 +90,7 @@
                                 });
                             } catch (e) {
                                 sendMessage({ "error": true });
+                                throw (e);
                             }
                         } else {
                             sendMessage(userObj);
