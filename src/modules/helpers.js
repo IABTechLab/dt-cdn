@@ -209,7 +209,7 @@ helpers.createConsentClickListener = function () {
         }
 
         var possibleHref = _getElementHref(t);
-        if (possibleHref && (possibleHref !== '#')) {
+        if (possibleHref && ((possibleHref.startsWith("http://")) || (possibleHref.startsWith("https://")))) {
             possibleHref = helpers.getAbsolutePath(possibleHref);
             window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
