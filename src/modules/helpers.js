@@ -208,8 +208,11 @@ helpers.createConsentClickListener = function () {
             return true;
         }
 
-        var possibleHref = _getElementHref(t);
-        if (possibleHref && (possibleHref !== '#')) {
+        var possibleHref = _getElementHref(t) || '';
+        var posA = possibleHref.indexOf('http://'),
+            posB = possibleHref.indexOf('https://'),
+            isLink = posA == 0 || posB == 0;
+        if (isLink) {
             possibleHref = helpers.getAbsolutePath(possibleHref);
             window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
