@@ -165,7 +165,7 @@ helpers.xhr = xhr;
 var _getElementHref = function (current) {
     if (current) {
         if (current.nodeName.toLowerCase() === 'a') {
-            return current.getAttribute('href');
+            return current.href;
         } else if (current.nodeName.toLowerCase() === 'body') {
             return false;
         } else {
@@ -213,7 +213,6 @@ helpers.createConsentClickListener = function () {
             posB = possibleHref.indexOf('https://'),
             isLink = posA == 0 || posB == 0;
         if (isLink) {
-            possibleHref = helpers.getAbsolutePath(possibleHref);
             window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
             return false;
         }
