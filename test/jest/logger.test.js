@@ -4,8 +4,9 @@ test('can create logger', () => {
   let log = logger.createLogger('testLogger');
   let levels = log.getLevels();
   expect(levels).toBeTruthy();
-  expect(levels.length).toBe(5);
+  expect(levels['DEBUG'].val).toBe(0);
+  expect(levels['INFO'].val).toBe(1);
+  expect(levels['ERROR'].log).toBe('error');
   expect(log.name).toBe('testLogger');
-})
-
+});
 

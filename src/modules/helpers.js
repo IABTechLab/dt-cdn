@@ -2,7 +2,6 @@
 
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
-var consts = require('../config/constants.json');
 
 
 var helpers = {};
@@ -195,30 +194,31 @@ helpers.inIframe = function () {
  * Builds a consent click handler
  * */
 helpers.createConsentClickListener = function () {
-    if (helpers.inIframe()) {
-        return;
+  if (helpers.inIframe()) {
+    return;
+  }
+
+  var consentClickHandler = function (e) {
+    e = e || window.event;
+    var t = e.target || e.srcElement;
+    var consentLinkId = "digitrust-optout";
+
+    // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
+    if (t.id === consentLinkId) {
+      return true;
     }
 
-    var consentClickHandler = function (e) {
-        e = e || window.event;
-        var t = e.target || e.srcElement;
+    var possibleHref = _getElementHref(t) || '';
+    var posA = possibleHref.indexOf('http://'),
+      posB = possibleHref.indexOf('https://'),
+      isLink = posA == 0 || posB == 0;
+    if (isLink) {
+      window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
+      return false;
+    }
+  };
 
-        // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
-        if (t.id === consts.consentLinkId) {
-            return true;
-        }
-
-        var possibleHref = _getElementHref(t) || '';
-        var posA = possibleHref.indexOf('http://'),
-            posB = possibleHref.indexOf('https://'),
-            isLink = posA == 0 || posB == 0;
-        if (isLink) {
-            window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
-            return false;
-        }
-    };
-
-    addEvt(window, 'click', consentClickHandler)
+  addEvt(window, 'click', consentClickHandler)
 
 };
 

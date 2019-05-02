@@ -4,9 +4,11 @@
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
   "scripts": {
-    "test": "karma start karma.conf.js --single-run",
+    "test": "jest",
+    "karmatest": "karma start karma.conf.js --single-run",
     "unit": "karma start karma.conf.js",
     "jest": "jest",
+    "coverage": "jest --coverage",
     "copypages": "copyfiles -f ./pages/*.* ./dist",
     "versionUpdate": "genversion src/_version.js",
     "buildclient": "browserify src/digitrust_client.js -do dist/digitrust.js",
