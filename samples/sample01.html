@@ -17,7 +17,11 @@
             member: 'example_member_id',
             site: 'example_site_id',
 			//logging: { level: "DEBUG", enable: true },
-			environment: {
+            environment: {
+                redir: {
+                    exp: 2,
+                    experiod: 's'
+                },
 				urls: {
                     "digitrustIframe": "http://local.digitru.st/dist/dt_debug.html",
                     "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json"
@@ -26,20 +30,7 @@
 					postMessageOrigin: "http://local.digitru.st",
 					timeoutDuration: (1000 * 60)
 				}
-			},
-            adblocker: {
-                logoSrc: 'http://i.imgur.com/xfgM1wq.png',
-                logoText: 'The Seattle Times',
-                pictureSrc: 'http://i.imgur.com/IP5RRah.png',
-                blockContent: true,
-                detection: true,
-                unstyled: true,
-                customCssPath: './custom-dt.css',
-                detectedCallback: function () { console.log('Publisher executed custom code after adblock detection'); },
-                //popupFontColor: 'white', // @todo add to GitHub spec
-                //popupBackgroundColor: 'orange', // @todo add to GitHub spec
-                //userMessage: "test message"
-            }
+			}
         },
         function (digiTrustResult) {
             //console.log("Digi sample callback", digiTrustResult);
@@ -63,16 +54,6 @@
 			}
 			
         });
-        // var json = DigiTrust.getUser({member: ''});
-        // console.log(json);
-        /*var json = DigiTrust.getUser({member: '3rd_party_id'}, function (digiTrustResult) {
-            console.log('3rd party getUser result', digiTrustResult);
-            if (digiTrustResult.identity.id) {
-                DigiTrustCrypto.decrypt(digiTrustResult.identity.id, function(decryptedId) {
-                    console.log(decryptedId);
-                })
-            }
-        });*/
     </script>
 </head>
 <body>

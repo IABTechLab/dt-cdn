@@ -210,25 +210,62 @@ var inIframe = function () {
 var DT_REDIR_KEY = "dtrdir";
 var REDIR_EXPIRE = 30; // days
 
+var getConfig = function () {
+  return DigiTrust._config.getConfig();
+}
+
 /*
  * Encapsulate storing flags for redirect control.
  * 
  */
 var flagStore = {
+  _settings: {
+    key: null,
+    expire: {
+      val: 7,
+      per: 'd'
+    },
+    expirePeriods: {
+      'd': 24,
+      'h': 1,
+      'm': (1 / 60),
+      's': (1/3600)
+    },
+    checkLoad: function () {
+      var s = flagStore['_settings'];
+      if (s.key != null) {
+        return true;
+      }
+      var opt = getConfig(),
+        rd = opt.redir || {};
+      s.key = rd.key || 'DigiTrust.v1.redir';
+      if (rd.exp) {
+        s.expire.val = rd.exp;
+      }
+      if (rd.experiod) {
+        s.expire.per = rd.experiod;
+      }
+    }
+  },
   getStore: function () {
+    flagStore._settings.checkLoad();
     return window.localStorage;
     // return window.sessionStorage;
   },
   ignoreRedirect: function () {
     var store = flagStore.getStore();
-    var tmp = store.getItem(DT_REDIR_KEY);
+    var s = flagStore._settings;
+    var tmp = store.getItem(s.key);
     if (tmp == null) {
       return false;
     }
     try {
       var obj = JSON.parse(tmp);
       var ts = new Date(obj.exp);
-      var isExpired = (ts.setHours(REDIR_EXPIRE * 24) <= new Date().getTime());
+      var expFactor = s.expirePeriods[s.expire.per] || 24;
+      var expVal = s.expire.val * expFactor;
+
+      var isExpired = (ts.setHours(expVal) <= new Date().getTime());
       if (isExpired) {
         flagStore.clearRedirectFlag();
         return false;
@@ -242,18 +279,20 @@ var flagStore = {
   },
   clearRedirectFlag: function () {
     var store = flagStore.getStore();
-    store.removeItem(DT_REDIR_KEY);
+    var key = flagStore._settings.key;
+    store.removeItem(key);
   },
   clearAll: function () {
     flagStore.clearRedirectFlag();
   },
   setRedirectFlag: function () {
     var store = flagStore.getStore();
+    var key = flagStore._settings.key;
     var obj = {
       val: true,
       exp: new Date().getTime()
     };
-    store.setItem(DT_REDIR_KEY, JSON.stringify(obj));
+    store.setItem(key, JSON.stringify(obj));
   }
 }
 

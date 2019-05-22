@@ -84,6 +84,54 @@ DigiTrust._setDigiTrustOptions = function (options) {
 };
 
 
+
+var newConfig = null; // instance of the cloned and merged configuration
+/**
+* @function
+* Wrapper method that merges any initialized options into the general configuration.
+*/
+DigiTrust._config.getConfig = function() {
+  var opts = window.DigiTrust.initializeOptions;
+  var env = opts && opts.environment;
+
+  if (newConfig != null) {
+    return newConfig;
+  }
+
+  var i;
+  var config = Object.assign({}, configGeneral);
+
+  // go for specific items
+  var keys = ['urls', 'iframe', 'redir']
+
+  // function to set the specific override values
+  var setVals = function (target, source, key) {
+    try {
+      var k;
+      if (source[key] == null) { return; }
+      if (target[key] == null) {
+        target[key] = {};
+      }
+      for (k in source[key]) {
+        if (source[key].hasOwnProperty(k)) {
+          target[key][k] = source[key][k];
+        }
+      }
+    }
+    catch (ex) { }
+  }
+
+  for (i = 0; i < keys.length; i++) {
+    setVals(config, env, keys[i]);
+  }
+
+  newConfig = config;
+
+  return newConfig;
+}
+
+
+
 var initInternal = function(options, initializeCallback) {
 	log.debug('init Internal');
     try {
@@ -189,6 +237,8 @@ DigiTrust.getUser = function (options, callback) {
 DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
+
+
 
 module.exports = DigiTrust
 /*
