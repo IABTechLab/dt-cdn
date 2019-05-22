@@ -55,13 +55,27 @@ var getBrowserCrypto = function () {
  * @param {function} handler  An event handler function or null
  */
 var addEvt = function (elem, eventName, handler) {
-    elem.addEventListener(eventName, function (evt) {
-        if (isFunc(handler)) {
-            handler.call(null, evt);
-        }
-    })
+  var evtWrap = function (evt) {
+    if (isFunc(handler)) {
+      handler.call(null, evt);
+    }
+  };
+  elem.addEventListener(eventName, evtWrap);
+
+  return evtWrap; // return reference so we can clean up later
 }
 
+/**
+ * 
+ * @param {any} elem
+ * @param {any} eventName
+ * @param {any} handler The function (or wrapper ref) to the handler
+ */
+var nixEvt = function (elem, eventName, handler) {
+  if (elem && elem.removeEventListener) {
+    elem.removeEventListener(eventName, handler);
+  }
+}
 
 /*
 *   https://github.com/toddmotto/atomic
@@ -181,7 +195,10 @@ helpers.getAbsolutePath = function (href) {
     return link.cloneNode(false).href;
 };
 
-helpers.inIframe = function () {
+/*
+ * Test to see if we are in an iFrame safely
+ */ 
+var inIframe = function () {
     try {
         return window.self !== window.top;
     } catch (e) {
@@ -189,14 +206,75 @@ helpers.inIframe = function () {
     }
 };
 
+// key used in localstorage to flag redirect
+var DT_REDIR_KEY = "dtrdir";
+var REDIR_EXPIRE = 30; // days
+
+/*
+ * Encapsulate storing flags for redirect control.
+ * 
+ */
+var flagStore = {
+  getStore: function () {
+    return window.localStorage;
+    // return window.sessionStorage;
+  },
+  ignoreRedirect: function () {
+    var store = flagStore.getStore();
+    var tmp = store.getItem(DT_REDIR_KEY);
+    if (tmp == null) {
+      return false;
+    }
+    try {
+      var obj = JSON.parse(tmp);
+      var ts = new Date(obj.exp);
+      var isExpired = (ts.setHours(REDIR_EXPIRE * 24) <= new Date().getTime());
+      if (isExpired) {
+        flagStore.clearRedirectFlag();
+        return false;
+      }
+      return true;
+    }
+    catch (ex) {
+      flagStore.clearRedirectFlag();
+      return false;
+    }
+  },
+  clearRedirectFlag: function () {
+    var store = flagStore.getStore();
+    store.removeItem(DT_REDIR_KEY);
+  },
+  clearAll: function () {
+    flagStore.clearRedirectFlag();
+  },
+  setRedirectFlag: function () {
+    var store = flagStore.getStore();
+    var obj = {
+      val: true,
+      exp: new Date().getTime()
+    };
+    store.setItem(DT_REDIR_KEY, JSON.stringify(obj));
+  }
+}
+
+helpers.resetFlags = function () {
+  flagStore.clearAll();
+}
+
 /**
  * @function
  * Builds a consent click handler
  * */
 helpers.createConsentClickListener = function () {
-  if (helpers.inIframe()) {
+  if (inIframe()) {
     return;
   }
+
+  if (flagStore.ignoreRedirect()) {
+    return;
+  }
+
+  var handlerRef;
 
   var consentClickHandler = function (e) {
     e = e || window.event;
@@ -213,12 +291,15 @@ helpers.createConsentClickListener = function () {
       posB = possibleHref.indexOf('https://'),
       isLink = posA == 0 || posB == 0;
     if (isLink) {
+      // remove consentClick link handler after we attempt
+      nixEvt(window, 'click', handlerRef);
+      flagStore.setRedirectFlag();
       window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
       return false;
     }
   };
 
-  addEvt(window, 'click', consentClickHandler)
+  handlerRef = addEvt(window, 'click', consentClickHandler)
 
 };
 
