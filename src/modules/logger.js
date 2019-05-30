@@ -108,8 +108,6 @@ function Logger(){
 				}					
 			}
 		}
-		
-		
 	})(passedArgs);
 	
 	/**

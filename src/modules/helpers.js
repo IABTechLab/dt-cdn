@@ -2,7 +2,6 @@
 
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
-var consts = require('../config/constants.json');
 
 
 var helpers = {};
@@ -56,13 +55,27 @@ var getBrowserCrypto = function () {
  * @param {function} handler  An event handler function or null
  */
 var addEvt = function (elem, eventName, handler) {
-    elem.addEventListener(eventName, function (evt) {
-        if (isFunc(handler)) {
-            handler.call(null, evt);
-        }
-    })
+  var evtWrap = function (evt) {
+    if (isFunc(handler)) {
+      handler.call(null, evt);
+    }
+  };
+  elem.addEventListener(eventName, evtWrap);
+
+  return evtWrap; // return reference so we can clean up later
 }
 
+/**
+ * 
+ * @param {any} elem
+ * @param {any} eventName
+ * @param {any} handler The function (or wrapper ref) to the handler
+ */
+var nixEvt = function (elem, eventName, handler) {
+  if (elem && elem.removeEventListener) {
+    elem.removeEventListener(eventName, handler);
+  }
+}
 
 /*
 *   https://github.com/toddmotto/atomic
@@ -182,7 +195,10 @@ helpers.getAbsolutePath = function (href) {
     return link.cloneNode(false).href;
 };
 
-helpers.inIframe = function () {
+/*
+ * Test to see if we are in an iFrame safely
+ */ 
+var inIframe = function () {
     try {
         return window.self !== window.top;
     } catch (e) {
@@ -190,35 +206,135 @@ helpers.inIframe = function () {
     }
 };
 
+var getConfig = function () {
+  return DigiTrust._config.getConfig();
+}
+
+/*
+ * Encapsulate storing flags for redirect control.
+ * 
+ */
+var flagStore = {
+  _settings: {
+    key: null,
+    expire: {
+      val: 7,
+      per: 'd'
+    },
+    expirePeriods: {
+      'd': 24,
+      'h': 1,
+      'm': (1 / 60),
+      's': (1/3600)
+    },
+    checkLoad: function () {
+      var s = flagStore['_settings'];
+      if (s.key != null) {
+        return true;
+      }
+      var opt = getConfig(),
+        rd = opt.redirectInterval || {};
+      s.key = rd.key || 'DigiTrust.v1.redir';
+      if (rd.exp) {
+        s.expire.val = rd.exp;
+      }
+      if (rd.experiod) {
+        s.expire.per = rd.experiod;
+      }
+    }
+  },
+  getStore: function () {
+    flagStore._settings.checkLoad();
+    return window.localStorage;
+    // return window.sessionStorage;
+  },
+  ignoreRedirect: function () {
+    var store = flagStore.getStore();
+    var s = flagStore._settings;
+    var tmp = store.getItem(s.key);
+    if (tmp == null) {
+      return false;
+    }
+    try {
+      var obj = JSON.parse(tmp);
+      var ts = new Date(obj.exp);
+      var expFactor = s.expirePeriods[s.expire.per] || 24;
+      var expVal = s.expire.val * expFactor;
+
+      var isExpired = (ts.setHours(expVal) <= new Date().getTime());
+      if (isExpired) {
+        flagStore.clearRedirectFlag();
+        return false;
+      }
+      return true;
+    }
+    catch (ex) {
+      flagStore.clearRedirectFlag();
+      return false;
+    }
+  },
+  clearRedirectFlag: function () {
+    var store = flagStore.getStore();
+    var key = flagStore._settings.key;
+    store.removeItem(key);
+  },
+  clearAll: function () {
+    flagStore.clearRedirectFlag();
+  },
+  setRedirectFlag: function () {
+    var store = flagStore.getStore();
+    var key = flagStore._settings.key;
+    var obj = {
+      val: true,
+      exp: new Date().getTime()
+    };
+    store.setItem(key, JSON.stringify(obj));
+  }
+}
+
+helpers.resetFlags = function () {
+  flagStore.clearAll();
+}
+
 /**
  * @function
  * Builds a consent click handler
  * */
 helpers.createConsentClickListener = function () {
-    if (helpers.inIframe()) {
-        return;
+  if (inIframe()) {
+    return;
+  }
+
+  if (flagStore.ignoreRedirect()) {
+    return;
+  }
+
+  var handlerRef;
+
+  var consentClickHandler = function (e) {
+    e = e || window.event;
+    var t = e.target || e.srcElement;
+    var consentLinkId = "digitrust-optout";
+
+    // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
+    if (t.id === consentLinkId) {
+      return true;
     }
 
-    var consentClickHandler = function (e) {
-        e = e || window.event;
-        var t = e.target || e.srcElement;
+    var possibleHref = _getElementHref(t) || '';
+    var posA = possibleHref.indexOf('http://'),
+      posB = possibleHref.indexOf('https://'),
+      isLink = posA == 0 || posB == 0;
+    if (isLink) {
+      // remove consentClick link handler after we attempt
+      nixEvt(window, 'click', handlerRef);
+      flagStore.setRedirectFlag();
+      window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
+      return false;
+    }
+  };
 
-        // Listen to all links except for the OPT OUT link (do not-redirect, go to opt-out url)
-        if (t.id === consts.consentLinkId) {
-            return true;
-        }
-
-        var possibleHref = _getElementHref(t) || '';
-        var posA = possibleHref.indexOf('http://'),
-            posB = possibleHref.indexOf('https://'),
-            isLink = posA == 0 || posB == 0;
-        if (isLink) {
-            window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
-            return false;
-        }
-    };
-
-    addEvt(window, 'click', consentClickHandler)
+  handlerRef = addEvt(window, 'click', consentClickHandler)
 
 };
 

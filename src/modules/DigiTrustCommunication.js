@@ -29,52 +29,8 @@ var MKEY = {
   idGet: kID + '.request'
 };
 
-var newConfig = null; // instance of the cloned and merged configuration
-/**
-* @function
-* Wrapper method that merges any initialized options into the general configuration.
-*/
-function getConfig(){
-	var opts = window.DigiTrust.initializeOptions;
-    var env = opts && opts.environment;
-
-    if (newConfig != null) {
-        return newConfig;
-    }
-	
-	var i;
-	var config = Object.assign({}, configGeneral);
-	
-	// go for specific items
-	var keys = ['urls', 'iframe']
-	
-	// function to set the specific override values
-	var setVals = function(target, source, key){
-		try{
-			var k;
-			if(source[key] == null){ return; }
-			if(target[key] == null){
-				if(source[key] == null){ return; }
-			}
-			else{
-				target[key] = {}
-			}
-			for(k in source[key]){
-				if(source[key].hasOwnProperty(k)){
-					target[key][k] = source[key][k];
-				}
-			}
-		}
-		catch(ex){}
-	}
-	
-	for(i=0;i<keys.length;i++){
-		setVals(config, env, keys[i]);
-    }
-
-    newConfig = config;
-	
-    return newConfig;
+var getConfig = function () {
+  return DigiTrust._config.getConfig();
 }
 
 /**
