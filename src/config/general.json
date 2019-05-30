@@ -8,7 +8,7 @@
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
     },
-    "redir": {
+    "redirectInterval": {
       "exp": 7
     },
     "cookie": {

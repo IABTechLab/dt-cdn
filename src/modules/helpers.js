@@ -206,10 +206,6 @@ var inIframe = function () {
     }
 };
 
-// key used in localstorage to flag redirect
-var DT_REDIR_KEY = "dtrdir";
-var REDIR_EXPIRE = 30; // days
-
 var getConfig = function () {
   return DigiTrust._config.getConfig();
 }
@@ -237,7 +233,7 @@ var flagStore = {
         return true;
       }
       var opt = getConfig(),
-        rd = opt.redir || {};
+        rd = opt.redirectInterval || {};
       s.key = rd.key || 'DigiTrust.v1.redir';
       if (rd.exp) {
         s.expire.val = rd.exp;
