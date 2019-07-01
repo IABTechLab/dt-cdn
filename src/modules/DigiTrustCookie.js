@@ -15,7 +15,12 @@ var _maxAgeToDate = function (milliseconds) {
 };
 
 var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
-  document.cookie = cookieKV + expiresKV + domainKV + pathKV;
+  var str = cookieKV + expiresKV + domainKV + pathKV;
+  if (str.substr(str.length - 1) != ';') {
+    str += ';'
+  }
+  str += "SameSite=none;";
+  document.cookie = str;
 };
 
 var _setIdentityCookie = function (cookieV) {
