@@ -378,24 +378,6 @@ helpers.isEmpty = function (obj) {
     return true;
 };
 
-helpers.getObjectByKeyFromArray = function (items, key, value) {
-    for (var i = 0; i < items.length; i++) {
-        if (items[i][key] === value) {
-            return items[i];
-        }
-    }
-    return null;
-};
-
-helpers.getObjectByKeyFromObject = function (items, key, value) {
-    for (var itemKey in items) {
-        if (items[itemKey][key] === value) {
-            return items[itemKey];
-        }
-    }
-    return null;
-};
-
 helpers.getUrlParameterByName = function (name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
