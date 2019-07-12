@@ -1,4 +1,5 @@
 /*
+  THIS IS NOW CONSIDERED A DEAD FILE - REMOVE IN FUTURE BUILD
 * Constants and IDs that do not change.
 * These have been extracted from the general config.
 * We do not use the const keyword because at time of writing (2018) not
@@ -7,12 +8,14 @@
 */
 {
   /* ID values used when building the DigiTrust framework DOM objects */
-  "consentLinkId": "digitrust-optout",
   /*
+  "consentLinkId": "digitrust-optout",
   "dtAdbContainer": "digitrust-adb-container", // not used
   "dtAdbMessage": "digitrust-adb-message", // not used
   "publisherPicture": "dt-pub-pic", //not used?
   */
   /* dt common frame name */
+  /*
   "locatorFrameName": "__dtLocator"
+  */
 }

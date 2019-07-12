@@ -32,8 +32,19 @@ var logLevelsByNum = [
 * Return a numeric value for the level
 * @return {number} mapped numeric value or the "ERROR" level value
 */
-function getLevelVal(level){
-	var lvl = logLevels[level];
+function getLevelVal(level) {
+  var ltype = typeof (level);
+  var lvl;
+  if (ltype === 'string') {
+    lvl = logLevels[level];
+  }
+  else if (ltype === 'number') {
+    lvl = logLevelsByNum[level];
+  }
+  else {
+    return 3;
+  }
+
 	if(lvl == null){
 		return 3;
 	}
@@ -73,6 +84,29 @@ function toArray(obj){
 	return arr;
 }
 
+// expected methods on a console object
+var consoleMethods = ['info', 'debug', 'warn', 'error', 'trace'];
+var noop = function () { };
+var isFunc = function (fn) { return typeof (fn) === 'function' };
+
+/**
+ * Adds any missing methods to the passed console implementation
+ * 
+ * @param {any} obj
+ */
+function insureValidConsole(obj) {
+  if (!isFunc(obj.log)) {
+    obj.log = noop;
+  }
+  var cm = consoleMethods;
+  var i;
+  for (i = 0; i < cm.length; i++) {
+    if (!isFunc(obj[cm[i]])) {
+      obj[cm[i]] = obj.log;
+    }
+  }
+}
+
 /**
 * @class
 * The class definition for a new logger. This is created with the factory method "createLogger"
@@ -84,6 +118,18 @@ function Logger(){
 	this.enabled = true;
 	var passedArgs = toArray(arguments);
 	var me = this;
+
+  // wrap the console so we can override
+  var consoleWrapper = console;
+
+	/**
+	* @function
+	* Substitute the default console for a custom object
+	*/
+  this.setConsoleObj = function (obj) {
+    insureValidConsole(obj);
+    consoleWrapper = obj;
+  };
 
 	// Initializer method
 	(function(args){
@@ -105,7 +151,10 @@ function Logger(){
 				}
 				if(val.level == null){
 					val.level = DEF_LOGLEVEL;
-				}					
+        }
+        if (val.console != null) {
+          me.setConsoleObj(val.console);
+        }
 			}
 		}
 	})(passedArgs);
@@ -119,30 +168,11 @@ function Logger(){
 		var lvl = logLevels[level];
 		var level = (lvl && lvl.val) || 0;
 		var myLevel = getLevelVal(me.opts.level);
-		
+
+    console.log('---LEVEL CHECH --- MINE: ' + myLevel + ' ASK: ' + level);
+    console.table(level);
 		return (level >= myLevel);
-	}
-	
-	/**
-	* @function
-	* Change the internal log level after initialization
-	*/
-	this.setLogLevel = function(level){
-		var lvlType = typeof(level);
-		var lvlObj;
-		if(lvlType === 'string'){
-			this.opts.level = level;
-		}
-		else if(typeof(args[args.length - 1]) === 'number'){
-			lvlObj = logLevelsByNum[level];
-			if(lvlObj){
-				try{
-					this.opts.level = lvlObj.log.toUpperCase();
-				}
-				catch(ex){}
-			}
-		}
-	}
+  }
 
 	/**
 	* @function
@@ -158,12 +188,12 @@ function Logger(){
 		
 		if(this.enabled != true){
 			return;
-		}
+    }
 		
 		if(args.length >= 2){
 			if(typeof(args[args.length - 1]) === 'string'){
 				lvlArg = args.pop();
-				logIt = this.doLog(lvlArg);
+				logIt = doLog(lvlArg);
 				levelDef = logLevels[lvlArg];
 			}
 			else if(typeof(args[args.length - 1]) === 'number'){
@@ -172,7 +202,7 @@ function Logger(){
 				levelDef = logLevelsByNum[lvlArg];
 			}
 		}
-		
+
 		if(!logIt){
 			return;
 		}
@@ -194,17 +224,42 @@ function Logger(){
 		if(doTrace || levelDef.val == logObj.DEBUG){
 			args.push({ page: document.location.href });
 		}
-		
-		if(console[levelDef.log]){
-			console[levelDef.log].apply(null, args);
+
+    var result;
+    var cw = consoleWrapper;
+		if(cw[levelDef.log]){
+      result = cw[levelDef.log].apply(null, args);
 		}
 		else{
-			console.log.apply(null, args);
+      result = cw.log.apply(null, args);
 		}
-		if(doTrace && console.trace){
-			console.trace();
-		}
+    if (doTrace && cw.trace){
+      cw.trace();
+    }
+
+    return result;
 	}
+}
+
+/**
+* @function
+* Change the internal log level after initialization
+*/
+Logger.prototype.setLogLevel = function (level) {
+  var lvlType = typeof (level);
+  var lvlObj;
+  if (lvlType === 'string') {
+    this.opts.level = level;
+  }
+  else if (lvlType === 'number') {
+    lvlObj = logLevelsByNum[level];
+    if (lvlObj) {
+      try {
+        this.opts.level = lvlObj.log.toUpperCase();
+      }
+      catch (ex) { }
+    }
+  }
 }
 
 Logger.prototype.getLevels = function(){
@@ -214,22 +269,22 @@ Logger.prototype.getLevels = function(){
 Logger.prototype.debug = function(){
 	var args = toArray(arguments);
 	args.push(logObj.DEBUG);
-	this.log.apply(this, args);
+  return this.log.apply(this, args);
 }
 Logger.prototype.info = function(){
 	var args = toArray(arguments);
 	args.push(logObj.INFO);
-	this.log.apply(this, args);
+  return this.log.apply(this, args);
 }
 Logger.prototype.warn = function(){
-	var args = toArray(arguments);
-	args.push(logObj.WARN);
-	this.log.apply(this, args);
+  var args = toArray(arguments);
+  args.push(logObj.WARN);
+	return this.log.apply(this, args);
 }
 Logger.prototype.error = function(){
 	var args = toArray(arguments);
 	args.push(logObj.ERROR);
-	this.log.apply(this, args);
+  return this.log.apply(this, args);
 }
 
 var logObj = {
