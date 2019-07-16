@@ -37,13 +37,25 @@ They will be automatically run on push. The Circle CI build will fail if the uni
 
 ### Production Releases
 
-In general we are using "[three-flow](http://www.nomachetejuggling.com/2017/04/09/a-different-branching-strategy/)" to manage mostly automated releases. Releases are branched off of master into `candidate` and then into a `release` branch.
+In general we are using "[three-flow](http://www.nomachetejuggling.com/2017/04/09/a-different-branching-strategy/)" to manage mostly automated releases. 
+Releases are branched off of master into `candidate` and then into a `release` branch.
+In order to get automated Releases in github we tag releases in master as well.
 
-1. Update `version` in `package.json`
-2. Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
-3. git checkout candidate
-4. git pull
-5. git merge --no-ff master
-6. git tag candidate-1.5.13
-7. git push --follow-tags
-8. git push --force origin candidate-1.5.13:release
+To verify the current release version, consult this URL https://cdn.digitru.st/prod/1/digitrust.min.js or load the 
+test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTrust.version` in the debug console.
+
+1.  Update `version` in `package.json`
+2.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
+3.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` to the most recent prior
+    release version in the `build` section of `src/config/general.json`
+4.  Commit and push your changes to master branch
+5.  git checkout candidate
+6.  git pull
+7.  git merge --no-ff master
+8.  git tag candidate-1.5.35
+9.  git push --follow-tags
+10. git push --force origin candidate-1.5.35:release
+11. git checkout master
+12. git tag v1.5.35
+13. Go to project site on Github and draft a new release
+14. Reflect release notes in the `Release Notes` wiki page at https://github.com/digi-trust/dt-cdn/wiki/Release-Notes
