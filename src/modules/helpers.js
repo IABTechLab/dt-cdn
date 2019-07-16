@@ -378,55 +378,46 @@ helpers.isEmpty = function (obj) {
     return true;
 };
 
-helpers.getObjectByKeyFromArray = function (items, key, value) {
-    for (var i = 0; i < items.length; i++) {
-        if (items[i][key] === value) {
-            return items[i];
-        }
+helpers.getUrlParameterByName = function (name, search) {
+  var search = search || location.search;
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  var results = regex.exec(search);
+
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
+/**
+ * Sniffs UserAgent for older IE.
+ * @param {any} ua
+ */
+helpers.isIE = function (ua) {
+  var ua = ua || navigator.userAgent;
+  ua = ua.toLowerCase();
+  var num = Math.max(ua.indexOf('msie'), ua.indexOf('trident'));
+  return (num > -1) ? true : false;
+};
+
+helpers.isSafari = function (ua) {
+  var ua = ua || navigator.userAgent;
+  ua = ua.toLowerCase();
+  if (ua.indexOf('safari') !== -1) {
+    if (ua.indexOf('chrome') > -1) {
+      return false;
+    } else {
+      return true;
     }
-    return null;
+  }
+  return false;
 };
 
-helpers.getObjectByKeyFromObject = function (items, key, value) {
-    for (var itemKey in items) {
-        if (items[itemKey][key] === value) {
-            return items[itemKey];
-        }
-    }
-    return null;
-};
-
-helpers.getUrlParameterByName = function (name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-};
-
-helpers.isIE = function  () {
-    var myNav = navigator.userAgent.toLowerCase();
-    return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
-};
-
-helpers.isSafari = function () {
-    var ua = navigator.userAgent.toLowerCase();
-    if (ua.indexOf('safari') !== -1) {
-        if (ua.indexOf('chrome') > -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    return false;
-};
-
-helpers.isChrome = function () {
-    var ua = navigator.userAgent.toLowerCase();
-    if (ua.indexOf('chrome') !== -1) {
-        return true;
-    }
-    return false;
+helpers.isChrome = function (ua) {
+  var ua = ua || navigator.userAgent;
+  ua = ua.toLowerCase();
+  if (ua.indexOf('chrome') !== -1) {
+    return true;
+  }
+  return false;
 };
 
 helpers.isValidJSON = function (str) {

@@ -3,7 +3,6 @@
 var env = require('../config/env.json').current;
 var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
-var consts = require('../config/constants.json');
 
 var LOGID = 'DigiTrustCommunication';
 var logObj = require('./logger');
