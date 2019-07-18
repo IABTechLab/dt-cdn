@@ -140,7 +140,7 @@ DC.startConnection = function (loadSuccess) {
     DC.iframe = document.createElement('iframe');
     DC.iframe.style.display = 'none';
     DC.iframe.src = conf.urls.digitrustIframe;
-    DC.iframe.name = consts.locatorFrameName || '__dtLocator';
+  DC.iframe.name = '__dtLocator'; // locatorFrameName
     DC.iframeStatus = 1;
     document.body.appendChild(DC.iframe);
 	log.debug('communication frame added');
