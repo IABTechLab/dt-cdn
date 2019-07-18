@@ -106,44 +106,40 @@ function _messageHandler(evt) {
 };
 
 DC.startConnection = function (loadSuccess) {
-	initOptions(); // initialization point
-    var conf = getConfig();
-	
-    /*
-        If there is a connection problem, or if adblocker blocks the request,
-        start a 10 second timeout to notify the caller. Clear the timeout upon
-        successful connection to the iframe
+  initOptions(); // initialization point
+  var conf = getConfig();
 
-        Note: onload is executed even on non 2XX HTTP STATUSES (e.g. 404, 500)
-              for cross-domain iframe requests
-    */
-    var iframeLoadErrorTimeout = setTimeout(function () {
-        loadSuccess(false);
-        DC.iframeStatus = 0;
-    }, conf.iframe.timeoutDuration);
+  /*
+      If there is a connection problem, or if adblocker blocks the request,
+      start a 10 second timeout to notify the caller. Clear the timeout upon
+      successful connection to the iframe
 
-  pubsub.subscribe(MKEY.ready, function (iframeReady) {
-        clearTimeout(iframeLoadErrorTimeout);
-        DC.iframeStatus = 2;
-        loadSuccess(true);
-    });
+      Note: onload is executed even on non 2XX HTTP STATUSES (e.g. 404, 500)
+            for cross-domain iframe requests
+  */
+  var iframeLoadErrorTimeout = setTimeout(function () {
+    loadSuccess(false);
+    DC.iframeStatus = 0;
+  }, conf.iframe.timeoutDuration);
 
   pubsub.subscribe(MKEY.ready, function (iframeReady) {
     clearTimeout(iframeLoadErrorTimeout);
+    iframeLoadErrorTimeout = 0;
     DC.iframeStatus = 2;
     loadSuccess(true);
   });
 
-    // Add postMessage listeners
-    window.addEventListener('message', _messageHandler, false);
+  // Add postMessage listeners
+  window.addEventListener('message', _messageHandler, false);
 
-    DC.iframe = document.createElement('iframe');
-    DC.iframe.style.display = 'none';
-    DC.iframe.src = conf.urls.digitrustIframe;
+  DC.iframe = document.createElement('iframe');
+  DC.iframe.style.display = 'none';
+  DC.iframe.src = conf.urls.digitrustIframe;
   DC.iframe.name = '__dtLocator'; // locatorFrameName
-    DC.iframeStatus = 1;
-    document.body.appendChild(DC.iframe);
-	log.debug('communication frame added');
+  DC.iframeStatus = 1;
+  document.body.appendChild(DC.iframe);
+
+  log.debug('communication frame added');
 };
 
 /**

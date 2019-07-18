@@ -54,9 +54,9 @@
   },
   "build": {
     "urls": {
-      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.34/",
-      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.34/redirect.html",
-      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.34/dt.html",
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.35/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.35/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.35/dt.html",
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
