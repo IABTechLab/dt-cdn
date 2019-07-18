@@ -17,7 +17,7 @@ beforeEach(() => {
 
 })
 
-
+/*
 test('DigiTrust can init', done => {
   DigiTrust.initialize(
     {
@@ -33,7 +33,6 @@ test('DigiTrust can init', done => {
   )
 });
 
-
 test('DigiTrust fails init with sample rate zero', done => {
   DigiTrust.initialize({
     member: 'foo',
@@ -47,6 +46,7 @@ test('DigiTrust fails init with sample rate zero', done => {
       done();
     });
 });
+*/
 
 test('DigiTrust invalid member fails', done => {
   DigiTrust.initialize({},
@@ -69,7 +69,7 @@ test('DigiTrust undefined callback does not throw', done => {
   done();
 });
 
-
+/*
 test('DigiTrust getUser from callback', done => {
   DigiTrust.getUser({ member: "foo" }, function (rslt) {
     expect(rslt).not.toBeNull();
@@ -77,6 +77,7 @@ test('DigiTrust getUser from callback', done => {
   });
 
 });
+*/
 
 test('DigiTrust getUser invalid member returns false', done => {
   DigiTrust.getUser({ member: null }, function (rslt) {
