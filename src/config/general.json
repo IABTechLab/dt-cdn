@@ -102,55 +102,6 @@
     },
     "gvlVendorId": 64
   },
-  "dev": {
-    "urls": {
-      "digitrustHostPath": "//digitrust.s3.amazonaws.com/dev/v1/",
-      "digitrustRedirect": "//digitrust.s3.amazonaws.com/dev/v1/redirect.html",
-      "digitrustIframe": "//digitrust.s3.amazonaws.com/dev/v1/dt.html",
-      "digitrustIdService": "//lambda-dev.digitru.st/id/v1",
-      "optoutInfo": "//digitrust.s3.amazonaws.com/dev/v1/info.html",
-      "adblockCheck": "//stats.aws.rubiconproject.com/"
-    },
-    "cookie": {
-      "version": 2,
-      "producer": "SIx8cS71Eo",
-      "publisher": {
-        "domainKeyValue": "",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrust.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=digitrust.s3.amazonaws.com;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrust.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
-    },
-    "iframe": {
-      "timeoutDuration": 10000,
-      "postMessageOrigin": "http://digitrust.s3.amazonaws.com"
-    },
-    "crypto": {
-      "serverCryptoRate": 1.0
-    },
-    "logging": {
-      "level": "DEBUG"
-    },
-    "gvlVendorId": 64
-  },
   "local": {
     "urls": {
       "digitrustHostPath": "//localhost/dist/",
