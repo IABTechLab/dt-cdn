@@ -12,7 +12,7 @@ To initialize your local repository for development, clone this repository and r
     yarn build
     
 	# build & watch script for client
-    yarn devclient
+    yarn devwatch
 	
     # deploy to cdn
     yarn deploy
@@ -22,11 +22,20 @@ To initialize your local repository for development, clone this repository and r
 
 
 #### Environment Setup
-Use your host file to set this host pointer to a local webserver.
+Use your host file to set this host pointer for two local websites. You will need webserver
+on your system for your environment. If you don't have IIS or Apache available, try nginx.
+Webserver configuration is beyond scope of this document.
 
 local.digitru.st  127.0.0.1
-	
-Available environments: local, dev, prod
+local.pubsite.ed  127.0.0.1
+
+Point your webserver and both sites to the root of your source repository.
+Access your site samples at:
+
+http://local.pubsite.ed/samples/sample01.html
+
+Available environments: *local*, *build*, *prod*. Modify the file `src/config/env.json` to use *local*
+for local development.
 
 Before committing, you can run the following to validate your code
 
