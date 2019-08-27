@@ -14,9 +14,6 @@ To initialize your local repository for development, clone this repository and r
 	# build & watch script for client
     yarn devwatch
 	
-    # deploy to cdn
-    yarn deploy
-	
     # generate new key pair
     grunt generateKey --keyversion N
 
