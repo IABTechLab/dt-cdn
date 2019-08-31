@@ -241,12 +241,3 @@ DigiTrust.sendReset = function (options, callback) {
 
 
 module.exports = DigiTrust
-/*
-module.exports = {
-    initialize: DigiTrust.initialize,
-    initializeOptions: DigiTrust.initializeOptions,
-    getUser: DigiTrust.getUser,
-    sendReset: DigiTrust.sendReset,
-    isClient: DigiTrust.isClient,
-};
-*/

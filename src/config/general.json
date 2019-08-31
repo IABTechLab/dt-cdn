@@ -60,47 +60,7 @@
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
-    },
-    "cookie": {
-      "version": 2,
-      "producer": "1CrsdUNAo6",
-      "publisher": {
-        "domainKeyValue": "",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrust.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=.digitru.st;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrust.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
-    },
-    "iframe": {
-      "timeoutDuration": 10000,
-      "postMessageOrigin": "https://cdn.digitru.st"
-    },
-    "crypto": {
-      "serverCryptoRate": 0.8
-    },
-    "logging": {
-      "enable": false,
-      "level": "ERROR"
-    },
-    "gvlVendorId": 64
+    }
   },
   "local": {
     "urls": {

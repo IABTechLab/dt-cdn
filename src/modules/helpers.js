@@ -378,6 +378,28 @@ helpers.isEmpty = function (obj) {
     return true;
 };
 
+
+helpers.deepGet = function (obj, key) {
+  var type = typeof (obj);
+  if (type != 'object' || helpers.isEmpty(obj) || key == null) {
+    return null;
+  }
+
+  var i, val = obj, k;
+  var parts = key.split('.');
+  var max = parts.length;
+
+  for (i = 0; i < max; i++) {
+    k = parts[i];
+    val = val[k];
+    if (i == max - 1 || val == null) {
+      return val;
+    }
+  }
+
+  return null;
+}
+
 helpers.getUrlParameterByName = function (name, search) {
   var search = search || location.search;
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');

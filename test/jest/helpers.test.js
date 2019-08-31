@@ -22,6 +22,23 @@ test('urlParameter by name gets value', () => {
 
 });
 
+var testObj = {
+  one: {
+    two: {
+      three: 3
+    }
+  }
+};
+
+test('deepGet works happy path', () => {
+  var obj = testObj;
+  expect(helpers.deepGet(obj, "one.two.three")).toBe(3);
+})
+test('deepGet works missing path', () => {
+  var obj = testObj;
+  expect(helpers.deepGet(obj, "one.four.three")).toBeUndefined(); //.toBe(null);
+})
+
 
 test('extend adds to literal object', () => {
   var objA = {
