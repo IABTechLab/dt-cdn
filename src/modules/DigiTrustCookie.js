@@ -1,7 +1,8 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+//var env = require('../config/env.json').current;
+//var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
 var Dcom = require('./DigiTrustCommunication');
 var helpers = require('./helpers');
 
@@ -25,7 +26,7 @@ var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
 
 var _setIdentityCookie = function (cookieV) {
 
-  var cookieConfig = window.DigiTrust.isClient ? configGeneral.cookie.publisher : configGeneral.cookie.digitrust;
+  var cookieConfig = window.DigiTrust.isClient ? config.getValue('cookie.publisher') : config.getValue('cookie.digitrust');
 
   var cookieKV = cookieConfig.userObjectKey + '=' + cookieV + ';';
   var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.maxAgeMiliseconds) + ';';
@@ -59,7 +60,7 @@ var _verifyUserCookieStructure = function (userJSON) {
 
 var DigiTrustCookie = {};
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
-  var cookieKey = cookieKey || configGeneral.cookie.digitrust.userObjectKey;
+  var cookieKey = cookieKey || config.getValue('cookie.digitrust.userObjectKey');
   var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
   if (localUserCookie) {
@@ -69,8 +70,8 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     } catch (e) {
       localUserCookieJSON = {
         id: helpers.generateUserId(),
-        version: configGeneral.cookie.version,
-        producer: configGeneral.cookie.producer,
+        version: config.getValue('cookie.version'),
+        producer: config.getValue('cookie.producer'),
         privacy: {
           optout: false
         }
@@ -88,10 +89,11 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
 };
 
 DigiTrustCookie.setResetCookie = function () {
-  var cookieKV = configGeneral.cookie.digitrust.resetKey + '=true;';
-  var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
-  var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-  var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+  var cookieConf = config.getValue('cookie');
+  var cookieKV = cookieConf.digitrust.resetKey + '=true;';
+  var expiresKV = 'expires=' + _maxAgeToDate(cookieConf.digitrust.maxAgeMiliseconds) + ';';
+  var domainKV = cookieConf.digitrust.domainKeyValue;
+  var pathKV = cookieConf.digitrust.pathKeyValue;
 
   _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
@@ -102,14 +104,16 @@ DigiTrustCookie.setResetCookie = function () {
  * @param {any} cookieKey
  */
 DigiTrustCookie.expireCookie = function (cookieKey) {
+  var cookieConf = config.getValue('cookie');
+
   var cookieKV = cookieKey + '=; ',
     expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
     domainKV = '',
-    pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+    pathKV = cookieConf.digitrust.pathKeyValue;
 
   try {
-    if (location.host.indexOf(configGeneral.cookie.digitrust.domainKeyValue) > -1) {
-      domainKV = configGeneral.cookie.digitrust.domainKeyValue;
+    if (location.host.indexOf(cookieConf.digitrust.domainKeyValue) > -1) {
+      domainKV = cookieConf.digitrust.domainKeyValue;
     }
   }
   catch (ex) { }
@@ -118,15 +122,17 @@ DigiTrustCookie.expireCookie = function (cookieKey) {
 };
 
 DigiTrustCookie.setDigitrustCookie = function (cookieV) {
-  var cookieKV = configGeneral.cookie.digitrust.userObjectKey + '=' + cookieV + ';';
-  var expiresKV = 'expires=' + _maxAgeToDate(configGeneral.cookie.digitrust.maxAgeMiliseconds) + ';';
-  var domainKV = configGeneral.cookie.digitrust.domainKeyValue;
-  var pathKV = configGeneral.cookie.digitrust.pathKeyValue;
+  var cookieConf = config.getValue('cookie');
+  var cookieKV = cookieConf.digitrust.userObjectKey + '=' + cookieV + ';';
+  var expiresKV = 'expires=' + _maxAgeToDate(cookieConf.digitrust.maxAgeMiliseconds) + ';';
+  var domainKV = cookieConf.digitrust.domainKeyValue;
+  var pathKV = cookieConf.digitrust.pathKeyValue;
 
   _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
 DigiTrustCookie.getUser = function (options, callback) {
+  var cookieConf = config.getValue('cookie');
 
   options = options || {};
   var useCallback = (typeof callback === 'function') ? true : false;
@@ -142,7 +148,7 @@ DigiTrustCookie.getUser = function (options, callback) {
   };
 
   if (useCallback === false) {
-    localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(configGeneral.cookie.publisher.userObjectKey);
+    localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(cookieConf.publisher.userObjectKey);
     // Do a sync with digitrust official domain
     _createSyncOnlySubscription();
     Dcom.getIdentity({ syncOnly: true });
@@ -175,7 +181,7 @@ DigiTrustCookie.getUser = function (options, callback) {
       Dcom.getIdentity();
     } else {
       localUserCookieJSON = DigiTrustCookie.getIdentityCookieJSON(
-        configGeneral.cookie.publisher.userObjectKey
+        cookieConf.publisher.userObjectKey
       );
       if (DigiTrustCookie.verifyPublisherDomainCookie(localUserCookieJSON)) {
         // OK to proceed & show content
@@ -207,11 +213,13 @@ DigiTrustCookie.getCookieByName = function (name) {
 };
 
 DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
+  var cookieConf = config.getValue('cookie');
+
   var userId = helpers.generateUserId();
   var userJSON = {
     id: userId,
-    version: configGeneral.cookie.version,
-    producer: configGeneral.cookie.producer,
+    version: cookieConf.version,
+    producer: cookieConf.producer,
     privacy: {
       optout: false
     }

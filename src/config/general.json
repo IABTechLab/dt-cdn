@@ -71,34 +71,6 @@
       "optoutInfo": "//localhost/dist/info.html",
       "adblockCheck": "//stats.aws.rubiconproject.com/"
     },
-    "cookie": {
-      "version": 2,
-      "producer": "SIx8cS71Eo",
-      "publisher": {
-        "domainKeyValue": "domain=;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrustLOCALPUB.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrustLOCALDT.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
-    },
     "iframe": {
       "timeoutDuration": 10000,
       "postMessageOrigin": "http://local.digitru.st"

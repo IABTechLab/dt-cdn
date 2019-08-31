@@ -1,7 +1,8 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+//var env = require('../config/env.json').current;
+//var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
 
 
 var helpers = {};
@@ -329,7 +330,7 @@ helpers.createConsentClickListener = function () {
       // remove consentClick link handler after we attempt
       nixEvt(window, 'click', handlerRef);
       flagStore.setRedirectFlag();
-      window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
+      window.location = config.getValue('urls.digitrustRedirect') + '?redirect=' + encodeURIComponent(possibleHref);
       return false;
     }
   };

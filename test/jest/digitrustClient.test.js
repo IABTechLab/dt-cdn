@@ -1,7 +1,6 @@
 
 const DigiTrust = require('../../src/modules/DigiTrust');
-const env = require('../../src/config/env.json').current;
-const configGeneral = require('../../src/config/general.json')[env];
+const config = require('../../src/modules/ConfigLoader');
 
 window.DigiTrust = DigiTrust;
 
@@ -11,9 +10,9 @@ window.DigiTrust = DigiTrust;
 // These may also be caused by Chrome headless not working over non-ssl.
 
 beforeEach(() => {
-  document.cookie = configGeneral.cookie.publisher.userObjectKey
+  document.cookie = config.getValue('cookie.publisher.userObjectKey')
     + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  document.cookie = configGeneral.cookie.digitrust.userObjectKey
+  document.cookie = config.getValue('cookie.digitrust.userObjectKey')
     + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
 })

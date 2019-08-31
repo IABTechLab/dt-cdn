@@ -1,7 +1,9 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+//var env = require('../config/env.json').current;
+//var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
+
 var configErrors = require('../config/errors.json');
 
 var LOGID = 'DigiTrustCommunication';

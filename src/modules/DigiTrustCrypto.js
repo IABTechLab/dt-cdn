@@ -1,7 +1,8 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general')[env];
+//var env = require('../config/env.json').current;
+//var configGeneral = require('../config/general')[env];
+var config = require('./ConfigLoader');
 var helpers = require('./helpers');
 var ServerCrypto = require('./ServerCrypto');
 var DTPublicKeyObject = require('../config/key.json');
@@ -16,8 +17,8 @@ var crypto_browser = helpers.getBrowserCrypto();
 function initLog(){
 	if(logInitialized){ return; }
 	var opts = window.DigiTrust.initializeOptions;
-	if(opts.logging == null){
-		opts.logging = configGeneral.logging
+  if (opts.logging == null) {
+    opts.logging = config.getValue('logging')
 	}
 	if(opts.logging != null){
 		if(opts.logging.enable == false){
@@ -94,8 +95,8 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
         keyType = 'spki';
         publicKey = helpers.base64StringToArrayBuffer(DTPublicKeyObject.spki);
     }
-    if (window.crypto && !window.crypto.subtle && helpers.isChrome() &&
-            (Math.random() < configGeneral.crypto.serverCryptoRate)) {
+  if (window.crypto && !window.crypto.subtle && helpers.isChrome() &&
+    (Math.random() < config.getValue('crypto.serverCryptoRate') )) {
         // chrome 61 removes crypto.subtle on insecure origins
         crypto_browser.subtle = ServerCrypto.mockCryptoSubtle();
     }

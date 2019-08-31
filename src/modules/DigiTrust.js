@@ -7,8 +7,9 @@
  * */
 
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+//var env = require('../config/env.json').current;
+//var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
@@ -26,7 +27,7 @@ var DigiTrust = {
     version: VERSION,
     isClient: false,
     _config: {
-        configGeneral: configGeneral,
+        configGeneral: config.all(),
         errors: configErrors,
         initOptions: configInitializeOptions,
         crypto: DigiTrustCrypto
@@ -59,11 +60,12 @@ var isMemberIdValid = function (memberId) {
 */
 DigiTrust._setDigiTrustOptions = function (options) {
 	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
-	var opts = Object.assign({}, configInitializeOptions, options);
+
+  var opts = Object.assign({}, configInitializeOptions, options);
 	window.DigiTrust.initializeOptions = opts;
 	
-	if(opts.logging == null){
-		opts.logging = configGeneral.logging
+  if (opts.logging == null) {
+    opts.logging = config.getValue('logging');
 	}
 	
 	if(opts.logging != null){
@@ -89,6 +91,7 @@ var newConfig = null; // instance of the cloned and merged configuration
 /**
 * @function
 * Wrapper method that merges any initialized options into the general configuration.
+ * @deprecated Move to new ConfigLoader object
 */
 DigiTrust._config.getConfig = function() {
   var opts = window.DigiTrust.initializeOptions;
@@ -99,10 +102,10 @@ DigiTrust._config.getConfig = function() {
   }
 
   var i;
-  var config = Object.assign({}, configGeneral);
+  var configX = Object.assign({}, config.all());
 
   // go for specific items
-  var keys = ['urls', 'iframe', 'redir']
+  var keys = ['urls', 'iframe', 'redirectInterval', 'redir']
 
   // function to set the specific override values
   var setVals = function (target, source, key) {
@@ -122,10 +125,10 @@ DigiTrust._config.getConfig = function() {
   }
 
   for (i = 0; i < keys.length; i++) {
-    setVals(config, env, keys[i]);
+    setVals(configX, env, keys[i]);
   }
 
-  newConfig = config;
+  newConfig = configX;
 
   return newConfig;
 }
@@ -133,14 +136,17 @@ DigiTrust._config.getConfig = function() {
 
 
 var initInternal = function(options, initializeCallback) {
-	log.debug('init Internal');
+  log.debug('init Internal');
     try {
         if (initializeCallback === undefined) {
             initializeCallback = noop;
         }
-        var identityResponseObject = {success: false};
-
-        options = DigiTrust._setDigiTrustOptions(options);
+      var identityResponseObject = { success: false };
+      if (options && options.environment) {
+        config.loadConfig(options.environment);
+      }
+      options = DigiTrust._setDigiTrustOptions(options);
+      
 		log.debug('init options completed');
 
 

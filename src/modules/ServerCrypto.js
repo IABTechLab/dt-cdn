@@ -1,7 +1,8 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+//var env = require('../config/env.json').current;
+//var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
 var helpers = require('./helpers');
 
 var ServerCrypto = {};
@@ -14,8 +15,8 @@ ServerCrypto.mockCryptoSubtle = function () {
             });
         },
         encrypt: function (options, cryptokey, raw) {
-            return new Promise(function (resolve, reject) {
-                helpers.xhr.promise('GET', configGeneral.urls.digitrustIdService)
+          return new Promise(function (resolve, reject) {
+            helpers.xhr.promise('GET', config.getValue('urls.digitrustIdService'))
                     .then(function (contents) {
                         var encryptedIdentity = JSON.parse(contents);
                         resolve(encryptedIdentity.id);

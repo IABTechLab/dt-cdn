@@ -1,7 +1,8 @@
 'use strict';
 
 var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+//var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
 var gdprInfo = require('../config/gdpr-lang.json');
 
 var DigiTrustConsent = {};
@@ -26,14 +27,15 @@ DigiTrustConsent.gdprApplies = function (options) {
 };
 
 DigiTrustConsent.hasConsent = function (options, callback) {
-    var applies = DigiTrustConsent.gdprApplies();
+  var applies = DigiTrustConsent.gdprApplies();
+  var vendorId = config.getValue('gvlVendorId');
 	if(env === 'local' || env === 'localdev'){ applies = false; } // dev test
 	
     if (typeof(window.__cmp) !== 'undefined') {
         window.__cmp('ping', null, function (pingReturn) {
-            if (applies || (pingReturn.gdprAppliesGlobally)) {
-                window.__cmp('getVendorConsents', [configGeneral.gvlVendorId], function (result) {
-                    var myconsent = result.vendorConsents[configGeneral.gvlVendorId];
+          if (applies || (pingReturn.gdprAppliesGlobally)) {
+            window.__cmp('getVendorConsents', [vendorId], function (result) {
+              var myconsent = result.vendorConsents[vendorId];
                     callback(myconsent);
                 });
             } else {
