@@ -17,6 +17,10 @@ var myConfig;
 
 var loadDepth = 0; // beak over recursion
 
+/**
+ * Loads an object of values into the config.
+ * @param {any} settings
+ */
 function loadConfig(settings) {
   loadDepth = 0;
   loadOver(settings, myConfig);
@@ -56,13 +60,14 @@ function loadOver(newVals, targetObject) {
   return targetObject;
 }
 
-function clear() {
+function reset() {
   myConfig = null;
   setBaseConfig();
 }
 
 function setBaseConfig() {
   var conf = Object.assign({}, genConfig['prod']);
+  // var conf = loadOver(genConfig['prod'], {});
   myConfig = conf
   // merge in activeConfig
   loadConfig(activeConfig);
@@ -83,6 +88,6 @@ setBaseConfig();
 module.exports = {
   loadConfig: loadConfig,
   getValue: getVal,
-  reset: clear,
+  reset: reset,
   all: function () { return myConfig; }
 }

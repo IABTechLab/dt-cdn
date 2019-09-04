@@ -1,11 +1,13 @@
 'use strict';
 
 var env = require('../config/env.json').current;
-//var configGeneral = require('../config/general.json')[env];
-var config = require('./ConfigLoader');
 var gdprInfo = require('../config/gdpr-lang.json');
 
 var DigiTrustConsent = {};
+
+var getConfig = function () {
+  return DigiTrust._config.getConfig();
+}
 
 DigiTrustConsent.browserLanguageIsEU = function (languages) {
     for (var i = 0; i < languages.length; i++) {
@@ -28,7 +30,7 @@ DigiTrustConsent.gdprApplies = function (options) {
 
 DigiTrustConsent.hasConsent = function (options, callback) {
   var applies = DigiTrustConsent.gdprApplies();
-  var vendorId = config.getValue('gvlVendorId');
+  var vendorId = getConfig().getValue('gvlVendorId');
 	if(env === 'local' || env === 'localdev'){ applies = false; } // dev test
 	
     if (typeof(window.__cmp) !== 'undefined') {

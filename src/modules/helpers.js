@@ -1,9 +1,6 @@
 'use strict';
 
-//var env = require('../config/env.json').current;
-//var configGeneral = require('../config/general.json')[env];
 var config = require('./ConfigLoader');
-
 
 var helpers = {};
 
@@ -18,6 +15,19 @@ helpers.extend = function (target, source) {
     }
     return target;
 };
+
+/**
+ * Wrapper to access config singleton without every object requiring it.
+ * */
+function getConfig() {
+  if (window && window.DigiTrust && window.DigiTrust._config) {
+    return window.DigiTrust._config.getConfig();
+  }
+  // if not on global return new instance
+  return config;
+}
+
+
 
 /**
  * Tests to see if the passed object is a function
@@ -190,6 +200,8 @@ var _getElementHref = function (current) {
     }
 };
 
+helpers.getConfig = getConfig;
+
 helpers.getAbsolutePath = function (href) {
     var link = document.createElement('a');
     link.href = href;
@@ -206,10 +218,6 @@ var inIframe = function () {
         return true;
     }
 };
-
-var getConfig = function () {
-  return DigiTrust._config.getConfig();
-}
 
 /*
  * Encapsulate storing flags for redirect control.

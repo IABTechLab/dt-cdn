@@ -1,12 +1,16 @@
 'use strict';
 
-//var env = require('../config/env.json').current;
-//var configGeneral = require('../config/general.json')[env];
 var config = require('./ConfigLoader');
 var Dcom = require('./DigiTrustCommunication');
 var helpers = require('./helpers');
 
-var DigiTrust = window.DigiTrust || {};
+function getConfig() {
+  if (window && window.DigiTrust && window.DigiTrust._config) {
+    return window.DigiTrust._config.getConfig();
+  }
+  // if not on global return new instance
+  return config;
+}
 
 
 var _maxAgeToDate = function (milliseconds) {
@@ -26,7 +30,7 @@ var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
 
 var _setIdentityCookie = function (cookieV) {
 
-  var cookieConfig = window.DigiTrust.isClient ? config.getValue('cookie.publisher') : config.getValue('cookie.digitrust');
+  var cookieConfig = window.DigiTrust.isClient ? getConfig().getValue('cookie.publisher') : getConfig().getValue('cookie.digitrust');
 
   var cookieKV = cookieConfig.userObjectKey + '=' + cookieV + ';';
   var expiresKV = 'expires=' + _maxAgeToDate(cookieConfig.maxAgeMiliseconds) + ';';
@@ -60,7 +64,7 @@ var _verifyUserCookieStructure = function (userJSON) {
 
 var DigiTrustCookie = {};
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
-  var cookieKey = cookieKey || config.getValue('cookie.digitrust.userObjectKey');
+  var cookieKey = cookieKey || getConfig().getValue('cookie.digitrust.userObjectKey');
   var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
   if (localUserCookie) {
@@ -70,8 +74,8 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     } catch (e) {
       localUserCookieJSON = {
         id: helpers.generateUserId(),
-        version: config.getValue('cookie.version'),
-        producer: config.getValue('cookie.producer'),
+        version: getConfig().getValue('cookie.version'),
+        producer: getConfig().getValue('cookie.producer'),
         privacy: {
           optout: false
         }
@@ -89,7 +93,7 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
 };
 
 DigiTrustCookie.setResetCookie = function () {
-  var cookieConf = config.getValue('cookie');
+  var cookieConf = getConfig().getValue('cookie');
   var cookieKV = cookieConf.digitrust.resetKey + '=true;';
   var expiresKV = 'expires=' + _maxAgeToDate(cookieConf.digitrust.maxAgeMiliseconds) + ';';
   var domainKV = cookieConf.digitrust.domainKeyValue;
@@ -104,7 +108,7 @@ DigiTrustCookie.setResetCookie = function () {
  * @param {any} cookieKey
  */
 DigiTrustCookie.expireCookie = function (cookieKey) {
-  var cookieConf = config.getValue('cookie');
+  var cookieConf = getConfig().getValue('cookie');
 
   var cookieKV = cookieKey + '=; ',
     expiresKV = 'expires=expires=Thu, 01 Jan 1970 00:00:01 GMT;',
@@ -122,7 +126,7 @@ DigiTrustCookie.expireCookie = function (cookieKey) {
 };
 
 DigiTrustCookie.setDigitrustCookie = function (cookieV) {
-  var cookieConf = config.getValue('cookie');
+  var cookieConf = getConfig().getValue('cookie');
   var cookieKV = cookieConf.digitrust.userObjectKey + '=' + cookieV + ';';
   var expiresKV = 'expires=' + _maxAgeToDate(cookieConf.digitrust.maxAgeMiliseconds) + ';';
   var domainKV = cookieConf.digitrust.domainKeyValue;
@@ -132,7 +136,7 @@ DigiTrustCookie.setDigitrustCookie = function (cookieV) {
 };
 
 DigiTrustCookie.getUser = function (options, callback) {
-  var cookieConf = config.getValue('cookie');
+  var cookieConf = getConfig().getValue('cookie');
 
   options = options || {};
   var useCallback = (typeof callback === 'function') ? true : false;
@@ -207,13 +211,13 @@ DigiTrustCookie.unobfuscateCookieValue = function (value) {
 DigiTrustCookie.getCookieByName = function (name) {
   var value = '; ' + document.cookie;
   var parts = value.split('; ' + name + '=');
-  if (parts.length === 2) {
+  if (parts.length >= 2) { // sometimes multiple values found
     return parts.pop().split(';').shift();
   }
 };
 
 DigiTrustCookie.createUserCookiesOnDigitrustDomain = function () {
-  var cookieConf = config.getValue('cookie');
+  var cookieConf = getConfig().getValue('cookie');
 
   var userId = helpers.generateUserId();
   var userJSON = {

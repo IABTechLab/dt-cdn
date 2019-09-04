@@ -6,9 +6,6 @@
  * 
  * */
 
-
-//var env = require('../config/env.json').current;
-//var configGeneral = require('../config/general.json')[env];
 var config = require('./ConfigLoader');
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
@@ -26,8 +23,8 @@ var VERSION = require('../_version.js');
 var DigiTrust = {
     version: VERSION,
     isClient: false,
-    _config: {
-        configGeneral: config.all(),
+  _config: {
+      loader: config,
         errors: configErrors,
         initOptions: configInitializeOptions,
         crypto: DigiTrustCrypto
@@ -87,7 +84,16 @@ DigiTrust._setDigiTrustOptions = function (options) {
 
 
 
-var newConfig = null; // instance of the cloned and merged configuration
+var configLoaded = false; // flag value to control merge of init options
+
+/**
+ * Force the copy of config to update
+ * */
+DigiTrust._config.reload = function () {
+  configLoaded = false;
+  DigiTrust._config.loader.reset();
+}
+
 /**
 * @function
 * Wrapper method that merges any initialized options into the general configuration.
@@ -96,21 +102,20 @@ var newConfig = null; // instance of the cloned and merged configuration
 DigiTrust._config.getConfig = function() {
   var opts = window.DigiTrust.initializeOptions;
   var env = opts && opts.environment;
+  var i;
 
-  if (newConfig != null) {
-    return newConfig;
+  if (configLoaded) {
+    return DigiTrust._config.loader;
   }
 
-  var i;
-  var configX = Object.assign({}, config.all());
-
-  // go for specific items
+  var configX = {};
+  // go for specific items from initialization environment
   var keys = ['urls', 'iframe', 'redirectInterval', 'redir']
 
   // function to set the specific override values
   var setVals = function (target, source, key) {
+    var k;
     try {
-      var k;
       if (source[key] == null) { return; }
       if (target[key] == null) {
         target[key] = {};
@@ -128,9 +133,10 @@ DigiTrust._config.getConfig = function() {
     setVals(configX, env, keys[i]);
   }
 
-  newConfig = configX;
+  DigiTrust._config.loader.loadConfig(configX);
+  configLoaded = true;
 
-  return newConfig;
+  return DigiTrust._config.loader;
 }
 
 
