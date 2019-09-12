@@ -1,9 +1,9 @@
 {
   "prod": {
     "urls": {
-      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.35/",
-      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.35/redirect.html",
-      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.35/dt.html",
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.36/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.36/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.36/dt.html",
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
@@ -60,47 +60,7 @@
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
-    },
-    "cookie": {
-      "version": 2,
-      "producer": "1CrsdUNAo6",
-      "publisher": {
-        "domainKeyValue": "",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrust.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=.digitru.st;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrust.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
-    },
-    "iframe": {
-      "timeoutDuration": 10000,
-      "postMessageOrigin": "https://cdn.digitru.st"
-    },
-    "crypto": {
-      "serverCryptoRate": 0.8
-    },
-    "logging": {
-      "enable": false,
-      "level": "ERROR"
-    },
-    "gvlVendorId": 64
+    }
   },
   "local": {
     "urls": {
@@ -110,34 +70,6 @@
       "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json",
       "optoutInfo": "//localhost/dist/info.html",
       "adblockCheck": "//stats.aws.rubiconproject.com/"
-    },
-    "cookie": {
-      "version": 2,
-      "producer": "SIx8cS71Eo",
-      "publisher": {
-        "domainKeyValue": "domain=;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 604800000,
-        "userObjectKey": "DigiTrustLOCALPUB.v1.identity"
-      },
-      "digitrust": {
-        "domainKeyValue": "domain=;",
-        "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
-        "userObjectKey": "DigiTrustLOCALDT.v1.identity",
-        "resetKey": "DeleteEverything",
-        "challenge": "DTChal",
-        "optout": "optout",
-        "optoutUser": {
-          "id": "",
-          "privacy": {
-            "optout": true
-          }
-        },
-        "errorUser": {
-          "error": true
-        }
-      }
     },
     "iframe": {
       "timeoutDuration": 10000,

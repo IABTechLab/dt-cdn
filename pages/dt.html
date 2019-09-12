@@ -41,7 +41,7 @@
 
 
             var dt = window.DigiTrust;
-            var configGeneral = dt._config.configGeneral;
+            var configGeneral = dt._config.getConfig().all();
             var DigiTrustCookie = dt.cookie;
             var helpers = dt.util;
             var cookieKey = configGeneral.cookie.digitrust.userObjectKey;

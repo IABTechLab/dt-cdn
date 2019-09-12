@@ -52,6 +52,7 @@ test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTr
 
 1.  Update `version` in `package.json`
 2.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
+    to match the new version number in the URL path.
 3.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` to the most recent prior
     release version in the `build` section of `src/config/general.json`
 4.  Build with command `yarn build`

@@ -1,8 +1,6 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
-
+var config = require('./ConfigLoader');
 
 var helpers = {};
 
@@ -17,6 +15,19 @@ helpers.extend = function (target, source) {
     }
     return target;
 };
+
+/**
+ * Wrapper to access config singleton without every object requiring it.
+ * */
+function getConfig() {
+  if (window && window.DigiTrust && window.DigiTrust._config) {
+    return window.DigiTrust._config.getConfig();
+  }
+  // if not on global return new instance
+  return config;
+}
+
+
 
 /**
  * Tests to see if the passed object is a function
@@ -189,6 +200,8 @@ var _getElementHref = function (current) {
     }
 };
 
+helpers.getConfig = getConfig;
+
 helpers.getAbsolutePath = function (href) {
     var link = document.createElement('a');
     link.href = href;
@@ -205,10 +218,6 @@ var inIframe = function () {
         return true;
     }
 };
-
-var getConfig = function () {
-  return DigiTrust._config.getConfig();
-}
 
 /*
  * Encapsulate storing flags for redirect control.
@@ -329,7 +338,7 @@ helpers.createConsentClickListener = function () {
       // remove consentClick link handler after we attempt
       nixEvt(window, 'click', handlerRef);
       flagStore.setRedirectFlag();
-      window.location = configGeneral.urls.digitrustRedirect + '?redirect=' + encodeURIComponent(possibleHref);
+      window.location = config.getValue('urls.digitrustRedirect') + '?redirect=' + encodeURIComponent(possibleHref);
       return false;
     }
   };
@@ -377,6 +386,28 @@ helpers.isEmpty = function (obj) {
 
     return true;
 };
+
+
+helpers.deepGet = function (obj, key) {
+  var type = typeof (obj);
+  if (type != 'object' || helpers.isEmpty(obj) || key == null) {
+    return null;
+  }
+
+  var i, val = obj, k;
+  var parts = key.split('.');
+  var max = parts.length;
+
+  for (i = 0; i < max; i++) {
+    k = parts[i];
+    val = val[k];
+    if (i == max - 1 || val == null) {
+      return val;
+    }
+  }
+
+  return null;
+}
 
 helpers.getUrlParameterByName = function (name, search) {
   var search = search || location.search;

@@ -1,27 +1,44 @@
 
 const DigiTrust = require('../../src/modules/DigiTrust');
-const env = require('../../src/config/env.json').current;
-const configGeneral = require('../../src/config/general.json')[env];
+const config = require('../../src/modules/ConfigLoader');
 
 window.DigiTrust = DigiTrust;
 
 // Commenting out failing tests to fix build and deploy temporarily.
 // I suspect there is a timing/retry issue in the code that must be fixed
-// as these tests fail sporatically
+// as these tests fail sporatically.
+// These may also be caused by Chrome headless not working over non-ssl.
 
 beforeEach(() => {
-  document.cookie = configGeneral.cookie.publisher.userObjectKey
+  document.cookie = config.getValue('cookie.publisher.userObjectKey')
     + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  document.cookie = configGeneral.cookie.digitrust.userObjectKey
+  document.cookie = config.getValue('cookie.digitrust.userObjectKey')
     + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
 })
 
 /*
+
+      //logging: { level: "DEBUG", enable: true },
+      environment: {
+        redir: {
+          exp: 2,
+          experiod: 's'
+        },
+        urls: {
+          "digitrustIframe": "http://local.digitru.st/dist/dt_debug.html",
+          "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json"
+        },
+        iframe: {
+          postMessageOrigin: "http://local.digitru.st",
+          timeoutDuration: (1000 * 60)
+        }
+      },
 test('DigiTrust can init', done => {
   DigiTrust.initialize(
     {
       member: 'foo',
+      site: 'example_site_id',
       consent: {
         requires: 'none'
       }
@@ -32,7 +49,9 @@ test('DigiTrust can init', done => {
     }
   )
 });
+*/
 
+/*
 test('DigiTrust fails init with sample rate zero', done => {
   DigiTrust.initialize({
     member: 'foo',
