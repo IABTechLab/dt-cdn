@@ -1,7 +1,5 @@
 'use strict';
 
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
 var configErrors = require('../config/errors.json');
 
 var LOGID = 'DigiTrustCommunication';
@@ -73,10 +71,10 @@ DC.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
  * @param {any} evt
  */
 function _messageHandler(evt) {
-  var conf = getConfig();
+  var iframeOrigin = getConfig().getValue('iframe.postMessageOrigin');
   var msgKey = evt.data.type;
 
-    if (evt.origin !== conf.iframe.postMessageOrigin) {
+  if (evt.origin !== iframeOrigin) {
 
       switch (msgKey) {
             case 'Digitrust.shareIdToIframe.request':
@@ -90,7 +88,7 @@ function _messageHandler(evt) {
                 }
                 break;
             default:
-                log.warn('message origin error. allowed: ' + conf.iframe.postMessageOrigin + ' \nwas from: ' + evt.origin);
+          log.warn('message origin error. allowed: ' + iframeOrigin + ' \nwas from: ' + evt.origin);
         }
     }
     else {      
@@ -106,44 +104,40 @@ function _messageHandler(evt) {
 };
 
 DC.startConnection = function (loadSuccess) {
-	initOptions(); // initialization point
-    var conf = getConfig();
-	
-    /*
-        If there is a connection problem, or if adblocker blocks the request,
-        start a 10 second timeout to notify the caller. Clear the timeout upon
-        successful connection to the iframe
+  initOptions(); // initialization point
+  var iframeConf = getConfig().getValue('iframe');
 
-        Note: onload is executed even on non 2XX HTTP STATUSES (e.g. 404, 500)
-              for cross-domain iframe requests
-    */
-    var iframeLoadErrorTimeout = setTimeout(function () {
-        loadSuccess(false);
-        DC.iframeStatus = 0;
-    }, conf.iframe.timeoutDuration);
+  /*
+      If there is a connection problem, or if adblocker blocks the request,
+      start a 10 second timeout to notify the caller. Clear the timeout upon
+      successful connection to the iframe
 
-  pubsub.subscribe(MKEY.ready, function (iframeReady) {
-        clearTimeout(iframeLoadErrorTimeout);
-        DC.iframeStatus = 2;
-        loadSuccess(true);
-    });
+      Note: onload is executed even on non 2XX HTTP STATUSES (e.g. 404, 500)
+            for cross-domain iframe requests
+  */
+  var iframeLoadErrorTimeout = setTimeout(function () {
+    loadSuccess(false);
+    DC.iframeStatus = 0;
+  }, iframeConf.timeoutDuration);
 
   pubsub.subscribe(MKEY.ready, function (iframeReady) {
     clearTimeout(iframeLoadErrorTimeout);
+    iframeLoadErrorTimeout = 0;
     DC.iframeStatus = 2;
     loadSuccess(true);
   });
 
-    // Add postMessage listeners
-    window.addEventListener('message', _messageHandler, false);
+  // Add postMessage listeners
+  window.addEventListener('message', _messageHandler, false);
 
-    DC.iframe = document.createElement('iframe');
-    DC.iframe.style.display = 'none';
-    DC.iframe.src = conf.urls.digitrustIframe;
+  DC.iframe = document.createElement('iframe');
+  DC.iframe.style.display = 'none';
+  DC.iframe.src = getConfig().getValue('urls.digitrustIframe');
   DC.iframe.name = '__dtLocator'; // locatorFrameName
-    DC.iframeStatus = 1;
-    document.body.appendChild(DC.iframe);
-	log.debug('communication frame added');
+  DC.iframeStatus = 1;
+  document.body.appendChild(DC.iframe);
+
+  log.debug('communication frame added');
 };
 
 /**

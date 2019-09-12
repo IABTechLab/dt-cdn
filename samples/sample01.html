@@ -18,7 +18,7 @@
             site: 'example_site_id',
 			//logging: { level: "DEBUG", enable: true },
             environment: {
-                redir: {
+                redirectInterval: {
                     exp: 2,
                     experiod: 's'
                 },
@@ -29,7 +29,10 @@
 				iframe: {
 					postMessageOrigin: "http://local.digitru.st",
 					timeoutDuration: (1000 * 60)
-				}
+                },
+                crypto: {
+                    serverCryptoRate: 1.0
+                }
 			}
         },
         function (digiTrustResult) {

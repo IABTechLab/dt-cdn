@@ -6,9 +6,7 @@
  * 
  * */
 
-
-var env = require('../config/env.json').current;
-var configGeneral = require('../config/general.json')[env];
+var config = require('./ConfigLoader');
 var configErrors = require('../config/errors.json');
 var configInitializeOptions = require('../config/initializeOptions.json');
 var helpers = require('./helpers');
@@ -25,8 +23,8 @@ var VERSION = require('../_version.js');
 var DigiTrust = {
     version: VERSION,
     isClient: false,
-    _config: {
-        configGeneral: configGeneral,
+  _config: {
+      loader: config,
         errors: configErrors,
         initOptions: configInitializeOptions,
         crypto: DigiTrustCrypto
@@ -59,11 +57,12 @@ var isMemberIdValid = function (memberId) {
 */
 DigiTrust._setDigiTrustOptions = function (options) {
 	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
-	var opts = Object.assign({}, configInitializeOptions, options);
+
+  var opts = Object.assign({}, configInitializeOptions, options);
 	window.DigiTrust.initializeOptions = opts;
 	
-	if(opts.logging == null){
-		opts.logging = configGeneral.logging
+  if (opts.logging == null) {
+    opts.logging = config.getValue('logging');
 	}
 	
 	if(opts.logging != null){
@@ -85,29 +84,38 @@ DigiTrust._setDigiTrustOptions = function (options) {
 
 
 
-var newConfig = null; // instance of the cloned and merged configuration
+var configLoaded = false; // flag value to control merge of init options
+
+/**
+ * Force the copy of config to update
+ * */
+DigiTrust._config.reload = function () {
+  configLoaded = false;
+  DigiTrust._config.loader.reset();
+}
+
 /**
 * @function
 * Wrapper method that merges any initialized options into the general configuration.
+ * @deprecated Move to new ConfigLoader object
 */
 DigiTrust._config.getConfig = function() {
   var opts = window.DigiTrust.initializeOptions;
   var env = opts && opts.environment;
+  var i;
 
-  if (newConfig != null) {
-    return newConfig;
+  if (configLoaded) {
+    return DigiTrust._config.loader;
   }
 
-  var i;
-  var config = Object.assign({}, configGeneral);
-
-  // go for specific items
-  var keys = ['urls', 'iframe', 'redir']
+  var configX = {};
+  // go for specific items from initialization environment
+  var keys = ['urls', 'iframe', 'redirectInterval', 'redir']
 
   // function to set the specific override values
   var setVals = function (target, source, key) {
+    var k;
     try {
-      var k;
       if (source[key] == null) { return; }
       if (target[key] == null) {
         target[key] = {};
@@ -122,25 +130,29 @@ DigiTrust._config.getConfig = function() {
   }
 
   for (i = 0; i < keys.length; i++) {
-    setVals(config, env, keys[i]);
+    setVals(configX, env, keys[i]);
   }
 
-  newConfig = config;
+  DigiTrust._config.loader.loadConfig(configX);
+  configLoaded = true;
 
-  return newConfig;
+  return DigiTrust._config.loader;
 }
 
 
 
 var initInternal = function(options, initializeCallback) {
-	log.debug('init Internal');
+  log.debug('init Internal');
     try {
         if (initializeCallback === undefined) {
             initializeCallback = noop;
         }
-        var identityResponseObject = {success: false};
-
-        options = DigiTrust._setDigiTrustOptions(options);
+      var identityResponseObject = { success: false };
+      if (options && options.environment) {
+        config.loadConfig(options.environment);
+      }
+      options = DigiTrust._setDigiTrustOptions(options);
+      
 		log.debug('init options completed');
 
 
@@ -241,12 +253,3 @@ DigiTrust.sendReset = function (options, callback) {
 
 
 module.exports = DigiTrust
-/*
-module.exports = {
-    initialize: DigiTrust.initialize,
-    initializeOptions: DigiTrust.initializeOptions,
-    getUser: DigiTrust.getUser,
-    sendReset: DigiTrust.sendReset,
-    isClient: DigiTrust.isClient,
-};
-*/

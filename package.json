@@ -1,6 +1,6 @@
 {
   "name": "digitrust",
-  "version": "1.5.35",
+  "version": "1.5.36",
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
     "uglify": "npm-run-series uglifyc",
     "build": "npm-run-series versionUpdate buildclient uglify copypages",
-    "devwatch": "watchify src/client.js -do dist/digitrust.js",
+    "devwatch": "watchify src/digitrust_client.js -do dist/digitrust.js",
     "document": "jsdoc ./dist/digitrust.js -P package.json"
   },
   "repository": {

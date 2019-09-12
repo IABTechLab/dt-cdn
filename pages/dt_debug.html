@@ -48,7 +48,7 @@
 
 
             var dt = window.DigiTrust;
-            var configGeneral = dt._config.configGeneral;
+            var configGeneral = dt._config.getConfig().all();
             configGeneral.urls.digitrustIdService = "../misc/faked_id_service_v1.json" //http://local.digitru.st/misc/faked_id_service_v1.json
             var DigiTrustCookie = dt.cookie;
             var DigiTrustCrypto = dt._config.crypto;

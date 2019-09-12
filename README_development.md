@@ -12,21 +12,27 @@ To initialize your local repository for development, clone this repository and r
     yarn build
     
 	# build & watch script for client
-    yarn devclient
-	
-    # deploy to cdn
-    yarn deploy
+    yarn devwatch
 	
     # generate new key pair
     grunt generateKey --keyversion N
 
 
 #### Environment Setup
-Use your host file to set this host pointer to a local webserver.
+Use your host file to set this host pointer for two local websites. You will need webserver
+on your system for your environment. If you don't have IIS or Apache available, try nginx.
+Webserver configuration is beyond scope of this document.
 
 local.digitru.st  127.0.0.1
-	
-Available environments: local, dev, prod
+local.pubsite.ed  127.0.0.1
+
+Point your webserver and both sites to the root of your source repository.
+Access your site samples at:
+
+http://local.pubsite.ed/samples/sample01.html
+
+Available environments: *local*, *build*, *prod*. Modify the file `src/config/env.json` to use *local*
+for local development.
 
 Before committing, you can run the following to validate your code
 
@@ -46,6 +52,7 @@ test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTr
 
 1.  Update `version` in `package.json`
 2.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
+    to match the new version number in the URL path.
 3.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` to the most recent prior
     release version in the `build` section of `src/config/general.json`
 4.  Build with command `yarn build`
