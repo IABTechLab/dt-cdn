@@ -33,7 +33,8 @@ function loadOver(newVals, targetObject) {
   var k, v, vtype;
   var next;
   if (loadDepth++ > 7) {
-    console.error('DigiTrust load config over recurse');
+    // console.error('DigiTrust load config over recurse');
+    // TODO: Trace cause of over initialize and fix reset of loadDepth
     return targetObject;
   }
   if (otype != 'object' || newVals == null) {
