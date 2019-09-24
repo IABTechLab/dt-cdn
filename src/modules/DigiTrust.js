@@ -101,7 +101,7 @@ DigiTrust._config.reload = function () {
 */
 DigiTrust._config.getConfig = function() {
   var opts = window.DigiTrust.initializeOptions;
-  var env = opts && opts.environment;
+  var initEnv = opts && opts.environment || null;
   var i;
 
   if (configLoaded) {
@@ -129,11 +129,13 @@ DigiTrust._config.getConfig = function() {
     catch (ex) { }
   }
 
-  for (i = 0; i < keys.length; i++) {
-    setVals(configX, env, keys[i]);
+  if (initEnv != null) {
+    for (i = 0; i < keys.length; i++) {
+      setVals(configX, initEnv, keys[i]);
+    }
+    DigiTrust._config.loader.loadConfig(configX);
   }
 
-  DigiTrust._config.loader.loadConfig(configX);
   configLoaded = true;
 
   return DigiTrust._config.loader;

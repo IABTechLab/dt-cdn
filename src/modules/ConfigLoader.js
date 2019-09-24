@@ -9,9 +9,9 @@
  * 
  * */
 
-var env = require('../config/env.json').current;
+var buildEnv = require('../config/env.json').current;
 var genConfig = require('../config/general.json');
-var activeConfig = genConfig[env];
+var activeConfig = genConfig[buildEnv];
 var helpers = require('./helpers');
 var myConfig;
 
@@ -33,7 +33,7 @@ function loadOver(newVals, targetObject) {
   var k, v, vtype;
   var next;
   if (loadDepth++ > 7) {
-    // console.error('DigiTrust load config over recurse');
+    // console.error('DigiTrust load config over recurse page: ' + document.location);
     // TODO: Trace cause of over initialize and fix reset of loadDepth
     return targetObject;
   }
@@ -51,6 +51,7 @@ function loadOver(newVals, targetObject) {
         }
         next = targetObject[k]
         targetObject[k] = loadOver(v, next);
+        loadDepth--;
       }
       else {
         targetObject[k] = v;
@@ -71,7 +72,9 @@ function setBaseConfig() {
   // var conf = loadOver(genConfig['prod'], {});
   myConfig = conf
   // merge in activeConfig
-  loadConfig(activeConfig);
+  if (buildEnv != 'prod') {
+    loadConfig(activeConfig);
+  }
   return myConfig;
 }
 

@@ -23,16 +23,17 @@
                     experiod: 's'
                 },
 				urls: {
-                    "digitrustIframe": "http://local.digitru.st/dist/dt_debug.html",
-                    "digitrustIdService": "http://local.digitru.st/misc/faked_id_service_v1.json"
+                    "digitrustIframe": "//local.digitru.st/dist/dt_debug.html",
+                    "digitrustIdService": "//local.digitru.st/misc/faked_id_service_v1.json"
 				},
 				iframe: {
-					postMessageOrigin: "http://local.digitru.st",
+					postMessageOrigin: "https://local.digitru.st",
 					timeoutDuration: (1000 * 60)
                 },
                 crypto: {
                     serverCryptoRate: 1.0
-                }
+                },
+                logging: { enable: true, level: 'DEBUG'}
 			}
         },
         function (digiTrustResult) {
