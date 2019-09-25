@@ -14,16 +14,31 @@ var genConfig = require('../config/general.json');
 var activeConfig = genConfig[buildEnv];
 var helpers = require('./helpers');
 var myConfig;
+var noop = function () { };
 
 var loadDepth = 0; // beak over recursion
 
 var LOGID = 'DigiTrust_ConfigLoader';
 var log = {}; // this will later be re-initialized if the init pass requires
 var logInitialized = false;
+// Unit tests fail to have some helper methods initialized
+var mockLog = {
+  log: noop,
+  warn: noop,
+  info: noop,
+  error: noop
+}
 
 function initLog() {
   if (logInitialized) { return; }
-  log = helpers.createLogger(LOGID);
+
+  if (typeof (helpers.createLogger) === 'function') {
+    log = helpers.createLogger(LOGID);
+  }
+  else {
+    // this is a false positive that happens in jest tests
+    log = mockLog;
+  }
   logInitialized = true;
 }
 
@@ -80,7 +95,6 @@ function reset() {
 
 function setBaseConfig() {
   var conf = Object.assign({}, genConfig['prod']);
-  // var conf = loadOver(genConfig['prod'], {});
   myConfig = conf
   // merge in activeConfig
   if (buildEnv != 'prod') {

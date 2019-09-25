@@ -17,19 +17,12 @@ helpers.extend = function (target, source) {
     return target;
 };
 
+var defaultLogConfig = { level: 'ERROR', enable: false }
+
 /**
- * Wrapper to access config singleton without every object requiring it.
- * */
-function getConfig() {
-  if (window && window.DigiTrust && window.DigiTrust._config) {
-    return window.DigiTrust._config.getConfig();
-  }
-  // if not on global return new instance
-  return config;
-}
-
-var defaultLogConfig = { level: 'ERROR', enabled: false }
-
+ * Creates a logger based upon the global library settings
+ * @param {string} logId Identifier that will output to log
+ */
 function createLogger(logId) {
   var logId = logId || 'DigiTrust_default'
   if (window && window.DigiTrust && window.DigiTrust._config) {
@@ -38,7 +31,7 @@ function createLogger(logId) {
     if (logConf == null) {
       newLogger = logObj.createLogger(logId, defaultLogConfig);
     }
-    else{
+    else {
       if (logConf.enable == false) {
         // disable logging
         newLogger = logObj.createLogger(logId, { level: 'ERROR' });
@@ -49,15 +42,26 @@ function createLogger(logId) {
           logConf.level = "ERROR";
         }
         newLogger = logObj.createLogger(logId, logConf);
-        newLogger.enabled = logConf.enable || logConf.enabled || false;
+        newLogger.enabled = logConf.enable == true || logConf.enabled == true || false;
       }
     }
 
     return newLogger;
   }
   else {
-    return null;
+    return logObj.createLogger(logId, defaultLogConfig);
   }
+}
+
+/**
+ * Wrapper to access config singleton without every object requiring it.
+ * */
+function getConfig() {
+  if (window && window.DigiTrust && window.DigiTrust._config) {
+    return window.DigiTrust._config.getConfig();
+  }
+  // if not on global return new instance
+  return config;
 }
 
 /**
