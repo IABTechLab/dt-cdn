@@ -17,11 +17,23 @@ var myConfig;
 
 var loadDepth = 0; // beak over recursion
 
+var LOGID = 'DigiTrust_ConfigLoader';
+var log = {}; // this will later be re-initialized if the init pass requires
+var logInitialized = false;
+
+function initLog() {
+  if (logInitialized) { return; }
+  log = helpers.createLogger(LOGID);
+  logInitialized = true;
+}
+
+
 /**
  * Loads an object of values into the config.
  * @param {any} settings
  */
 function loadConfig(settings) {
+  initLog();
   loadDepth = 0;
   loadOver(settings, myConfig);
   return myConfig;
@@ -33,8 +45,7 @@ function loadOver(newVals, targetObject) {
   var k, v, vtype;
   var next;
   if (loadDepth++ > 7) {
-    // console.error('DigiTrust load config over recurse page: ' + document.location);
-    // TODO: Trace cause of over initialize and fix reset of loadDepth
+    log.warn('DigiTrust load config over recurse page: ' + document.location);
     return targetObject;
   }
   if (otype != 'object' || newVals == null) {

@@ -169,8 +169,8 @@ function Logger(){
 		var level = (lvl && lvl.val) || 0;
 		var myLevel = getLevelVal(me.opts.level);
 
-    console.log('---LEVEL CHECH --- MINE: ' + myLevel + ' ASK: ' + level);
-    console.table(level);
+    // console.log('---LEVEL CHECH --- MINE: ' + myLevel + ' ASK: ' + level);
+    // console.table(level);
 		return (level >= myLevel);
   }
 

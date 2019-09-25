@@ -1,6 +1,7 @@
 'use strict';
 
 var config = require('./ConfigLoader');
+var logObj = require('./logger');
 
 var helpers = {};
 
@@ -27,7 +28,37 @@ function getConfig() {
   return config;
 }
 
+var defaultLogConfig = { level: 'ERROR', enabled: false }
 
+function createLogger(logId) {
+  var logId = logId || 'DigiTrust_default'
+  if (window && window.DigiTrust && window.DigiTrust._config) {
+    var newLogger = null;
+    var logConf = DigiTrust._config.getConfig().getValue("logging")
+    if (logConf == null) {
+      newLogger = logObj.createLogger(logId, defaultLogConfig);
+    }
+    else{
+      if (logConf.enable == false) {
+        // disable logging
+        newLogger = logObj.createLogger(logId, { level: 'ERROR' });
+        newLogger.enabled = false;
+      }
+      else {
+        if (logConf.level == null) {
+          logConf.level = "ERROR";
+        }
+        newLogger = logObj.createLogger(logId, logConf);
+        newLogger.enabled = logConf.enable || logConf.enabled || false;
+      }
+    }
+
+    return newLogger;
+  }
+  else {
+    return null;
+  }
+}
 
 /**
  * Tests to see if the passed object is a function
@@ -201,6 +232,8 @@ var _getElementHref = function (current) {
 };
 
 helpers.getConfig = getConfig;
+
+helpers.createLogger = createLogger;
 
 helpers.getAbsolutePath = function (href) {
     var link = document.createElement('a');

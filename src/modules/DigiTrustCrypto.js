@@ -8,31 +8,14 @@ var ServerCrypto = require('./ServerCrypto');
 var DTPublicKeyObject = require('../config/key.json');
 
 var LOGID = 'DigiTrustCrypto';
-var logObj = require('./logger');
-var log = logObj.createLogger(LOGID, {level: 'ERROR'}); // this will later be re-initialized if the init pass requires
+var log = {}; // this will later be re-initialized if the init pass requires
 var logInitialized = false;
 
 var crypto_browser = helpers.getBrowserCrypto();
 
 function initLog(){
 	if(logInitialized){ return; }
-	var opts = window.DigiTrust.initializeOptions;
-  if (opts.logging == null) {
-    opts.logging = config.getValue('logging')
-	}
-	if(opts.logging != null){
-		if(opts.logging.enable == false){
-			// disable logging
-			log = logObj.createLogger(LOGID, {level: 'ERROR'});
-			log.enabled = false;
-		}
-		else{
-			if(opts.logging.level == null){
-				opts.logging.level = "INFO";
-			}
-			log = logObj.createLogger(LOGID, opts.logging);
-		}			
-	}
+  log = helpers.createLogger(LOGID);
 	logInitialized = true;
 }
 
