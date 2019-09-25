@@ -31,6 +31,12 @@ Access your site samples at:
 
 http://local.pubsite.ed/samples/sample01.html
 
+For best results setup SSL certificates on your site. One option is SSL and details
+will be specific to your webserver.
+https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/
+https://aboutssl.org/how-to-create-a-self-signed-certificate-in-iis/
+
+
 Available environments: *local*, *build*, *prod*. Modify the file `src/config/env.json` to use *local*
 for local development.
 
