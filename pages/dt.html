@@ -3,45 +3,51 @@
 <head>
     <meta charset="utf-8">
     <title>DigiTru.st Identity</title>
+    <!-- DT Frame Code -->
     <script src='./digitrust.min.js'></script>
     <script>
-    // Place initializer inside a closure
+        // Place initializer inside a closure
 
         (function () {
 
+            // Global error handler
+            var errGlobal = function (msg, url, line, col, error) {
+                var errMsg = "Digitrust frame error: " + msg;
+                try {
+                    if (console && console.error) {
+                        console.error(errMsg);
+                    }
+                    else {
+                        console.log(errMsg);
+                    }
+
+                    var eobj = {
+                        version: 1,
+                        type: 'DigiTrust.iframe.error',
+                        message: errMsg,
+                        value: {}
+                    }
+                    window.parent.postMessage(eobj, document.referrer);
+                    // log.error
+                }
+                catch (myex) {
+                    // log.error(myex);
+                }
+            }
+
             // ATTACH GLOBAL ERROR HANDLER
             try {
-                var errGlobal = function(msg, url, line, col, error) {
-                    var errMsg = "Digitrust frame error: " + msg;
-                    try {
-                        if (console && console.error) {
-                            console.error(errMsg);
-                        }
-                        else {
-                            console.log(errMsg);
-                        }
-
-                        var eobj = {
-                            version: 1,
-                            type: 'DigiTrust.iframe.error',
-                            value: {}
-                        }
-                        window.parent.postMessage(eobj, document.referrer);
-                    }
-                    catch (myex)
-                    {
-                        console.log(myex);
-                    }
-                }
-                window.addEventListener('error')
+                window.addEventListener('error', errGlobal)
             }
             catch (ex) {
                 // swallow this particular error
+                // console.log('failed to attach error handler');
             }
 
 
             var dt = window.DigiTrust;
             var configGeneral = dt._config.getConfig().all();
+            /* TOKEN ADDITIONAL SETTINGS */
             var DigiTrustCookie = dt.cookie;
             var helpers = dt.util;
             var cookieKey = configGeneral.cookie.digitrust.userObjectKey;

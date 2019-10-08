@@ -1,0 +1,22 @@
+
+List of File Sizes
+==================
+This is to track progress on trimming code size. Goal of DIS-28 is to slim down overall size of iframe and associated code.
+
+
+2/12/2019
+
+digitrust.min.js		38.7kb
+dt.html					5.25kb
+dt-embed.html			38.2kb
+
+
+4/3/2019
+
+digitrust.min.js			36.9kb
+digitrust_iframe.min.js		37.6kb
+dt.html						4.98kb
+dt-embed.html				42.6kb
+
+
+

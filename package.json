@@ -12,10 +12,16 @@
     "copypages": "copyfiles -f ./pages/*.* ./dist",
     "versionUpdate": "genversion src/_version.js",
     "buildclient": "browserify src/digitrust_client.js -do dist/digitrust.js",
+    "buildFrameScript": "browserify src/digitrust_iframe_embed.js -do dist/digitrust_iframe.js",
+    "packFrameScript": "uglifyjs dist/digitrust_iframe.js -o dist/digitrust_iframe.min.js",
+    "buildFrame": "npm-run-series buildFrameScript packFrameScript buildV2DebugFrame",
+    "buildV2DebugFrame": "node ./src/tool_scripts/buildFrameV2.js",
+    "buildV1DebugFrame": "node ./src/tool_scripts/buildFrameV1.js",
     "uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
     "uglify": "npm-run-series uglifyc",
-    "build": "npm-run-series versionUpdate buildclient uglify copypages",
+    "build": "npm-run-series versionUpdate buildclient uglify copypages buildV1DebugFrame",
     "devwatch": "watchify src/digitrust_client.js -do dist/digitrust.js",
+    "docCompiled": "jsdoc ./dist/digitrust.js -P package.json",
     "document": "jsdoc ./dist/digitrust.js -P package.json"
   },
   "repository": {
