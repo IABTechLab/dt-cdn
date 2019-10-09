@@ -74,3 +74,11 @@ test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTr
 14. git push origin v1.5.37
 15. Go to project site on Github and draft a new release
 16. Reflect release notes in the `Release Notes` wiki page at https://github.com/digi-trust/dt-cdn/wiki/Release-Notes
+
+
+## Development Roadmap Notes
+The library is moving to slim down and remove unused code from the iframe. Within the package.json file are two script commands that are part of this, but unused at the moment:
+*    "buildFrameScript": "browserify src/digitrust_iframe_embed.js -do dist/digitrust_iframe.js",
+*    "packFrameScript": "uglifyjs dist/digitrust_iframe.js -o dist/digitrust_iframe.min.js",
+
+
