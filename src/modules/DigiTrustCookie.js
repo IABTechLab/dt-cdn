@@ -202,10 +202,19 @@ DigiTrustCookie.getUser = function (options, callback) {
 };
 
 DigiTrustCookie.obfuscateCookieValue = function (value) {
-  return encodeURIComponent(btoa(JSON.stringify(value)));
+  try {
+    return encodeURIComponent(btoa(JSON.stringify(value)));
+  } catch(e) {
+    console.log(e);
+  }
 };
+
 DigiTrustCookie.unobfuscateCookieValue = function (value) {
-  return JSON.parse(atob(decodeURIComponent(value)));
+  try {
+    return JSON.parse(atob(decodeURIComponent(value)));
+  } catch(e) {
+    console.log(e);
+  }
 };
 
 DigiTrustCookie.getCookieByName = function (name) {
