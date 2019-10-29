@@ -39,6 +39,15 @@ test('deepGet works missing path', () => {
   expect(helpers.deepGet(obj, "one.four.three")).toBeUndefined(); //.toBe(null);
 })
 
+test('debugModeTogglesState', () => {
+  expect(helpers.isDebugEnabled()).toBeFalsy();
+  helpers.setDebug(true);
+  expect(helpers.isDebugEnabled()).toBeTruthy();
+  helpers.setDebug(false);
+  expect(helpers.isDebugEnabled()).toBeFalsy();
+})
+
+
 
 test('extend adds to literal object', () => {
   var objA = {

@@ -169,6 +169,7 @@ var initInternal = function (options, initializeCallback) {
 
 DigiTrust.initialize = function (options, initializeCallback) {
   log = helpers.createLogger(LOGID); // first initialize with default options
+  helpers.setGlobalLogger(log);
 
 	var document = window.document;
     var ready = document.readyState;
