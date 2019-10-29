@@ -24,7 +24,7 @@ var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
   if (str.substr(str.length - 1) != ';') {
     str += ';'
   }
-  str += "SameSite=none;";
+  str += "SameSite=None; Secure;";
   document.cookie = str;
 };
 
