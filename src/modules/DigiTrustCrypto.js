@@ -122,10 +122,10 @@ DigiTrustCrypto.encrypt = function (valueToEncrypt, callback) {
             var encryptedValueEncodedB64 = (typeof(encryptedValue) === 'string') ?
                 encryptedValue :
                 helpers.arrayBufferToBase64String(encryptedValue);
-            // console.log('just encrypted', keyType, encryptedValueEncodedB64);
             return callback(encryptedValueEncodedB64);
         })
-        .catch(function (err) {
+          .catch(function (err) {
+            log.error('Failure encrypting value.', err);
         });
     });
 };
@@ -223,7 +223,7 @@ var msieDecrypt = function (valueToDecrypt, keyType, privateKey, callback) {
             helpers.base64StringToArrayBuffer(valueToDecrypt)
         )
 		decryptOp.onerror = function(e){
-			console.error(e);
+			log.error(e);
 		}
 		
 		decryptOp.oncomplete = function(e){
@@ -277,7 +277,7 @@ var msieEncrypt = function (valueToEncrypt, keyType, publicKey, callback) {
 				var encryptedValueEncodedB64 = (typeof(encryptedValue) === 'string') ?
 					encryptedValue :
 					helpers.arrayBufferToBase64String(encryptedValue);
-				// console.log('just encrypted', keyType, encryptedValueEncodedB64);
+				  log.debug('just encrypted', keyType, encryptedValueEncodedB64);
 				return callback(encryptedValueEncodedB64);
 			};
 		}
