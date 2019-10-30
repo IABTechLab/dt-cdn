@@ -9,10 +9,19 @@
         // Place initializer inside a closure
 
         (function () {
+            var logger;
+            try {
+                logger = DigiTrust.util.createLogger('DT_Iframe');
+            }
+            catch (ex) {
+                /* DT Library Exception */
+            }
 
             // Global error handler
             var errGlobal = function (msg, url, line, col, error) {
                 var errMsg = "Digitrust frame error: " + msg;
+                logger.error(errMsg);
+
                 try {
                     if (console && console.error) {
                         console.error(errMsg);
@@ -31,7 +40,7 @@
                     // log.error
                 }
                 catch (myex) {
-                    // log.error(myex);
+                    logger.error(myex);
                 }
             }
 
