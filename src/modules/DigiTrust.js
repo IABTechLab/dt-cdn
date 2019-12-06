@@ -3,7 +3,7 @@
 /**
  * Digitrust
  * @module
- * 
+ * Main entry point object for the entire DigiTrust suite
  * */
 
 var config = require('./ConfigLoader');
@@ -20,8 +20,16 @@ var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR', enabled: false}); // this will later be re-initialized if the init pass requires
 var VERSION = require('../_version.js');
 
+/**
+ * Top level namespace object for DigiTrust
+ * 
+ * @namespace DigiTrust
+ * */
 var DigiTrust = {
-    version: VERSION,
+  version: VERSION,
+  /**
+   * Flag to indicate if library is running in host Publisher site (true) or in DigiTrust domain iFrame (false)
+   */ 
     isClient: false,
   _config: {
       loader: config,
@@ -123,7 +131,13 @@ DigiTrust._config.getConfig = function() {
 }
 
 
-
+/*
+ * Internal initializer routine to setup the DigiTrust library.
+ * 
+ * @memberof DigiTrust
+ * @param {any} options
+ * @param {any} initializeCallback
+ */
 var initInternal = function (options, initializeCallback) {
   log.debug('init Internal'); // wont fire unless default config is reset
   try {
@@ -167,6 +181,13 @@ var initInternal = function (options, initializeCallback) {
   }
 }
 
+/**
+ * Initialization entry point for boot up of DigiTrust
+ * @memberof DigiTrust
+ * @namespace DigiTrust.initialize
+ * @param {object} options
+ * @param {function} initializeCallback
+ */
 DigiTrust.initialize = function (options, initializeCallback) {
   log = helpers.createLogger(LOGID); // first initialize with default options
   helpers.setGlobalLogger(log);
@@ -185,6 +206,13 @@ DigiTrust.initialize = function (options, initializeCallback) {
 	}	
 };
 
+/**
+ * Call to obtain the current user object.
+ * @memberof DigiTrust
+ * @namespace DigiTrust.getUser
+ * @param {object} options
+ * @param {function} callback Callback method that will receive the response.
+ */
 DigiTrust.getUser = function (options, callback) {
 
     options = DigiTrust._setDigiTrustOptions(options);
@@ -230,10 +258,37 @@ DigiTrust.getUser = function (options, callback) {
     }
 };
 
+/**
+ * Instructs the DigiTrust library to reset the user ID cookie locally and globally (digitru.st domain)
+ * @memberof DigiTrust
+ * @namespace DigiTrust.sendReset
+ * @param {object} options
+ * @param {function} initializeCallback
+ */
 DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
 
+/**
+ * Toggles the debug state of DigiTrust
+ * @memberof DigiTrust
+ * @namespace DigiTrust.setDebug
+ * @param {boolean} isSet true or false to enable or disable debug state
+ */
+DigiTrust.setDebug = function (isSet) {
+  var me = DigiTrust;
+  me.util.setDebug(isSet);
+};
+
+/**
+ * Returns true or false to indicate if DigiTrust is in a debug state
+ * @memberof DigiTrust
+ * @namespace DigiTrust.isDebug
+ */
+DigiTrust.isDebug = function () {
+  var me = DigiTrust;
+  return me.util.isDebugEnabled();
+};
 
 
 module.exports = DigiTrust
