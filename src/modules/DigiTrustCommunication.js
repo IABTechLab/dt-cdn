@@ -84,7 +84,7 @@ function _messageHandler(evt) {
                         evt.source.postMessage(resp, evt.origin);
                     });
                 }else{
-                    console.log("DigiTrust not found");
+                    log.warn("DigiTrust not found");
                 }
                 break;
             default:
