@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * Digitrust
  * @module
  * Main entry point object for the entire DigiTrust suite
  * */
+
+'use strict';
 
 var config = require('./ConfigLoader');
 var configErrors = require('../config/errors.json');
@@ -14,6 +14,7 @@ var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 var DigiTrustCrypto = require('./DigiTrustCrypto');
+var debugCtrl = require('./DebugControl');
 
 var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
@@ -38,9 +39,14 @@ var DigiTrust = {
         crypto: DigiTrustCrypto
     },
     cookie: DigiTrustCookie,    
-    util: helpers
+  util: helpers
 };
+
+
+
 var noop = function(){}
+
+DigiTrust.debugControl = debugCtrl.createDebugControl(DigiTrust);
 
 DigiTrust.initializeOptions = {};
 
@@ -277,17 +283,7 @@ DigiTrust.sendReset = function (options, callback) {
  */
 DigiTrust.setDebug = function (isSet) {
   var me = DigiTrust;
-  me.util.setDebug(isSet);
-};
-
-/**
- * Returns true or false to indicate if DigiTrust is in a debug state
- * @memberof DigiTrust
- * @namespace DigiTrust.isDebug
- */
-DigiTrust.isDebug = function () {
-  var me = DigiTrust;
-  return me.util.isDebugEnabled();
+  me.debugControl.setDebug(isSet);
 };
 
 

@@ -119,6 +119,9 @@ function Logger(){
 	var passedArgs = toArray(arguments);
 	var me = this;
 
+  var buffer = [];
+  var maxBuffer = 200;
+
   // wrap the console so we can override
   var consoleWrapper = console;
 
@@ -158,7 +161,16 @@ function Logger(){
 			}
 		}
 	})(passedArgs);
-	
+
+
+	/**
+	* @function
+	* Reference to the full log buffer
+	*/
+  this.getBuffer = function () {
+    return buffer;
+  }
+
 	/**
 	* @function
 	* Test to see if provided level should be logged
@@ -186,10 +198,6 @@ function Logger(){
 		var doTrace = false;
 		var i;
 		
-		if(this.enabled != true){
-			return;
-    }
-		
 		if(args.length >= 2){
 			if(typeof(args[args.length - 1]) === 'string'){
 				lvlArg = args.pop();
@@ -203,10 +211,6 @@ function Logger(){
 			}
 		}
 
-		if(!logIt){
-			return;
-		}
-		
 		if(!levelDef){ levelDef = logLevels.LOG; }
 		
 		if(args.length == 0){
@@ -224,6 +228,22 @@ function Logger(){
 		if(doTrace || levelDef.val == logObj.DEBUG){
 			args.push({ page: document.location.href });
 		}
+
+    // Add to buffer, even if we don't log
+    if (buffer.length > maxBuffer) {
+      buffer.shift();
+    }
+    // todo stringify
+    buffer.push(args);
+
+    // end if disabled, but item is in the buffer
+    if (this.enabled != true) {
+      return;
+    }
+
+    if (!logIt) {
+      return;
+    }
 
     var result;
     var cw = consoleWrapper;
