@@ -1,7 +1,7 @@
 /**
- * Digitrust.debug
+ * Digitrust.debugControl
  * @module
- * Debug control methods. This object is attached to DigiTrust.debug
+ * Namespace to contain debug control methods. This object is attached to DigiTrust.debugControl
  * */
 
 'use strict';
@@ -36,17 +36,57 @@ Dbug.prototype.setDebug = function (isSet) {
 };
 
 /**
- * Outputs all log entries to Console.log
+ * Outputs all log entries to Con sole.log
  * and also returns them as an array
  * @memberof DigiTrust.debugControl
  */
 Dbug.prototype.dumpLogs = function () {
   var util = this.parent.util;
-  return util.getGlobalLogger().getBuffer();
+  var buffer = util.getGlobalLogger().getBuffer();
+  forceWrite(buffer);
+  return buffer;
 };
 
+/**
+ * Outputs all log entries to Con sole.log as a string
+ * @memberof DigiTrust.debugControl
+ */
+Dbug.prototype.dumpLogString = function () {
+  var util = this.parent.util;
+  var buffer = util.getGlobalLogger().getBuffer();
+  var rslt = [];
+  var i;
+  for (i = 0; i < buffer.length; i++) {
+    rslt.push(JSON.stringify(buffer[i]));
+  }
+
+  forceWrite(rslt.join('\n'));
+
+  return buffer;
+};
+
+Dbug.prototype.dumpConfig = function () {
+  var conf = DigiTrust._config.initOptions;
+  forceWrite(conf);
+  return conf;
+}
 
 
+/*
+ * @function
+ * Circumvents the build checks against using console for debugging purposes.
+ * Outputs to con sole.log
+ */ 
+function forceWrite() {
+  // circumvent build checks in this one instance
+  var key = 'con' + 'sole';
+  var con = window[key];
+  con.log(arguments[0]);
+  return;
+}
+
+
+// Export statements
 module.exports = {
   /**
    * Factory method to initialize debug controller

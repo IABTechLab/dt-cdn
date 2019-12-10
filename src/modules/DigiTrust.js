@@ -74,6 +74,7 @@ DigiTrust._setDigiTrustOptions = function (options) {
   var opts = Object.assign({}, configInitializeOptions, options);
 	window.DigiTrust.initializeOptions = opts; // TODO: hunt this down and redirect references to _config
 
+  log.debug('options set', opts);
   return window.DigiTrust.initializeOptions;
 };
 
@@ -145,13 +146,15 @@ DigiTrust._config.getConfig = function() {
  * @param {any} initializeCallback
  */
 var initInternal = function (options, initializeCallback) {
-  log.debug('init Internal'); // wont fire unless default config is reset
+  log.debug('initialize of DigiTrust begins', options); // wont fire unless default config is reset
   try {
     if (initializeCallback === undefined) {
+      log.debug('noop callback');
       initializeCallback = noop;
     }
     var identityResponseObject = { success: false };
     if (options && options.environment) {
+      log.debug('loading custom environement settings', options.environment);
       config.loadConfig(options.environment);
     }
     options = DigiTrust._setDigiTrustOptions(options);
@@ -165,6 +168,7 @@ var initInternal = function (options, initializeCallback) {
 
     // Verify Publisher's Member ID
     if (!isMemberIdValid(options.member)) {
+      log.debug('init fail! Invalid DigiTrust member or no member value passed')
       return initializeCallback(identityResponseObject);
     }
 
@@ -178,6 +182,7 @@ var initInternal = function (options, initializeCallback) {
           return initializeCallback(identityResponseObject);
         });
       } else {
+        log.debug('user consent missing - fail');
         return initializeCallback(identityResponseObject);
       }
     });
