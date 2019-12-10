@@ -10,7 +10,7 @@ var getConfig = function () {
 }
 
 var getLogger = function () {
-  return DigiTrust.util.getGlobalLogger();
+  return window.DigiTrust.util.getGlobalLogger();
 }
 
 DigiTrustConsent.browserLanguageIsEU = function (languages) {
