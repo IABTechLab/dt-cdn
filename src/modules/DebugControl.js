@@ -43,6 +43,9 @@ Dbug.prototype.isDebug = function () {
 Dbug.prototype.setDebug = function (isSet) {
   var util = this.parent.util;
   var isClient = this.parent.isClient;
+  if (typeof isSet !== 'boolean') {
+    isSet = true;
+  }
   var result = util.setDebug(isSet);
   if (isClient) {
     Dcom.setFrameDebug(true);
@@ -59,6 +62,8 @@ Dbug.prototype.setDebug = function (isSet) {
 Dbug.prototype.dumpLogs = function (header) {
   var util = this.parent.util;
   var buffer = util.getGlobalLogger().getBuffer();
+
+  forceWrite(util.getGlobalLogger().name);
   var hasHeader = header != null;
   if (hasHeader) {
     var style = getStyle.call(this);

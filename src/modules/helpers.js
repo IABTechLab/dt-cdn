@@ -23,6 +23,7 @@ helpers.setDebug = function (isSet) {
   }
 
   var dt = window.DigiTrust || dtMock;
+  var nav = window.navigator || {};
   var l = utilLogger;
   var prev = l.prevSettings || {};
   l.prevSettings = prev;
@@ -43,6 +44,14 @@ helpers.setDebug = function (isSet) {
     utilLogger.group('DigiTrust Library Info');
     utilLogger.info("DigiTrust version: " + dt.version);
     utilLogger.info('Page: ' + location.href);
+    utilLogger.info('Browser: ' + nav.userAgent)
+    if (helpers.isChrome()) {
+      utilLogger.info('Chrome detected - only works with SSL sites');
+    }
+    if (helpers.isSafari()) {
+      utilLogger.info('Safari detected - cookie restrictions may apply');
+    }
+
     utilLogger.groupEnd();
   }
   else {
