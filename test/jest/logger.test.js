@@ -1,5 +1,11 @@
 const logger = require('../../src/modules/logger');
 
+beforeAll(() => {
+  if (!window.DigiTrust) {
+    window.DigiTrust = { isClient: true, version: '1.0.mock' };
+  }
+});
+
 test('can create logger', () => {
   let log = logger.createLogger('testLogger');
   let levels = log.getLevels();

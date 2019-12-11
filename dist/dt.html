@@ -111,6 +111,12 @@
                             DigiTrustCookie.expireCookie(configGeneral.cookie.publisher.userObjectKey);
                         }
                         break;
+                    case 'DigiTrust.iframe.setDebug':
+                        handleSetDebug(evt.data);
+                        break;
+                    case 'DigiTrust.iframe.dumpLogs':
+                        handleDumpLogs(evt.data);
+                        break;
                 }
             }
 
@@ -126,6 +132,24 @@
                 type: 'DigiTrust.iframe.ready',
                 value: {}
             };
+
+            /**
+             * Handler for toggling debug mode
+             * @param msgData
+             */
+            function handleSetDebug(msgData) {
+                var val = msgData.value || true;
+                dt.setDebug(val);
+            }
+            /**
+             * Handler for toggling debug mode
+             * @param msgData
+             */
+            function handleDumpLogs(msgData) {
+                dt.debugControl.dumpLogs("DigiTrust IFrame");
+            }
+
+
             window.parent.postMessage(iframeReady, document.referrer);
         })();
 

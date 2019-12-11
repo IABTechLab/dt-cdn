@@ -2,6 +2,12 @@ const digitrustRoot = require('../../src/modules/DigiTrust');
 const debugCtrl = require('../../src/modules/DebugControl');
 const helpers = require('../../src/modules/helpers');
 
+beforeAll(() => {
+  if (!window.DigiTrust) {
+    window.DigiTrust = { isClient: true, version: '1.0.mock' };
+  }
+});
+
 test('can create debugControl', () => {
   let mockDt = {
     util: helpers

@@ -1,5 +1,11 @@
 const helpers = require('../../src/modules/helpers');
 
+beforeAll(() => {
+  if (!window.DigiTrust) {
+    window.DigiTrust = { isClient: true, version: '1.0.mock' };
+  }
+});
+
 test('getAbsolutePath', () => {
   
   expect(helpers.getAbsolutePath('http://example.com')).toBe('http://example.com/');

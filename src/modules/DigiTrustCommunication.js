@@ -11,6 +11,7 @@ var pubsub = require('./MinPubSub').createPubSub({
 });
 
 var DC = {};
+var noop = function () { };
 
 var Dt = 'DigiTrust',
   kID = Dt + '.identity',
@@ -23,7 +24,10 @@ var MKEY = {
   idSync: kID + '.response.sync',
   idResp: kID + '.response',
   idReset: kID + '.reset',
-  idGet: kID + '.request'
+  idGet: kID + '.request',
+  frameDebug: kIframe + '.setDebug',
+  frameDumpLogs: kIframe + '.dumpLogs',
+  debugMsg: kIframe + '.debugMsg'
 };
 
 var getConfig = function () {
@@ -80,8 +84,9 @@ function _messageHandler(evt) {
   var iframeOrigin = getConfig().getValue('iframe.postMessageOrigin');
   var msgKey = evt.data.type;
 
+  log.debug('pubsub event received: ' + evt.msgKey, evt);
   if (evt.origin !== iframeOrigin) {
-
+    log.info('pubsub event origin does not match iframeOrigin from config: ' + evt.origin + ' : ' + iframeOrigin);
     switch (msgKey) {
       case 'Digitrust.shareIdToIframe.request':
         if (DigiTrust) {
@@ -122,6 +127,8 @@ DC.startConnection = function (loadSuccess) {
             for cross-domain iframe requests
   */
   var iframeLoadErrorTimeout = setTimeout(function () {
+    var log = getLogger();
+    log.warn('pubsub MESSAGE TIMEOUT ERROR');
     loadSuccess(false);
     DC.iframeStatus = 0;
   }, iframeConf.timeoutDuration);
@@ -176,6 +183,9 @@ DC.sendRequest = function (sendRequestFunction, options) {
  * @param {any} options
  */
 DC.getIdentity = function (options) {
+  var log = getLogger();
+  log.debug('pubsub request identity');
+
   options = options ? options : {};
   var _sendIdentityRequest = function (options) {
     var identityRequest = {
@@ -206,6 +216,68 @@ DC.sendReset = function (options) {
 };
 
 /**
+ * Enable or disable debug mode in the iframe
+ * 
+ * @param {any} options
+ */
+DC.setFrameDebug = function (options) {
+  var log = getLogger();
+  var isClient = window.DigiTrust.isClient;
+  if (!isClient) {
+    log.warn('invalid call to DigiTrustCommunication.setFrameDebug. Only valid from client');
+    return;
+  }
+
+  var type = typeof options;
+  if (type == 'boolean') {
+    options = { debug: options };
+  }
+  else {
+    options = options || { debug: true };
+  }
+  var cb = options.callback || noop;
+  var reqFunc = function (opts) {
+    var reqData = {
+      value: options.debug || true,
+      type: MKEY.frameDebug
+    }
+
+    DC.iframe.contentWindow.postMessage(reqData, DC.iframe.src);
+  }
+
+  DC.sendRequest(reqFunc, options);
+}
+
+/**
+ * Enable or disable debug mode in the iframe
+ * 
+ * @param {any} options
+ */
+DC.dumpFrameLogs = function (options) {
+  var log = getLogger();
+  var isClient = window.DigiTrust.isClient;
+  if (!isClient) {
+    log.warn('invalid call to DigiTrustCommunication.dumpFrameLogs. Only valid from client');
+    return;
+  }
+
+  options = options || {};
+
+  var cb = options.callback || noop;
+  var reqFunc = function (opts) {
+    var reqData = {
+      value: {},
+      type: MKEY.frameDumpLogs
+    }
+
+    DC.iframe.contentWindow.postMessage(reqData, DC.iframe.src);
+  }
+
+  DC.sendRequest(reqFunc, options);
+}
+
+
+/**
  * Subscribe to given message topic in the global pubsub object.
  * @param {any} message topic in pubsub
  * @param {any} handler
@@ -223,6 +295,8 @@ module.exports = {
   getIdentity: DC.getIdentity,
   startConnection: DC.startConnection,
   sendReset: DC.sendReset,
+  setFrameDebug: DC.setFrameDebug,
+  dumpFrameLogs: DC.dumpFrameLogs,
   MsgKey: MKEY,
   listen: listen
 };

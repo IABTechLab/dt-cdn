@@ -85,7 +85,8 @@ function toArray(obj){
 }
 
 // expected methods on a console object
-var consoleMethods = ['info', 'debug', 'warn', 'error', 'trace'];
+var consoleMethods = ['info', 'debug', 'warn', 'error'];
+var nonLogConsoleMethods = ['group', 'groupEnd', 'trace'];
 var noop = function () { };
 var isFunc = function (fn) { return typeof (fn) === 'function' };
 
@@ -103,6 +104,12 @@ function insureValidConsole(obj) {
   for (i = 0; i < cm.length; i++) {
     if (!isFunc(obj[cm[i]])) {
       obj[cm[i]] = obj.log;
+    }
+  }
+  cm = nonLogConsoleMethods
+  for (i = 0; i < cm.length; i++) {
+    if (!isFunc(obj[cm[i]])) {
+      obj[cm[i]] = noop;
     }
   }
 }
@@ -184,6 +191,26 @@ function Logger(){
     // console.log('---LEVEL CHECH --- MINE: ' + myLevel + ' ASK: ' + level);
     // console.table(level);
 		return (level >= myLevel);
+  }
+
+  /**
+   * @function
+   * Begin a grouping level
+   * */
+  this.group = function () {
+    var args = toArray(arguments);
+    var cw = consoleWrapper;
+    cw['group'].apply(null, args);
+  }
+
+  /**
+   * @function
+   * End a grouping
+   * */
+  this.groupEnd = function () {
+    var args = toArray(arguments);
+    var cw = consoleWrapper;
+    cw['groupEnd'].apply(null, args);
   }
 
 	/**

@@ -6,11 +6,22 @@ var utilLogger = logObj.createLogger("DigiTrust_util", { level: 'ERROR' }); // d
 var helpers = {};
 
 var debugModeFlag = false; // flag to indicate if we are currently in debug mode
-var logTagStyle = 'display: inline-block; color: #fff; background: #395BA8; padding: 1px 4px; border-radius: 3px;font-size:1.1rem;';
+var logTagStyle = 'display: inline-block; color: #fff; background: [BG_COLOR]; padding: 1px 4px; border-radius: 3px;font-size:1.1rem;';
 
 var dtMock = { version: 'mock version' };
 
 helpers.setDebug = function (isSet) {
+  var isClient = window.DigiTrust.isClient;
+  var bgColor = isClient ? '#395BA8' : '#ff9900';
+  var tagStyle = logTagStyle.replace('[BG_COLOR]', bgColor);
+  var message;
+  if (isClient) {
+    message = "%cDigiTrust Debug Mode Enabled";
+  }
+  else {
+    message = "%cDigiTrust iFrame Debug Mode Enabled"
+  }
+
   var dt = window.DigiTrust || dtMock;
   var l = utilLogger;
   var prev = l.prevSettings || {};
@@ -28,8 +39,11 @@ helpers.setDebug = function (isSet) {
     l.enabled = true;
     l.opts.level = "DEBUG";
     // utilLogger this.opts = { level
-    utilLogger.info("%cDigiTrust Debug Mode Enabled", logTagStyle);
+    utilLogger.info(message, tagStyle);
+    utilLogger.group('DigiTrust Library Info');
     utilLogger.info("DigiTrust version: " + dt.version);
+    utilLogger.info('Page: ' + location.href);
+    utilLogger.groupEnd();
   }
   else {
     debugModeFlag = false;
