@@ -82,30 +82,11 @@ Dbug.prototype.dumpLogs = function (header) {
   return buffer;
 };
 
-/**
- * Outputs all log entries to Con sole.log as a string
- * @memberof DigiTrust.debugControl
- */
-Dbug.prototype.dumpLogString = function () {
-  var util = this.parent.util;
-  var buffer = util.getGlobalLogger().getBuffer();
-  var rslt = [];
-  var i;
-  for (i = 0; i < buffer.length; i++) {
-    rslt.push(JSON.stringify(buffer[i]));
-  }
-
-  forceWrite(rslt.join('\n'));
-
-  return buffer;
-};
-
 Dbug.prototype.dumpConfig = function () {
   var conf = DigiTrust._config.initOptions;
   forceWrite(conf);
   return conf;
 }
-
 
 /*
  * @function

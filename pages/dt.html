@@ -81,9 +81,13 @@
                         var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
                         digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
                         if (isOptOut) {
-                            log.info('DT Iframe User Opt Out - no ID');
+                            log.info('DT Iframe User Opt Out - no ID, but generic opt-out user object included');
                         }
-
+                        else {
+                            if (digiTrustUserJSON && digiTrustUserJSON.id) {
+                                log.info('digitru.st domain DigiTrust user cookie found and valid. Object version: ' + digiTrustUserJSON.version);
+                            }
+                        }
 
                         var sendMessage = function (messageValue) {
                             var messageType = evt.data.syncOnly ?
