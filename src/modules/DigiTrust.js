@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * Digitrust
  * @module
- * 
+ * Main entry point object for the entire DigiTrust suite
  * */
+
+'use strict';
 
 var config = require('./ConfigLoader');
 var configErrors = require('../config/errors.json');
@@ -14,14 +14,23 @@ var DigiTrustConsent = require('./DigiTrustConsent');
 var DigiTrustCookie = require('./DigiTrustCookie');
 var DigiTrustCommunication = require('./DigiTrustCommunication');
 var DigiTrustCrypto = require('./DigiTrustCrypto');
+var debugCtrl = require('./DebugControl');
 
 var LOGID = 'Digitrust'; // const, but older browser support
 var logObj = require('./logger');
 var log = logObj.createLogger(LOGID, {level: 'ERROR', enabled: false}); // this will later be re-initialized if the init pass requires
 var VERSION = require('../_version.js');
 
+/**
+ * Top level namespace object for DigiTrust
+ * 
+ * @namespace DigiTrust
+ * */
 var DigiTrust = {
-    version: VERSION,
+  version: VERSION,
+  /**
+   * Flag to indicate if library is running in host Publisher site (true) or in DigiTrust domain iFrame (false)
+   */ 
     isClient: false,
   _config: {
       loader: config,
@@ -30,9 +39,14 @@ var DigiTrust = {
         crypto: DigiTrustCrypto
     },
     cookie: DigiTrustCookie,    
-    util: helpers
+  util: helpers
 };
+
+
+
 var noop = function(){}
+
+DigiTrust.debugControl = debugCtrl.createDebugControl(DigiTrust);
 
 DigiTrust.initializeOptions = {};
 
@@ -57,29 +71,11 @@ var isMemberIdValid = function (memberId) {
 */
 DigiTrust._setDigiTrustOptions = function (options) {
 	// we have added a polyfill to handle IE. In this manner the base objects aren't corrupted
-
   var opts = Object.assign({}, configInitializeOptions, options);
-	window.DigiTrust.initializeOptions = opts;
-	
-  if (opts.logging == null) {
-    opts.logging = config.getValue('logging');
-	}
-	
-	if(opts.logging != null){
-		if(opts.logging.enable == false){
-			// disable logging
-			log = logObj.createLogger(LOGID, {level: 'ERROR'});
-			log.enabled = false;
-		}
-		else{
-			if(opts.logging.level == null){
-				opts.logging.level = "INFO";
-			}
-			log = logObj.createLogger(LOGID, opts.logging);
-		}			
-	}
-	
-    return window.DigiTrust.initializeOptions;
+	window.DigiTrust.initializeOptions = opts; // TODO: hunt this down and redirect references to _config
+
+  log.debug('options set', opts);
+  return window.DigiTrust.initializeOptions;
 };
 
 
@@ -101,7 +97,7 @@ DigiTrust._config.reload = function () {
 */
 DigiTrust._config.getConfig = function() {
   var opts = window.DigiTrust.initializeOptions;
-  var env = opts && opts.environment;
+  var initEnv = opts && opts.environment || null;
   var i;
 
   if (configLoaded) {
@@ -129,64 +125,84 @@ DigiTrust._config.getConfig = function() {
     catch (ex) { }
   }
 
-  for (i = 0; i < keys.length; i++) {
-    setVals(configX, env, keys[i]);
+  if (initEnv != null) {
+    for (i = 0; i < keys.length; i++) {
+      setVals(configX, initEnv, keys[i]);
+    }
+    DigiTrust._config.loader.loadConfig(configX);
   }
 
-  DigiTrust._config.loader.loadConfig(configX);
   configLoaded = true;
 
   return DigiTrust._config.loader;
 }
 
 
-
-var initInternal = function(options, initializeCallback) {
-  log.debug('init Internal');
-    try {
-        if (initializeCallback === undefined) {
-            initializeCallback = noop;
-        }
-      var identityResponseObject = { success: false };
-      if (options && options.environment) {
-        config.loadConfig(options.environment);
-      }
-      options = DigiTrust._setDigiTrustOptions(options);
-      
-		log.debug('init options completed');
-
-
-        // allow for a circuit break to disable the world
-        if (Math.random() > options.sample) {
-            return initializeCallback(identityResponseObject);
-        }
-
-        // Verify Publisher's Member ID
-        if (!isMemberIdValid(options.member)) {
-            return initializeCallback(identityResponseObject);
-        }
-
-        DigiTrustConsent.hasConsent(null, function (consent) {
-            if (consent) {
-                DigiTrustCookie.getUser(options, function (err, identityObject) {
-                    if (!err) {
-                        identityResponseObject.success = true;
-                        identityResponseObject.identity = identityObject;
-                    }
-                    return initializeCallback(identityResponseObject);
-                });
-            } else {
-                return initializeCallback(identityResponseObject);
-            }
-        });
-    } catch (e) {
-		log.error('Error in DigiTrust initializer', e);
-        return initializeCallback({success: false});
+/*
+ * Internal initializer routine to setup the DigiTrust library.
+ * 
+ * @memberof DigiTrust
+ * @param {any} options
+ * @param {any} initializeCallback
+ */
+var initInternal = function (options, initializeCallback) {
+  log.debug('initialize of DigiTrust begins', options); // wont fire unless default config is reset
+  try {
+    if (initializeCallback === undefined) {
+      log.debug('noop callback');
+      initializeCallback = noop;
     }
-	
+    var identityResponseObject = { success: false };
+    if (options && options.environment) {
+      log.debug('loading custom environement settings', options.environment);
+      config.loadConfig(options.environment);
+    }
+    options = DigiTrust._setDigiTrustOptions(options);
+    log = helpers.createLogger(LOGID); // reinitialize with passed options
+    log.debug('init options completed');
+
+    // allow for a circuit break to disable the world
+    if (Math.random() > options.sample) {
+      return initializeCallback(identityResponseObject);
+    }
+
+    // Verify Publisher's Member ID
+    if (!isMemberIdValid(options.member)) {
+      log.debug('init fail! Invalid DigiTrust member or no member value passed')
+      return initializeCallback(identityResponseObject);
+    }
+
+    DigiTrustConsent.hasConsent(null, function (consent) {
+      if (consent) {
+        DigiTrustCookie.getUser(options, function (err, identityObject) {
+          if (!err) {
+            identityResponseObject.success = true;
+            identityResponseObject.identity = identityObject;
+          }
+          return initializeCallback(identityResponseObject);
+        });
+      } else {
+        log.debug('user consent missing - fail');
+        return initializeCallback(identityResponseObject);
+      }
+    });
+  } catch (e) {
+    log.error('Error in DigiTrust initializer', e);
+    return initializeCallback({ success: false });
+  }
 }
 
+/**
+ * Initialization entry point for boot up of DigiTrust
+ * @memberof DigiTrust
+ * @namespace DigiTrust.initialize
+ * @param {object} options
+ * @param {function} initializeCallback
+ */
 DigiTrust.initialize = function (options, initializeCallback) {
+  log = helpers.createLogger(LOGID); // first initialize with default options
+  helpers.setGlobalLogger(log);
+
 	var document = window.document;
     var ready = document.readyState;
     DigiTrust.isClient = true; // init only called on clients
@@ -201,6 +217,13 @@ DigiTrust.initialize = function (options, initializeCallback) {
 	}	
 };
 
+/**
+ * Call to obtain the current user object.
+ * @memberof DigiTrust
+ * @namespace DigiTrust.getUser
+ * @param {object} options
+ * @param {function} callback Callback method that will receive the response.
+ */
 DigiTrust.getUser = function (options, callback) {
 
     options = DigiTrust._setDigiTrustOptions(options);
@@ -246,10 +269,27 @@ DigiTrust.getUser = function (options, callback) {
     }
 };
 
+/**
+ * Instructs the DigiTrust library to reset the user ID cookie locally and globally (digitru.st domain)
+ * @memberof DigiTrust
+ * @namespace DigiTrust.sendReset
+ * @param {object} options
+ * @param {function} initializeCallback
+ */
 DigiTrust.sendReset = function (options, callback) {
     DigiTrustCommunication.sendReset();
 };
 
+/**
+ * Toggles the debug state of DigiTrust
+ * @memberof DigiTrust
+ * @namespace DigiTrust.setDebug
+ * @param {boolean} isSet true or false to enable or disable debug state
+ */
+DigiTrust.setDebug = function (isSet) {
+  var me = DigiTrust;
+  me.debugControl.setDebug(isSet);
+};
 
 
 module.exports = DigiTrust

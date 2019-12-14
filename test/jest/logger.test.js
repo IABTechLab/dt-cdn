@@ -1,5 +1,11 @@
 const logger = require('../../src/modules/logger');
 
+beforeAll(() => {
+  if (!window.DigiTrust) {
+    window.DigiTrust = { isClient: true, version: '1.0.mock' };
+  }
+});
+
 test('can create logger', () => {
   let log = logger.createLogger('testLogger');
   let levels = log.getLevels();
@@ -75,3 +81,15 @@ test('filters verbose logs', () => {
   expect(log.info('hello')).toBeUndefined;
 
 });
+
+test('creates a named logger', () => {
+  let log = logger.createLogger('buffer');
+  expect(log.name).toBe('buffer');
+  log.warn('test 1');
+  log.log('test 2');
+
+  var result = log.getBuffer();
+  expect(result.length).toBe(2);
+});
+
+

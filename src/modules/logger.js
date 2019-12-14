@@ -85,7 +85,8 @@ function toArray(obj){
 }
 
 // expected methods on a console object
-var consoleMethods = ['info', 'debug', 'warn', 'error', 'trace'];
+var consoleMethods = ['info', 'debug', 'warn', 'error'];
+var nonLogConsoleMethods = ['group', 'groupEnd', 'trace'];
 var noop = function () { };
 var isFunc = function (fn) { return typeof (fn) === 'function' };
 
@@ -105,6 +106,12 @@ function insureValidConsole(obj) {
       obj[cm[i]] = obj.log;
     }
   }
+  cm = nonLogConsoleMethods
+  for (i = 0; i < cm.length; i++) {
+    if (!isFunc(obj[cm[i]])) {
+      obj[cm[i]] = noop;
+    }
+  }
 }
 
 /**
@@ -118,6 +125,9 @@ function Logger(){
 	this.enabled = true;
 	var passedArgs = toArray(arguments);
 	var me = this;
+
+  var buffer = [];
+  var maxBuffer = 200;
 
   // wrap the console so we can override
   var consoleWrapper = console;
@@ -158,7 +168,16 @@ function Logger(){
 			}
 		}
 	})(passedArgs);
-	
+
+
+	/**
+	* @function
+	* Reference to the full log buffer
+	*/
+  this.getBuffer = function () {
+    return buffer;
+  }
+
 	/**
 	* @function
 	* Test to see if provided level should be logged
@@ -169,9 +188,29 @@ function Logger(){
 		var level = (lvl && lvl.val) || 0;
 		var myLevel = getLevelVal(me.opts.level);
 
-    console.log('---LEVEL CHECH --- MINE: ' + myLevel + ' ASK: ' + level);
-    console.table(level);
+    // console.log('---LEVEL CHECH --- MINE: ' + myLevel + ' ASK: ' + level);
+    // console.table(level);
 		return (level >= myLevel);
+  }
+
+  /**
+   * @function
+   * Begin a grouping level
+   * */
+  this.group = function () {
+    var args = toArray(arguments);
+    var cw = consoleWrapper;
+    cw['group'].apply(null, args);
+  }
+
+  /**
+   * @function
+   * End a grouping
+   * */
+  this.groupEnd = function () {
+    var args = toArray(arguments);
+    var cw = consoleWrapper;
+    cw['groupEnd'].apply(null, args);
   }
 
 	/**
@@ -186,10 +225,6 @@ function Logger(){
 		var doTrace = false;
 		var i;
 		
-		if(this.enabled != true){
-			return;
-    }
-		
 		if(args.length >= 2){
 			if(typeof(args[args.length - 1]) === 'string'){
 				lvlArg = args.pop();
@@ -203,10 +238,6 @@ function Logger(){
 			}
 		}
 
-		if(!logIt){
-			return;
-		}
-		
 		if(!levelDef){ levelDef = logLevels.LOG; }
 		
 		if(args.length == 0){
@@ -224,6 +255,22 @@ function Logger(){
 		if(doTrace || levelDef.val == logObj.DEBUG){
 			args.push({ page: document.location.href });
 		}
+
+    // Add to buffer, even if we don't log
+    if (buffer.length > maxBuffer) {
+      buffer.shift();
+    }
+    // todo stringify
+    buffer.push(args);
+
+    // end if disabled, but item is in the buffer
+    if (this.enabled != true) {
+      return;
+    }
+
+    if (!logIt) {
+      return;
+    }
 
     var result;
     var cw = consoleWrapper;

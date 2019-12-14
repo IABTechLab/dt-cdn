@@ -9,19 +9,46 @@
  * 
  * */
 
-var env = require('../config/env.json').current;
+var buildEnv = require('../config/env.json').current;
 var genConfig = require('../config/general.json');
-var activeConfig = genConfig[env];
+var activeConfig = genConfig[buildEnv];
 var helpers = require('./helpers');
 var myConfig;
+var noop = function () { };
 
 var loadDepth = 0; // beak over recursion
+
+var LOGID = 'DigiTrust_ConfigLoader';
+var log = {}; // this will later be re-initialized if the init pass requires
+var logInitialized = false;
+// Unit tests fail to have some helper methods initialized
+var mockLog = {
+  log: noop,
+  warn: noop,
+  info: noop,
+  error: noop
+}
+
+function initLog() {
+  if (logInitialized) { return; }
+
+  if (typeof (helpers.createLogger) === 'function') {
+    log = helpers.createLogger(LOGID);
+  }
+  else {
+    // this is a false positive that happens in jest tests
+    log = mockLog;
+  }
+  logInitialized = true;
+}
+
 
 /**
  * Loads an object of values into the config.
  * @param {any} settings
  */
 function loadConfig(settings) {
+  initLog();
   loadDepth = 0;
   loadOver(settings, myConfig);
   return myConfig;
@@ -33,8 +60,7 @@ function loadOver(newVals, targetObject) {
   var k, v, vtype;
   var next;
   if (loadDepth++ > 7) {
-    // console.error('DigiTrust load config over recurse');
-    // TODO: Trace cause of over initialize and fix reset of loadDepth
+    log.warn('DigiTrust load config over recurse page: ' + document.location);
     return targetObject;
   }
   if (otype != 'object' || newVals == null) {
@@ -51,6 +77,7 @@ function loadOver(newVals, targetObject) {
         }
         next = targetObject[k]
         targetObject[k] = loadOver(v, next);
+        loadDepth--;
       }
       else {
         targetObject[k] = v;
@@ -68,10 +95,11 @@ function reset() {
 
 function setBaseConfig() {
   var conf = Object.assign({}, genConfig['prod']);
-  // var conf = loadOver(genConfig['prod'], {});
   myConfig = conf
   // merge in activeConfig
-  loadConfig(activeConfig);
+  if (buildEnv != 'prod') {
+    loadConfig(activeConfig);
+  }
   return myConfig;
 }
 

@@ -1,20 +1,140 @@
 'use strict';
 
 var config = require('./ConfigLoader');
-
+var logObj = require('./logger');
+var utilLogger = logObj.createLogger("DigiTrust_util", { level: 'ERROR' }); // default before set
 var helpers = {};
 
-helpers.extend = function (target, source) {
-    target = target || {};
-    for (var prop in source) {
-        if (typeof source[prop] === 'object') {
-            target[prop] = helpers.extend(target[prop], source[prop]);
-        } else {
-            target[prop] = source[prop];
-        }
+var debugModeFlag = false; // flag to indicate if we are currently in debug mode
+var logTagStyle = 'display: inline-block; color: #fff; background: [BG_COLOR]; padding: 1px 4px; border-radius: 3px;font-size:1.1rem;';
+
+var dtMock = { version: 'mock version' };
+
+helpers.setDebug = function (isSet) {
+  var isClient = window.DigiTrust.isClient;
+  var bgColor = isClient ? '#395BA8' : '#ff9900';
+  var tagStyle = logTagStyle.replace('[BG_COLOR]', bgColor);
+  var message;
+  if (isClient) {
+    message = "%cDigiTrust Debug Mode Enabled";
+  }
+  else {
+    message = "%cDigiTrust iFrame Debug Mode Enabled"
+  }
+
+  var dt = window.DigiTrust || dtMock;
+  var nav = window.navigator || {};
+  var l = utilLogger;
+  var prev = l.prevSettings || {};
+  l.prevSettings = prev;
+  if (debugModeFlag == isSet) {
+    return;
+  }
+  if (isSet) {
+    debugModeFlag = true;
+    l.prevSettings = {
+      enabled: l.enabled,
+      logLevel: { level: l.opts.level }
+    };
+
+    l.enabled = true;
+    l.opts.level = "DEBUG";
+    // utilLogger this.opts = { level
+    utilLogger.info(message, tagStyle);
+    utilLogger.group('DigiTrust Library Info');
+    utilLogger.info("DigiTrust version: " + dt.version);
+    utilLogger.info('Page: ' + location.href);
+    utilLogger.info('Browser: ' + nav.userAgent)
+    if (helpers.isChrome()) {
+      utilLogger.info('Chrome detected - only works with SSL sites');
     }
-    return target;
+    if (helpers.isSafari()) {
+      utilLogger.info('Safari detected - cookie restrictions may apply');
+    }
+
+    utilLogger.groupEnd();
+  }
+  else {
+    debugModeFlag = false;
+    l.enabled = prev.enabled;
+    l.logLevel = prev.logLevel;
+  }
+  publishLogLevelChange(l.opts.level, l.opts.enabled);
+}
+
+helpers.isDebugEnabled = function () {
+  return debugModeFlag == true;
+}
+
+/**
+ * Allow root object to inject global logger
+ */ 
+helpers.setGlobalLogger = function (logger) {
+  return utilLogger = logger;
+}
+helpers.getGlobalLogger = function () {
+  return utilLogger;
+}
+
+function publishLogLevelChange(newLevel) {
+  // publish to list
+}
+
+
+/**
+ * Extends target object with properties and functions from source.
+ * Returns target object
+ * 
+ * @param {any} target The object to extend or null to generate a new object
+ * @param {any} source Source object to copy properties from
+ */
+helpers.extend = function (target, source) {
+  target = target || {};
+  for (var prop in source) {
+    if (typeof source[prop] === 'object') {
+      target[prop] = helpers.extend(target[prop], source[prop]);
+    } else {
+      target[prop] = source[prop];
+    }
+  }
+  return target;
 };
+
+var defaultLogConfig = { level: 'ERROR', enable: false }
+
+/**
+ * Creates a logger based upon the global library settings
+ * @param {string} logId Identifier that will output to log
+ */
+function createLogger(logId) {
+  var logId = logId || 'DigiTrust_default'
+  if (window && window.DigiTrust && window.DigiTrust._config) {
+    var newLogger = null;
+    var logConf = DigiTrust._config.getConfig().getValue("logging")
+    if (logConf == null) {
+      newLogger = logObj.createLogger(logId, defaultLogConfig);
+    }
+    else {
+      if (logConf.enable == false) {
+        // disable logging
+        newLogger = logObj.createLogger(logId, { level: 'ERROR' });
+        newLogger.enabled = false;
+      }
+      else {
+        if (logConf.level == null) {
+          logConf.level = "ERROR";
+        }
+        newLogger = logObj.createLogger(logId, logConf);
+        newLogger.enabled = logConf.enable == true || logConf.enabled == true || false;
+      }
+    }
+
+    return newLogger;
+  }
+  else {
+    return logObj.createLogger(logId, defaultLogConfig);
+  }
+}
 
 /**
  * Wrapper to access config singleton without every object requiring it.
@@ -26,8 +146,6 @@ function getConfig() {
   // if not on global return new instance
   return config;
 }
-
-
 
 /**
  * Tests to see if the passed object is a function
@@ -201,6 +319,8 @@ var _getElementHref = function (current) {
 };
 
 helpers.getConfig = getConfig;
+
+helpers.createLogger = createLogger;
 
 helpers.getAbsolutePath = function (href) {
     var link = document.createElement('a');
