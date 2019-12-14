@@ -11,6 +11,7 @@ var pubsub = require('./MinPubSub').createPubSub({
 });
 
 var DC = {};
+var noop = function () { };
 
 var Dt = 'DigiTrust',
   kID = Dt + '.identity',
@@ -23,11 +24,18 @@ var MKEY = {
   idSync: kID + '.response.sync',
   idResp: kID + '.response',
   idReset: kID + '.reset',
-  idGet: kID + '.request'
+  idGet: kID + '.request',
+  frameDebug: kIframe + '.setDebug',
+  frameDumpLogs: kIframe + '.dumpLogs',
+  debugMsg: kIframe + '.debugMsg'
 };
 
 var getConfig = function () {
-  return DigiTrust._config.getConfig();
+  return window.DigiTrust._config.getConfig();
+}
+
+var getLogger = function () {
+  return window.DigiTrust.util.getGlobalLogger();
 }
 
 /**
@@ -41,6 +49,7 @@ function isFunc(fn) {
   return typeof (fn) === 'function';
 }
 
+// TODO: REMOVE THIS
 function initLog(){
 	if(logInitialized){ return; }
 	var opts = window.DigiTrust.initializeOptions;
@@ -71,36 +80,38 @@ DC.iframeStatus = 0; // 0: no iframe; 1: connecting; 2: ready
  * @param {any} evt
  */
 function _messageHandler(evt) {
+  var log = getLogger();
   var iframeOrigin = getConfig().getValue('iframe.postMessageOrigin');
   var msgKey = evt.data.type;
 
+  log.debug('pubsub event received: ' + evt.msgKey, evt);
   if (evt.origin !== iframeOrigin) {
-
-      switch (msgKey) {
-            case 'Digitrust.shareIdToIframe.request':
-                if(DigiTrust){
-                    DigiTrust.getUser({member: window.DigiTrust.initializeOptions.member}, function(resp){
-                        resp.type = "Digitrust.shareIdToIframe.response";
-                        evt.source.postMessage(resp, evt.origin);
-                    });
-                }else{
-                    log.warn("DigiTrust not found");
-                }
-                break;
-            default:
-          log.warn('message origin error. allowed: ' + iframeOrigin + ' \nwas from: ' + evt.origin);
+    log.info('pubsub event origin does not match iframeOrigin from config: ' + evt.origin + ' : ' + iframeOrigin);
+    switch (msgKey) {
+      case 'Digitrust.shareIdToIframe.request':
+        if (DigiTrust) {
+          DigiTrust.getUser({ member: window.DigiTrust.initializeOptions.member }, function (resp) {
+            resp.type = "Digitrust.shareIdToIframe.response";
+            evt.source.postMessage(resp, evt.origin);
+          });
+        } else {
+          log.warn("DigiTrust not found");
         }
+        break;
+      default:
+        log.warn('message origin error. allowed: ' + iframeOrigin + ' \nwas from: ' + evt.origin);
     }
-    else {      
-      switch (msgKey) {
-        case MKEY.ready:
-          pubsub.publish(msgKey, [true]);
-          break;
-        default:
-          pubsub.publish(msgKey, [evt.data.value]);
-          break;
-       }
+  }
+  else {
+    switch (msgKey) {
+      case MKEY.ready:
+        pubsub.publish(msgKey, [true]);
+        break;
+      default:
+        pubsub.publish(msgKey, [evt.data.value]);
+        break;
     }
+  }
 };
 
 DC.startConnection = function (loadSuccess) {
@@ -116,6 +127,8 @@ DC.startConnection = function (loadSuccess) {
             for cross-domain iframe requests
   */
   var iframeLoadErrorTimeout = setTimeout(function () {
+    var log = getLogger();
+    log.warn('pubsub MESSAGE TIMEOUT ERROR');
     loadSuccess(false);
     DC.iframeStatus = 0;
   }, iframeConf.timeoutDuration);
@@ -146,23 +159,23 @@ DC.startConnection = function (loadSuccess) {
  * @param {any} options
  */
 DC.sendRequest = function (sendRequestFunction, options) {
-    if (DC.iframeStatus === 2) {
+  if (DC.iframeStatus === 2) {
+    sendRequestFunction(options);
+  } else if (DC.iframeStatus === 1) {
+    // This mimics a "delay", until the iframe is ready
+    pubsub.subscribe(MKEY.ready, function (iframeReady) {
+      sendRequestFunction(options);
+    });
+  } else if (DC.iframeStatus === 0) {
+    // Create communication gateway with digitru.st iframe
+    DC.startConnection(function (loadSuccess) {
+      if (loadSuccess) {
         sendRequestFunction(options);
-    } else if (DC.iframeStatus === 1) {
-        // This mimics a "delay", until the iframe is ready
-      pubsub.subscribe(MKEY.ready, function (iframeReady) {
-            sendRequestFunction(options);
-        });
-    } else if (DC.iframeStatus === 0) {
-        // Create communication gateway with digitru.st iframe
-        DC.startConnection(function (loadSuccess) {
-            if (loadSuccess) {
-                sendRequestFunction(options);
-            } else {
-                throw new Error(configErrors.en.iframeError);
-            }
-        });
-    }
+      } else {
+        throw new Error(configErrors.en.iframeError);
+      }
+    });
+  }
 };
 
 /**
@@ -170,34 +183,99 @@ DC.sendRequest = function (sendRequestFunction, options) {
  * @param {any} options
  */
 DC.getIdentity = function (options) {
-    options = options ? options : {};
-    var _sendIdentityRequest = function (options) {
-        var identityRequest = {
-          version: 1,
-          type: MKEY.idGet,
-          syncOnly: options.syncOnly ? options.syncOnly : false,
-          redirects: options.redirects ? options.redirects : false,
-          value: {}
-        };
-        DC.iframe.contentWindow.postMessage(identityRequest, DC.iframe.src);
-    };
+  var log = getLogger();
+  log.debug('pubsub request identity');
 
-    DC.sendRequest(_sendIdentityRequest, options);
+  options = options ? options : {};
+  var _sendIdentityRequest = function (options) {
+    var identityRequest = {
+      version: 1,
+      type: MKEY.idGet,
+      syncOnly: options.syncOnly ? options.syncOnly : false,
+      redirects: options.redirects ? options.redirects : false,
+      value: {}
+    };
+    DC.iframe.contentWindow.postMessage(identityRequest, DC.iframe.src);
+  };
+
+  DC.sendRequest(_sendIdentityRequest, options);
 };
 
 DC.sendReset = function (options) {
-    var DigiTrustCookie = require('./DigiTrustCookie');
-    DigiTrustCookie.setResetCookie();
-    var _request = function (options) {
-        var requestPayload = {
-          version: 1,
-          type: MKEY.idReset
-        };
-        DC.iframe.contentWindow.postMessage(requestPayload, DC.iframe.src);
+  var DigiTrustCookie = require('./DigiTrustCookie');
+  DigiTrustCookie.setResetCookie();
+  var _request = function (options) {
+    var requestPayload = {
+      version: 1,
+      type: MKEY.idReset
     };
+    DC.iframe.contentWindow.postMessage(requestPayload, DC.iframe.src);
+  };
 
-    DC.sendRequest(_request, options);
+  DC.sendRequest(_request, options);
 };
+
+/**
+ * Enable or disable debug mode in the iframe
+ * 
+ * @param {any} options
+ */
+DC.setFrameDebug = function (options) {
+  var log = getLogger();
+  var isClient = window.DigiTrust.isClient;
+  if (!isClient) {
+    log.warn('invalid call to DigiTrustCommunication.setFrameDebug. Only valid from client');
+    return;
+  }
+
+  var type = typeof options;
+  if (type == 'boolean') {
+    options = { debug: options };
+  }
+  else {
+    options = options || { debug: true };
+  }
+  var cb = options.callback || noop;
+  var reqFunc = function (opts) {
+    var reqData = {
+      value: options.debug || true,
+      type: MKEY.frameDebug
+    }
+
+    DC.iframe.contentWindow.postMessage(reqData, DC.iframe.src);
+  }
+
+  DC.sendRequest(reqFunc, options);
+}
+
+/**
+ * Enable or disable debug mode in the iframe
+ * 
+ * @param {any} options
+ */
+DC.dumpFrameLogs = function (options) {
+  var log = getLogger();
+  var isClient = window.DigiTrust.isClient;
+  if (!isClient) {
+    log.warn('invalid call to DigiTrustCommunication.dumpFrameLogs. Only valid from client');
+    return;
+  }
+
+  options = options || {};
+
+  var cb = options.callback || noop;
+  var reqFunc = function (opts) {
+    var reqData = {
+      value: {},
+      type: MKEY.frameDumpLogs
+    }
+
+    DC.iframe.contentWindow.postMessage(reqData, DC.iframe.src);
+  }
+
+  DC.sendRequest(reqFunc, options);
+}
+
 
 /**
  * Subscribe to given message topic in the global pubsub object.
@@ -217,6 +295,8 @@ module.exports = {
   getIdentity: DC.getIdentity,
   startConnection: DC.startConnection,
   sendReset: DC.sendReset,
+  setFrameDebug: DC.setFrameDebug,
+  dumpFrameLogs: DC.dumpFrameLogs,
   MsgKey: MKEY,
   listen: listen
 };
