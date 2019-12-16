@@ -1,9 +1,9 @@
 {
   "prod": {
     "urls": {
-      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.39/",
-      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.39/redirect.html",
-      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.39/dt.html",
+      "digitrustHostPath": "https://cdn.digitru.st/prod/1.5.40/",
+      "digitrustRedirect": "https://cdn.digitru.st/prod/1.5.40/redirect.html",
+      "digitrustIframe": "https://cdn.digitru.st/prod/1.5.40/dt.html",
       "digitrustIdService": "https://cdn-cf.digitru.st/id/v1",
       "optoutInfo": "http://www.digitru.st/about-this-notice/",
       "adblockCheck": "http://stats.aws.rubiconproject.com/"
@@ -23,7 +23,7 @@
       "digitrust": {
         "domainKeyValue": "domain=.digitru.st;",
         "pathKeyValue": "path=/;",
-        "maxAgeMiliseconds": 157680000000,
+        "maxAgeMiliseconds": 31536000000,
         "userObjectKey": "DigiTrust.v1.identity",
         "resetKey": "DeleteEverything",
         "challenge": "DTChal",
