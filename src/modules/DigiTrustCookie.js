@@ -78,7 +78,7 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     try {
       localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
     } catch (e) {
-      log.warn('error decrypting user cookie - generating new identity')
+      log.warn('error parsing user cookie - generating new identity')
       localUserCookieJSON = {
         id: helpers.generateUserId(),
         version: getConfig().getValue('cookie.version'),
