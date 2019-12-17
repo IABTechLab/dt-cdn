@@ -12,6 +12,11 @@
 
 var VERSION = require('../_version.js');
 
+// Add an explicit value here to control how builds verify during the build automation testing.
+// Normally a build assumes one version prior. This can be used to specify a build number for
+// testing purposes in the CircleCI build. Leave null for default behavior
+var BUILD_VERSION_OVERRIDE = null;
+
 var VARIABLE_CURRENT_VERSION = "%CURRENT_VERSION%";
 var VARIABLE_PRIOR_VERSION = "%PRIOR_VERSION%";
 
@@ -123,17 +128,27 @@ function computeVersions(ver, prevVer) {
   var verParts = ver.split('.');
   var prevMinor = parseInt(verParts[verParts.length - 1]);
 
-  if (isNaN(prevMinor)) {
-    prevMinor = 0;
+  if (prevVer == null && BUILD_VERSION_OVERRIDE == null) {
+    if (isNaN(prevMinor)) {
+      prevMinor = 0;
+    }
+    else {
+      prevMinor = prevMinor - 1;
+    }
+
+    currentVersion = ver;
+    verParts[verParts.length - 1] = new String(prevMinor);
+
+    prevVersion = verParts.join('.');
   }
   else {
-    prevMinor = prevMinor - 1;
+    if (prevVer != null) {
+      prevVersion = prevVer;
+    }
+    else if (BUILD_VERSION_OVERRIDE != null) {
+      prevVersion = BUILD_VERSION_OVERRIDE;
+    }
   }
-
-  currentVersion = ver;
-  verParts[verParts.length - 1] = new String(prevMinor);
-
-  prevVersion = verParts.join('.');
   
   result.current = currentVersion;
   result.prior = prevVersion;
@@ -147,8 +162,8 @@ function replaceUrlVariables(urlObj, variable, value) {
   for (key in urlObj) {
     if (urlObj.hasOwnProperty(key)) {
       val = urlObj[key];
-      if (val.indexOf(VARIABLE_CURRENT_VERSION) > -1) {
-        urlObj[key] = val.replace(VARIABLE_CURRENT_VERSION, value);
+      if (val.indexOf(variable) > -1) {
+        urlObj[key] = val.replace(variable, value);
       }
     }
   }
