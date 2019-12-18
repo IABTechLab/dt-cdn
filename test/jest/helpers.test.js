@@ -1,5 +1,11 @@
 const helpers = require('../../src/modules/helpers');
 
+beforeAll(() => {
+  if (!window.DigiTrust) {
+    window.DigiTrust = { isClient: true, version: '1.0.mock' };
+  }
+});
+
 test('getAbsolutePath', () => {
   
   expect(helpers.getAbsolutePath('http://example.com')).toBe('http://example.com/');
@@ -38,6 +44,15 @@ test('deepGet works missing path', () => {
   var obj = testObj;
   expect(helpers.deepGet(obj, "one.four.three")).toBeUndefined(); //.toBe(null);
 })
+
+test('debugModeTogglesState', () => {
+  expect(helpers.isDebugEnabled()).toBeFalsy();
+  helpers.setDebug(true);
+  expect(helpers.isDebugEnabled()).toBeTruthy();
+  helpers.setDebug(false);
+  expect(helpers.isDebugEnabled()).toBeFalsy();
+})
+
 
 
 test('extend adds to literal object', () => {

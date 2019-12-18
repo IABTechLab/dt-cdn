@@ -4,15 +4,32 @@
     <meta charset="utf-8">
     <title>DigiTru.st Identity</title>
     <!-- DT Frame Code -->
-    <script src='./digitrust_iframe.min.js'></script>
+    <script src='./digitrust.min.js'></script>
     <script>
         // Place initializer inside a closure
 
         (function () {
+            function getGlobalLogger() {
+                var logger;
+                var dt = window.DigiTrust;
+                if (dt) {
+                    logger = dt.util.getGlobalLogger();
+                    if (!logger) {
+                        logger = dt.util.createLogger('DT_Iframe');
+                    }
+                }
+                return logger || window['con' + 'sole'];
+            }
 
             // Global error handler
             var errGlobal = function (msg, url, line, col, error) {
-                var errMsg = "Digitrust frame error: " + msg;
+                var log = getGlobalLogger();
+                try {
+                    var errMsg = "Digitrust frame error: " + msg;
+                    log.error(errMsg);
+                }
+                catch (ex) { }
+
                 try {
                     if (console && console.error) {
                         console.error(errMsg);
@@ -31,7 +48,7 @@
                     // log.error
                 }
                 catch (myex) {
-                    // log.error(myex);
+                    log.error(myex);
                 }
             }
 
@@ -55,6 +72,7 @@
             var DigiTrustCrypto = dt._config.crypto;
 
             function messageHandler(evt) {
+                var log = getGlobalLogger();
                 switch (evt.data.type) {
                     case 'DigiTrust.identity.request':
                         var digiTrustUserCookie = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.userObjectKey);
@@ -62,6 +80,14 @@
                             DigiTrustCookie.unobfuscateCookieValue(digiTrustUserCookie) : {};
                         var isOptOut = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.optout);
                         digiTrustUserJSON = isOptOut ? configGeneral.cookie.digitrust.optoutUser : digiTrustUserJSON;
+                        if (isOptOut) {
+                            log.info('DT Iframe User Opt Out - no ID, but generic opt-out user object included');
+                        }
+                        else {
+                            if (digiTrustUserJSON && digiTrustUserJSON.id) {
+                                log.info('digitru.st domain DigiTrust user cookie found and valid. Object version: ' + digiTrustUserJSON.version);
+                            }
+                        }
 
                         var sendMessage = function (messageValue) {
                             var messageType = evt.data.syncOnly ?
@@ -76,6 +102,7 @@
                         }
 
                         if ((!isOptOut) && (helpers.isEmpty(digiTrustUserJSON))) {
+                            log.debug('Create new DigiTrust Id on digitru.st domain');
                             // see if we can write and read cookies from within the iframe
                             DigiTrustCookie.createUserCookiesOnDigitrustDomain();
                             digiTrustUserJSON = DigiTrustCookie.getIdentityCookieJSON(cookieKey);
@@ -88,6 +115,14 @@
                                     sendMessage(digiTrustUserJSON);
                                 });
                             } catch (e) {
+                                log.error('Failure encrypting DigiTrust Identity', e);
+                                if (dt.util.isChrome()) {
+                                    var cryptoObj = dt.util.getBrowserCrypto();
+                                    if (cryptoObj.subtle == null) {
+                                        log.warn('Invalid crypto object on Chrome. This may be due to using a non-ssl site');
+                                    }
+                                }
+
                                 sendMessage(configGeneral.cookie.digitrust.errorUser);
                             }
                         } else {
@@ -95,12 +130,19 @@
                         }
                         break;
                     case 'DigiTrust.identity.reset':
+                        log.debug('reset DigiTrust identity on digitru.st domain');
                         var DE = DigiTrustCookie.getCookieByName(configGeneral.cookie.digitrust.resetKey);
                         if (DE === 'true') {
                             DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.resetKey);
                             DigiTrustCookie.expireCookie(configGeneral.cookie.digitrust.userObjectKey);
                             DigiTrustCookie.expireCookie(configGeneral.cookie.publisher.userObjectKey);
                         }
+                        break;
+                    case 'DigiTrust.iframe.setDebug':
+                        handleSetDebug(evt.data);
+                        break;
+                    case 'DigiTrust.iframe.dumpLogs':
+                        handleDumpLogs(evt.data);
                         break;
                 }
             }
@@ -117,6 +159,24 @@
                 type: 'DigiTrust.iframe.ready',
                 value: {}
             };
+
+            /**
+             * Handler for toggling debug mode
+             * @param msgData
+             */
+            function handleSetDebug(msgData) {
+                var val = msgData.value || true;
+                dt.setDebug(val);
+            }
+            /**
+             * Handler for toggling debug mode
+             * @param msgData
+             */
+            function handleDumpLogs(msgData) {
+                dt.debugControl.dumpLogs("DigiTrust IFrame");
+            }
+
+
             window.parent.postMessage(iframeReady, document.referrer);
         })();
 

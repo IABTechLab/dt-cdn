@@ -12,8 +12,9 @@ var redirectBuffer = null,
 
 const DEBUG_IDAPI_SETTING = 'configGeneral.urls.digitrustIdService = "../misc/faked_id_service_v1.json" //http://local.digitru.st/misc/faked_id_service_v1.json'
 const DEBUG_SCRIPT_TAG = "<script src='./digitrust_iframe.js'></script>"
-const PROD_SCRIPT_TAG = "<script src='./digitrust_iframe.min.js'></script>"
+const PROD_V2_SCRIPT_TAG = "<script src='./digitrust_iframe.min.js'></script>"
 const DEBUG_V1_SCRIPT_TAG = "<script src='./digitrust.js'></script>"
+const PROD_V1_SCRIPT_TAG = "<script src='./digitrust.min.js'></script>"
 const PROD_REDIR_SCRIPT_TAG = "<script src='./digitrust.min.js'></script>"
 const DEBUG_REDIR_SCRIPT_TAG = "<script src='./digitrust.js'></script>"
 
@@ -34,15 +35,15 @@ const replaceTokens = {
 function writeEmbedScriptAll() {
   fs.readFile('./dist/digitrust_iframe.min.js', 'utf8', function (err, contents) {
     scriptMinBuffer = contents;
-    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, true);
+    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, true, PROD_V2_SCRIPT_TAG);
   });
   fs.readFile('./dist/digitrust_iframe.js', 'utf8', function (err, contents) {
     scriptFullBuffer = contents;
-    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, true);
+    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, true, PROD_V2_SCRIPT_TAG);
   });
   fs.readFile('./pages/dt.html', 'utf8', function (err, contents) {
     iframeBuffer = contents;
-    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, true);
+    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, true, PROD_V2_SCRIPT_TAG);
   });
 
   fs.readFile('./pages/redirect.html', 'utf8', function (err, contents) {
@@ -58,7 +59,7 @@ function writeV1FrameFiles() {
 
   fs.readFile('./pages/dt.html', 'utf8', function (err, contents) {
     iframeBuffer = contents;
-    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer);
+    checkComplete(scriptMinBuffer, scriptFullBuffer, iframeBuffer, false, PROD_V1_SCRIPT_TAG);
   });
 
   fs.readFile('./pages/redirect.html', 'utf8', function (err, contents) {
@@ -76,7 +77,7 @@ function writeV1FrameFiles() {
  * @param {any} scripts
  * @param {any} markup
  */
-function checkComplete(scriptMin, scriptFull, markup, writeEmbed){
+function checkComplete(scriptMin, scriptFull, markup, writeEmbed, prodScriptRef){
   if (scriptMin == null
     || scriptFull == null
     || markup == null) {
@@ -85,7 +86,7 @@ function checkComplete(scriptMin, scriptFull, markup, writeEmbed){
 
   var debugMarkup = formatDebugFile(markup, writeEmbed);
   var embedMarkup = formatEmbedFile(markup, scriptMin);
-  var refMarkup = formatScriptRef(markup);
+  var refMarkup = formatScriptRef(markup, prodScriptRef);
   var fileRef;
   
   var files = [
@@ -171,11 +172,11 @@ function formatEmbedFile(markup, embedScript) {
 }
 
 /**
- * Format the source into the debug iFrame
+ * Format the source into the prod iFrame
  * @param {any} markup
  */
-function formatScriptRef(markup) {
-  var result = markup.replace(replaceTokens.SCRIPTREF, PROD_SCRIPT_TAG);
+function formatScriptRef(markup, scriptTag) {
+  var result = markup.replace(replaceTokens.SCRIPTREF, scriptTag);
   return result;
 }
 

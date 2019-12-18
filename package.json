@@ -1,6 +1,6 @@
 {
   "name": "digitrust",
-  "version": "1.5.37",
+  "version": "1.5.40",
   "description": "Package for a universal ID for registered ad servers",
   "main": "dist/digitrust.min.js",
   "scripts": {
@@ -17,9 +17,10 @@
     "buildFrame": "npm-run-series buildFrameScript packFrameScript buildV2DebugFrame",
     "buildV2DebugFrame": "node ./src/tool_scripts/buildFrameV2.js",
     "buildV1DebugFrame": "node ./src/tool_scripts/buildFrameV1.js",
+    "checkSourcecode": "node ./src/tool_scripts/checkSourceForConsole.js",
     "uglifyc": "uglifyjs dist/digitrust.js -o dist/digitrust.min.js",
     "uglify": "npm-run-series uglifyc",
-    "build": "npm-run-series versionUpdate buildclient uglify copypages buildV1DebugFrame",
+    "build": "npm-run-series versionUpdate checkSourcecode buildclient uglify copypages buildV1DebugFrame",
     "devwatch": "watchify src/digitrust_client.js -do dist/digitrust.js",
     "docCompiled": "jsdoc ./dist/digitrust.js -P package.json",
     "document": "jsdoc ./dist/digitrust.js -P package.json"

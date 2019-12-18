@@ -12,6 +12,10 @@ function getConfig() {
   return config;
 }
 
+var getLogger = function () {
+  return window.DigiTrust.util.getGlobalLogger();
+}
+
 
 var _maxAgeToDate = function (milliseconds) {
   var date = new Date();
@@ -64,14 +68,17 @@ var _verifyUserCookieStructure = function (userJSON) {
 
 var DigiTrustCookie = {};
 DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
+  var log = getLogger();
   var cookieKey = cookieKey || getConfig().getValue('cookie.digitrust.userObjectKey');
   var localUserCookie = DigiTrustCookie.getCookieByName(cookieKey);
 
   if (localUserCookie) {
+    log.debug('local user identity cookie found on domain ' + location.host);
     var localUserCookieJSON = {};
     try {
       localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
     } catch (e) {
+      log.warn('error parsing user cookie - generating new identity')
       localUserCookieJSON = {
         id: helpers.generateUserId(),
         version: getConfig().getValue('cookie.version'),
@@ -85,9 +92,11 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     if (_verifyUserCookieStructure(localUserCookieJSON)) {
       return localUserCookieJSON;
     } else {
+      log.info('failure in verifying cookie structure ' + JSON.stringify(localUserCookieJSON));
       return {};
     }
   } else {
+    log.debug('no local user identity');
     return {};
   }
 };
@@ -126,16 +135,20 @@ DigiTrustCookie.expireCookie = function (cookieKey) {
 };
 
 DigiTrustCookie.setDigitrustCookie = function (cookieV) {
+  var log = getLogger();
   var cookieConf = getConfig().getValue('cookie');
   var cookieKV = cookieConf.digitrust.userObjectKey + '=' + cookieV + ';';
   var expiresKV = 'expires=' + _maxAgeToDate(cookieConf.digitrust.maxAgeMiliseconds) + ';';
   var domainKV = cookieConf.digitrust.domainKeyValue;
   var pathKV = cookieConf.digitrust.pathKeyValue;
 
+  log.debug('setting identity cookie');
   _setCookie(cookieKV, expiresKV, domainKV, pathKV);
 };
 
 DigiTrustCookie.getUser = function (options, callback) {
+  var log = getLogger();
+
   var cookieConf = getConfig().getValue('cookie');
 
   options = options || {};
