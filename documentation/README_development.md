@@ -62,9 +62,9 @@ test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTr
 4.  git checkout candidate
 5.  git pull
 6.  git merge --no-ff master
-7.  git tag candidate-1.5.37 (update to your version number as set in step 1)
+7.  git tag v1.5.39 (update to your version number as set in step 1)
 8.  git push --follow-tags  (and then wait to confirm CircleCI build is successful)
-9.  git push --force origin candidate-1.5.37:release (then wait for successful CircleCI build)
+9.  git push --force origin v1.5.39:release (then wait for successful CircleCI build)
 10. git checkout master
 11. git tag v1.5.37
 12. git push origin v1.5.37
