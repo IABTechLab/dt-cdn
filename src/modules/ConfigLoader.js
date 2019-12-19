@@ -10,7 +10,7 @@
  * */
 
 var buildEnv = require('../config/env.json').current;
-var genConfig = require('../config/general.json');
+var genConfig = require('../config/GeneralConfig').getFullConfig();
 var activeConfig = genConfig[buildEnv];
 var helpers = require('./helpers');
 var myConfig;

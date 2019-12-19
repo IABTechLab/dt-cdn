@@ -57,23 +57,19 @@ To verify the current release version, consult this URL https://cdn.digitru.st/p
 test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTrust.version` in the debug console.
 
 1.  Update `version` in `package.json`
-2.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` in the `prod` section of `src/config/general.json`
-    to match the new version number in the URL path.
-3.  Update `digitrustHostPath`, `digitrustRedirect`, and `digitrustIframe` to the most recent prior
-    release version in the `build` section of `src/config/general.json`
-4.  Build with command `yarn build`
-5.  Commit and push your changes to master branch
-6.  git checkout candidate
-7.  git pull
-8.  git merge --no-ff master
-9.  git tag candidate-1.5.37 (update to your version number as set in step 1)
-10. git push --follow-tags  (and then wait to confirm CircleCI build is successful)
-11. git push --force origin candidate-1.5.37:release (then wait for successful CircleCI build)
-12. git checkout master
-13. git tag v1.5.37
-14. git push origin v1.5.37
-15. Go to project site on Github and draft a new release
-16. Reflect release notes in the `Release Notes` wiki page at https://github.com/digi-trust/dt-cdn/wiki/Release-Notes
+2.  Build with command `yarn build`
+3.  Commit and push your changes to master branch
+4.  git checkout candidate
+5.  git pull
+6.  git merge --no-ff master
+7.  git tag v1.5.39 (update to your version number as set in step 1)
+8.  git push --follow-tags  (and then wait to confirm CircleCI build is successful)
+9.  git push --force origin v1.5.39:release (then wait for successful CircleCI build)
+10. git checkout master
+11. git tag v1.5.37
+12. git push origin v1.5.37
+13. Go to project site on Github and draft a new release
+14. Reflect release notes in the `Release Notes` wiki page at https://github.com/digi-trust/dt-cdn/wiki/Release-Notes
 
 
 ## Development Roadmap Notes
