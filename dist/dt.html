@@ -115,7 +115,7 @@
                                     sendMessage(digiTrustUserJSON);
                                 });
                             } catch (e) {
-                                log.error('Failure encrypting DigiTrust Identity', e);
+                                log.warn('Failure encrypting DigiTrust Identity', e);
                                 if (dt.util.isChrome()) {
                                     var cryptoObj = dt.util.getBrowserCrypto();
                                     if (cryptoObj.subtle == null) {
