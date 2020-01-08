@@ -28,7 +28,7 @@ var _setCookie = function (cookieKV, expiresKV, domainKV, pathKV) {
   if (str.substr(str.length - 1) != ';') {
     str += ';'
   }
-  str += "SameSite=none;";
+  str += "SameSite=None; Secure;";
   document.cookie = str;
 };
 
@@ -78,7 +78,7 @@ DigiTrustCookie.getIdentityCookieJSON = function (cookieKey) {
     try {
       localUserCookieJSON = DigiTrustCookie.unobfuscateCookieValue(localUserCookie);
     } catch (e) {
-      log.warn('error decrypting user cookie - generating new identity')
+      log.warn('error parsing user cookie - generating new identity')
       localUserCookieJSON = {
         id: helpers.generateUserId(),
         version: getConfig().getValue('cookie.version'),
