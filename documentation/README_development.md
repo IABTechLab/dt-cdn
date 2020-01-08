@@ -10,10 +10,10 @@ To initialize your local repository for development, clone this repository and r
     yarn install
     # build only
     yarn build
-    
+
 	# build & watch script for client
     yarn devwatch
-	
+
     # generate new key pair
     grunt generateKey --keyversion N
 
@@ -49,11 +49,11 @@ They will be automatically run on push. The Circle CI build will fail if the uni
 
 ### Production Releases
 
-In general we are using "[three-flow](http://www.nomachetejuggling.com/2017/04/09/a-different-branching-strategy/)" to manage mostly automated releases. 
+In general we are using "[three-flow](http://www.nomachetejuggling.com/2017/04/09/a-different-branching-strategy/)" to manage mostly automated releases.
 Releases are branched off of master into `candidate` and then into a `release` branch.
 In order to get automated Releases in github we tag releases in master as well.
 
-To verify the current release version, consult this URL https://cdn.digitru.st/prod/1/digitrust.min.js or load the 
+To verify the current release version, consult this URL https://cdn.digitru.st/prod/1/digitrust.min.js or load the
 test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTrust.version` in the debug console.
 
 1.  Update `version` in `package.json`
@@ -62,19 +62,16 @@ test page Prebid.js/integrationExamples/gpt/digitrust_Full.html and type `DigiTr
 4.  git checkout candidate
 5.  git pull
 6.  git merge --no-ff master
-7.  git tag v1.5.39 (update to your version number as set in step 1)
+7.  git tag v1.5.42 (update to your version number as set in step 1)
 8.  git push --follow-tags  (and then wait to confirm CircleCI build is successful)
-9.  git push --force origin v1.5.39:release (then wait for successful CircleCI build)
+9.  git push --force origin v1.5.42:release (then wait for successful CircleCI build)
 10. git checkout master
-11. git tag v1.5.37
-12. git push origin v1.5.37
-13. Go to project site on Github and draft a new release
-14. Reflect release notes in the `Release Notes` wiki page at https://github.com/digi-trust/dt-cdn/wiki/Release-Notes
+11. git push origin v1.5.42
+12. Go to project site on Github and draft a new release
+13. Reflect release notes in the `Release Notes` wiki page at https://github.com/digi-trust/dt-cdn/wiki/Release-Notes
 
 
 ## Development Roadmap Notes
 The library is moving to slim down and remove unused code from the iframe. Within the package.json file are two script commands that are part of this, but unused at the moment:
 *    "buildFrameScript": "browserify src/digitrust_iframe_embed.js -do dist/digitrust_iframe.js",
 *    "packFrameScript": "uglifyjs dist/digitrust_iframe.js -o dist/digitrust_iframe.min.js",
-
-
